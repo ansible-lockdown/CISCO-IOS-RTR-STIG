@@ -1,0 +1,816 @@
+---
+- name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000010
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000010
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000001
+      - SV-216551r531085_rule
+      - V-216551
+      
+- name: "MEDIUM | CISC-RT-000040 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000040
+  tags:
+      - CISC-RT-000040
+      - CAT2
+      - CCI-000803
+      - SRG-NET-000168-RTR-000077
+      - SV-216554r531085_rule
+      - V-216554
+
+- name: "MEDIUM | CISC-RT-000050 | PATCH | The Cisco router must be configured to authenticate all routing protocol messages using NIST-validated FIPS 198-1 message authentication code algorithm."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000050
+  tags:
+      - CISC-RT-000050
+      - CAT2
+      - CCI-000803
+      - SRG-NET-000168-RTR-000078
+      - SV-216555r531085_rule
+      - V-216555   
+
+- name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000120
+  tags:
+      - CISC-RT-000120
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000110
+      - SV-216560r531085_rule
+      - V-216560
+
+- name: "MEDIUM | CISC-RT-000140 | PATCH | The Cisco router must be configured to drop all fragmented Internet Control Message Protocol (ICMP) packets destined to itself."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000140
+  tags:
+      - CISC-RT-000140
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000002
+      - SV-216562r531085_rule
+      - V-216562
+
+- name: "MEDIUM | CISC-RT-000150 | PATCH | The Cisco router must be configured to have Gratuitous ARP disabled on all external interfaces."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000150
+  tags:
+      - CISC-RT-000150
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000111
+      - SV-216563r531085_rule
+      - V-216563
+
+- name: "MEDIUM | CISC-RT-000170 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) unreachable messages disabled on all external interfaces."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000170
+  tags:
+      - CISC-RT-000170
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000113
+      - SV-216565r531085_rule
+      - V-216565
+
+- name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000180
+  tags:
+      - CISC-RT-000180
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000114
+      - SV-216566r531085_rule
+      - V-216566
+      
+- name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000190
+  tags:
+      - CISC-RT-000190
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000115
+      - SV-216567r531085_rule
+      - V-216567
+
+- name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000210
+  tags:
+      - CISC-RT-000210
+      - CAT2
+      - CCI-000132
+      - SRG-NET-000076-RTR-000001
+      - SV-216569r531085_rule
+      - V-216569
+
+- name: "MEDIUM | CISC-RT-000220 | PATCH | The Cisco router must be configured to produce audit records containing information to establish the source of the events."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000220
+  tags:
+      - CISC-RT-000220
+      - CAT2
+      - CCI-000133
+      - SRG-NET-000077-RTR-000001
+      - SV-216570r531085_rule
+      - V-216570
+
+- name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000250
+  tags:
+      - CISC-RT-000250
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000002
+      - SV-216573r531085_rule
+      - V-216573
+
+- name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000260
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000260
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000109
+      - SV-216574r531085_rule
+      - V-216574
+
+- name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000270
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000270
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000110
+      - SV-216575r531085_rule
+
+- name: "MEDIUM | CISC-RT-000320 | PATCH | The Cisco perimeter router must be configured to filter traffic destined to the enclave in accordance with the guidelines contained in DoD Instruction 8551.1."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000320
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000320
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000003
+      - SV-216580r531085_rule
+      - V-216580
+
+- name: "MEDIUM | CISC-RT-000330 | PATCH | The Cisco perimeter router must be configured to filter ingress traffic at the external interface on an inbound direction."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000330
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000330
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000004
+      - SV-216581r531085_rule
+      - V-216581
+
+- name: "MEDIUM | CISC-RT-000340 | PATCH | The Cisco perimeter router must be configured to filter egress traffic at the internal interface on an inbound direction."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000340
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000340
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000005
+      - SV-216582r531085_rule
+      - V-216582
+
+- name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000380
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000380
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000112
+      - SV-216586r531085_rule
+      - V-216586
+
+- name: "MEDIUM | CISC-RT-000390 | PATCH | The Cisco perimeter router must be configured to block all outbound management traffic."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000390
+  tags:
+      - CISC-RT-000390
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000364-RTR-000113
+      - SV-216587r531085_rule
+      - V-216587
+
+- name: "MEDIUM | CISC-RT-000400 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to transport management traffic to the Network Operations Center (NOC) via dedicated circuit, MPLS/VPN service, or IPsec tunnel."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000400
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000400
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000009
+      - SV-216588r531085_rule
+      - V-216588	
+- name: "MEDIUM | CISC-RT-000410 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to forward only authorized management traffic to the Network Operations Center (NOC)."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000410
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000410
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000010
+      - SV-216587r531085_rule	
+      - V-216589
+
+- name: "MEDIUM | CISC-RT-000420 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to have separate IGP instances for the managed network and management network."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000420
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000420
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000011
+      - SV-216590r531085_rule 
+      - V-216590
+
+- name: "MEDIUM | CISC-RT-000430 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to not redistribute routes between the management network routing domain and the managed network routing domain."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000430
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000430
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000012
+      - SV-216591r531085_rule	
+      - V-216591
+
+- name: "MEDIUM | CISC-RT-000440 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to block any traffic destined to itself that is not sourced from the OOBM network or the Network Operations Center (NOC)."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000440
+  tags:
+      - CISC-RT-000440
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000011
+      - SV-216592r531085_rule
+      - V-216592
+
+- name: "MEDIUM | CISC-RT-000450 | PATCH | The Cisco router must be configured to only permit management traffic that ingresses and egresses the out-of-band management (OOBM) interface."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000450
+  tags:
+      - CISC-RT-000450
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000012
+      - SV-216593r531085_rule
+      - V-216593
+
+- name: "MEDIUM | CISC-RT-000460 | PATCH | The Cisco router providing connectivity to the Network Operations Center (NOC) must be configured to forward all in-band management traffic via an IPsec tunnel."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000460
+      - not cisc_rt_dodin_backbone 
+  tags:
+      - CISC-RT-000460
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000013
+      - SV-216594r531085_rule
+      - V-216594
+
+- name: "MEDIUM | CISC-RT-000490 | PATCH | The Cisco BGP router must be configured to reject inbound route advertisements for any Bogon prefixes."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000490
+  tags:
+      - CISC-RT-000490
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000002
+      - SV-216597r531085_rule
+      - V-216597
+
+- name: "MEDIUM | CISC-RT-000500 | PATCH | The Cisco BGP router must be configured to reject inbound route advertisements for any prefixes belonging to the local autonomous system (AS)."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000500
+  tags:
+      - CISC-RT-000500
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000003
+      - SV-216598r531085_rule
+      - V-216598
+
+- name: "MEDIUM | CISC-RT-000510 | PATCH | The Cisco BGP router must be configured to reject inbound route advertisements from a customer edge (CE) router for prefixes that are not allocated to that customer."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000510
+  tags:
+      - CISC-RT-000510
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000004
+      - SV-216599r531085_rule
+      - V-216599
+
+- name: "MEDIUM | CISC-RT-000520 | PATCH | The Cisco BGP router must be configured to reject outbound route advertisements for any prefixes that do not belong to any customers or the local autonomous system (AS)."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000520
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000520
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000005
+      - SV-216600r531085_rule
+      - V-216600
+
+- name: "MEDIUM | CISC-RT-000530 | PATCH | The Cisco BGP router must be configured to reject outbound route advertisements for any prefixes belonging to the IP core."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000530
+  tags:
+      - CISC-RT-000530
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000006
+      - SV-216601r531085_rule
+      - V-216601
+
+- name: "MEDIUM | CISC-RT-000560 | PATCH | The Cisco BGP router must be configured to use the maximum prefixes feature to protect against route table flooding and prefix de-aggregation attacks."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000560
+  tags:
+      - CISC-RT-000560
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000117
+      - SV-216604r531085_rule	
+      - V-216604
+
+- name: "MEDIUM | CISC-RT-000620 | PATCH | The Cisco MPLS router must be configured to have TTL Propagation disabled."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000620
+  tags:
+      - CISC-RT-000620
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000004
+      - SV-216610r531085_rule	
+      - V-216610	
+
+- name: "MEDIUM | CISC-RT-000650 | PATCH | The Cisco PE router must be configured to have each VRF with the appropriate Route Distinguisher (RD)."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000650
+  tags:
+      - CISC-RT-000650
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000007
+      - SV-216613r531085_rule
+      - V-216613
+
+- name: "MEDIUM | CISC-RT-000660 | PATCH | The Cisco PE router must be configured to have each VRF with the appropriate Route Distinguisher (RD)."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000660
+  tags:
+      - CISC-RT-000660
+      - CAT2
+      - CCI-001958
+      - SRG-NET-000343-RTR-000001
+      - SV-216614r531085_rule
+      - V-216614
+
+- name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000740
+  tags:
+      - CISC-RT-000740
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000205-RTR-000008
+      - SV-216617r531085_rule
+      - V-216617
+
+- name: "MEDIUM | CISC-RT-000780 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy to limit the effects of packet flooding denial-of-service (DoS) attacks."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000780
+  tags:
+      - CISC-RT-000780
+      - CAT2
+      - CCI-001097
+      - SRG-NET-000193-RTR-000112
+      - SV-216621r531085_rule
+      - V-216621
+
+- name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000790
+  tags:
+      - CISC-RT-000790
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000003
+      - SV-216622r531085_rule
+      - V-216622
+
+- name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000800
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000800
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000004
+      - SV-216623r531085_rule
+      - V-216623
+
+- name: "MEDIUM | CISC-RT-000850 | PATCH | The Cisco multicast Rendezvous Point (RP) must be configured to rate limit the number of Protocol Independent Multicast (PIM) Register messages."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000850
+  tags:
+      - CISC-RT-000850
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000121
+      - SV-216628r531085_rule
+      - V-216628
+
+- name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000870
+  tags:
+      - CISC-RT-000870
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000115
+      - SV-216630r531085_rule	
+      - V-216630
+
+- name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000880
+  tags:
+      - CISC-RT-000880
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000122
+      - SV-216631r531085_rule
+      - V-216631
+
+- name: "MEDIUM | CISC-RT-000890 | PATCH | The Cisco multicast Designated Router (DR) must be configured to set the shortest-path tree (SPT) threshold to infinity to minimalize source-group (S, G) state within the multicast topology where Any Source Multicast (ASM) is deployed."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000890
+  tags:
+      - CISC-RT-000890
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000123
+      - SV-216632r531085_rule
+      - V-216632
+
+- name: "MEDIUM | CISC-RT-000900 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to only accept MSDP packets from known MSDP peers."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000900
+  tags:
+      - CISC-RT-000900
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000116
+      - SV-216633r531085_rule
+      - V-216633
+
+- name: "MEDIUM | CISC-RT-000910 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to authenticate all received MSDP packets."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000910
+  tags:
+      - CISC-RT-000910
+      - CAT2
+      - CCI-001958
+      - SRG-NET-000343-RTR-000002
+      - SV-216634r531085_rule
+      - V-216634
+
+- name: "MEDIUM | CISC-RT-000020 | PATCH | The Cisco router must be configured to implement message authentication for all control plane protocols."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000020
+  tags:
+      - CISC-RT-000020
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000230-RTR-000001
+      - SV-216986r538969_rule
+      - V-216986
+
+- name: "MEDIUM | CISC-RT-000030 | PATCH | The Cisco router must be configured to use keys with a duration not exceeding 180 days for authenticating routing protocol messages."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000030
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000030
+      - CAT2
+      - CCI-002205
+      - SRG-NET-000230-RTR-000003
+      - SV-216987r531085_rule	
+      - V-216987
+
+- name: "MEDIUM | CISC-RT-000080 | PATCH | The Cisco router must not be configured to have any feature enabled that calls home to the vendor."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000080
+  tags:
+      - CISC-RT-000080
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000131-RTR-000083
+      - SV-216988r538977_rule	
+      - V-216988
+
+- name: "MEDIUM | CISC-RT-000350 | PATCH | The Cisco perimeter router must be configured to block all packets with any IP options."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000350
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000350
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000205-RTR-000015
+      - SV-216990r531085_rule
+      - V-216990
+
+- name: "MEDIUM | CISC-RT-000480 | PATCH | The Cisco BGP router must be configured to use a unique key for each autonomous system (AS) that it peers with."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000480
+  tags:
+      - CISC-RT-000480
+      - CAT2
+      - CCI-002205
+      - SRG-NET-000230-RTR-000002
+      - SV-216992r531085_rule	
+      - V-216992
+
+- name: "MEDIUM | CISC-RT-000750 | PATCH | The Cisco PE router must be configured to drop all packets with any IP options."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000750
+  tags:
+      - CISC-RT-000750
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000205-RTR-000016
+      - SV-216993r531085_rule
+      - V-216993
+
+- name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000235
+  tags:
+      - CISC-RT-000235
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000100
+      - SV-229030r531380_rule
+      - V-229030
+
+- name: "MEDIUM | CISC-RT-000237 | PATCH | The Cisco router must not be configured to use IPv6 Site Local Unicast addresses."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000237
+  tags:
+      - CISC-RT-000237
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000013
+      - SV-230041r532998_rule	
+      - V-230041
+
+- name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000391
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000391
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000014
+      - SV-230044r533005_rule
+      - V-230044
+
+- name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000392
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000392
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000200
+      - SV-230047r533184_rule
+      - V-230047
+
+- name: "MEDIUM | CISC-RT-000393 | PATCH | The Cisco perimeter router must be configured drop IPv6 packets with a Routing Header type 0, 1, or 3-255."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000393
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000393
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000201
+      - SV-230050r533192_rule
+      - V-230050
+
+- name: "MEDIUM | CISC-RT-000394 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Hop-by-Hop header with invalid option type values."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000394
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000394
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000202
+      - SV-230145r538505_rule
+      - V-230145
+
+- name: "MEDIUM | CISC-RT-000395 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Destination Option header with invalid option type values."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000395
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000395
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000203
+      - SV-230149r538592_rule
+      - V-230149
+
+- name: "MEDIUM | CISC-RT-000396 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing an extension header with the Endpoint Identification option."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000396
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000396
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000204
+      - SV-230152r538599_rule
+      - V-230152
+
+- name: "MEDIUM | CISC-RT-000397 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing the NSAP address option within Destination Option header."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000397
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000397
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000205
+      - SV-230155r538607_rule
+      - V-230155
+
+- name: "MEDIUM | CISC-RT-000398 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Hop-by-Hop or Destination Option extension header with an undefined option type."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000398
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000398
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000206
+      - SV-230158r538614_rule
+      - V-230158
+

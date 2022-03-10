@@ -1,0 +1,369 @@
+---
+- name: "LOW | CISC-RT-000060 | PATCH | The Cisco router must be configured to have all inactive interfaces disabled."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000060
+  tags:
+      - CISC-RT-000060
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000007
+      - SV-216556r531085_rule
+      - V-216556
+
+- name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000070
+  tags:
+      - CISC-RT-000070
+      - CAT2
+      - CCI-000381
+      - SRG-NET-000131-RTR-000035
+      - SV-216557r531085_rule
+      - V-216557
+
+- name: "LOW | CISC-RT-000160 | PATCH | The Cisco router must be configured to have IP directed broadcast disabled on all interfaces."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000160
+  tags:
+      - CISC-RT-000160
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000112
+      - SV-216564r531085_rule
+      - V-216564
+
+- name: "LOW | CISC-RT-000200 | PATCH | The Cisco router must be configured to log all packets that have been dropped at interfaces via an ACL."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000200
+  tags:
+      - CISC-RT-000200
+      - CAT2
+      - CCI-000134
+      - SRG-NET-000078-RTR-000001
+      - SV-216568r531085_rule
+      - V-216568
+
+- name: "LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000230
+  tags:
+      - CISC-RT-000230
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000001
+      - SV-216571r531085_rule
+      - V-216571
+
+- name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000300
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000300
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000010
+      - SV-216578r531085_rule	
+      - V-216578
+
+- name: "LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000360
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000360
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000111
+      - SV-216584r531085_rule
+      - V-216584
+
+- name: "LOW | CISC-RT-000370 | PATCH | The Cisco perimeter router must be configured to have Cisco Discovery Protocol (CDP) disabled on all external interfaces."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000370
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000370
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000111
+      - SV-216585r531085_rule
+      - V-216585
+
+- name: "LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000540
+  tags:
+      - CISC-RT-000540
+      - CAT2
+      - CCI-000032
+      - SRG-NET-000018-RTR-000006
+      - SV-216602r531085_rule
+      - V-216602
+
+- name: "LOW | CISC-RT-000550 | PATCH | The Cisco BGP router must be configured to reject route advertisements from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000550
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000550
+      - CAT2
+      - CCI-000032
+      - SRG-NET-000018-RTR-000010
+      - SV-216603r531085_rule
+      - V-216603
+
+- name: "LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000570
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000570
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000118
+      - SV-216605r531085_rule
+      - V-216605
+
+- name: "LOW | CISC-RT-000580 | PATCH | The Cisco BGP router must be configured to use its loopback address as the source address for iBGP peering sessions."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000580
+  tags:
+      - CISC-RT-000580
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000001
+      - SV-216606r531085_rule
+      - V-216606
+
+- name: "LOW | CISC-RT-000590 | PATCH | The Cisco MPLS router must be configured to use its loopback address as the source address for LDP peering sessions."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000590
+  tags:
+      - CISC-RT-000590
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000002
+      - SV-216607r531085_rule	
+      - V-216607
+
+- name: "LOW | CISC-RT-000600 | PATCH | The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000600
+  tags:
+      - CISC-RT-000600
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000003
+      - SV-216608r531085_rule
+      - V-216608
+
+- name: "LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000610
+  tags:
+      - CISC-RT-000610
+      - CAT2
+      - CCI-001095
+      - SRG-NET-000193-RTR-000001
+      - SV-216609r531085_rule
+      - V-216609
+
+- name: "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000760
+  tags:
+      - CISC-RT-000760
+      - CAT2
+      - CCI-001095
+      - SRG-NET-000193-RTR-000113
+      - SV-216619r531085_rule
+      - V-216619
+
+- name: "LOW | CISC-RT-000770 | PATCH | The Cisco P router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000770
+  tags:
+      - CISC-RT-000770
+      - CAT2
+      - CCI-001095
+      - SRG-NET-000193-RTR-000114
+      - SV-216620r531085_rule
+      - V-216620
+
+- name: "LOW | CISC-RT-000810 | PATCH | The Cisco multicast edge router must be configured to establish boundaries for administratively scoped multicast traffic."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000810
+  tags:
+      - CISC-RT-000810
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000005
+      - SV-216624r531085_rule
+      - V-216624
+
+- name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000820
+  tags:
+      - CISC-RT-000820
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000120
+      - SV-216625r531085_rule
+      - V-216625
+
+- name: "LOW | CISC-RT-000830 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Register messages received from the Designated Router (DR) for any undesirable multicast groups and sources."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000830
+  tags:
+      - CISC-RT-000830
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000013
+      - SV-216626r531085_rule	
+      - V-216626
+
+- name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000840
+  tags:
+      - CISC-RT-000840
+      - CAT2
+      - CCI-001414
+      - SRG-NET-000019-RTR-000014
+      - SV-216627r531085_rule	
+      - V-216627
+
+- name: "LOW | CISC-RT-000860 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000860
+  tags:
+      - CISC-RT-000860
+      - CAT2
+      - CCI-002403
+      - SRG-NET-000364-RTR-000114
+      - SV-216629r531085_rule	
+      - V-216629
+
+- name: "LOW | CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000920
+  tags:
+      - CISC-RT-000920
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000007
+      - SV-216635r531085_rule
+      - V-216635
+
+- name: "LOW | CISC-RT-000930 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter source-active multicast advertisements to external MSDP peers to avoid global visibility of local-only multicast sources and groups."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000930
+  tags:
+      - CISC-RT-000930
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000008
+      - SV-216636r531085_rule
+      - V-216636
+
+- name: "LOW | CISC-RT-000940 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to limit the amount of source-active messages it accepts on a per-peer basis."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000940
+  tags:
+      - CISC-RT-000940
+      - CAT2
+      - CCI-001368
+      - SRG-NET-000018-RTR-000009
+      - SV-216637r531085_rule
+      - V-216637
+
+- name: "LOW | CISC-RT-000950 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to use a loopback address as the source address when originating MSDP traffic."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000950
+  tags:
+      - CISC-RT-000950
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000011
+      - SV-216638r531085_rule
+      - V-216638
+
+- name: "LOW | CISC-RT-000470 | PATCH | The Cisco BGP router must be configured to enable the Generalized TTL Security Mechanism (GTSM)."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000470
+  tags:
+      - CISC-RT-000470
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000124
+      - SV-216991r531085_rule
+      - V-216991
+
+- name: "LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000236
+  tags:
+      - CISC-RT-000236
+      - CAT2
+      - CCI-000366
+      - SRG-NET-000512-RTR-000012
+      - SV-230038r531386_rule
+      - V-230038

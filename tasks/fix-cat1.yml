@@ -1,0 +1,122 @@
+---
+
+- name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000130
+  tags:
+      - CISC-RT-000130
+      - CAT1
+      - CCI-001097
+      - SRG-NET-000205-RTR-000001
+      - SV-216561r531085_rule
+      - V-216561
+
+- name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception."
+  debug:
+    msg: "The Play has run because you are not on a DODIN Network"
+  when:
+      - cisc_rt_000240
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000240
+      - CAT1
+      - CCI-001109
+      - SRG-NET-000202-RTR-000001
+      - SV-216572r531085_rule
+      - V-216572
+
+- name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space."
+  debug:
+    msg: "test"
+  when:
+      - cisc_rt_000280
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000280
+      - CAT1
+      - CCI-001414
+      - SRG-NET-000019-RTR-000008
+      - SV-216576r531085_rule
+      - V-216576
+
+- name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000290
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000290
+      - CAT1
+      - CCI-001414
+      - SRG-NET-000019-RTR-000009
+      - SV-216577r531085_rule
+      - V-216577
+
+- name: "HIGH | CISC-RT-000630 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs."
+  debug:
+    msg: "test" 
+  when:
+      - cisc_rt_000630
+  tags:
+      - CISC-RT-000630
+      - CAT1
+      - CCI-000366
+      - SRG-NET-000512-RTR-000005
+      - SV-216611r531085_rule
+      - V-216611
+
+- name: "HIGH | CISC-RT-000640 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance with the appropriate Route Target (RT)."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000640
+  tags:
+      - CISC-RT-000640
+      - CAT1
+      - CCI-000366
+      - SRG-NET-000512-RTR-000006
+      - SV-216612r531085_rule
+      - V-216612
+
+- name: "HIGH | CISC-RT-000670 | PATCH | The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000670
+  tags:
+      - CISC-RT-000670
+      - CAT1
+      - CCI-000366
+      - SRG-NET-000512-RTR-000008
+      - SV-216615r531085_rule
+      - V-216615
+
+- name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000730
+  tags:
+      - CISC-RT-000730
+      - CAT1
+      - CCI-001097
+      - SRG-NET-000205-RTR-000007
+      - SV-216616r531085_rule
+      - V-216616
+
+- name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000310
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000310
+      - CAT1
+      - CCI-001094
+      - SRG-NET-000205-RTR-000014
+      - SV-216989r531085_rule
+      - V-216989
