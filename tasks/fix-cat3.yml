@@ -1,7 +1,8 @@
 ---
 - name: "LOW | CISC-RT-000060 | PATCH | The Cisco router must be configured to have all inactive interfaces disabled."
-  debug:
-    msg: "test"
+  ios_command:
+      commands:
+        - interface range {{  }}
   when:
       - cisc_rt_000060
   tags:
@@ -52,8 +53,11 @@
       - V-216568
 
 - name: "LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication."
-  debug:
-    msg: "test"
+  ios_command:
+      commands:
+        - line aux 0
+        - no exec
+        - transport input none
   when:
       - cisc_rt_000230
   tags:
