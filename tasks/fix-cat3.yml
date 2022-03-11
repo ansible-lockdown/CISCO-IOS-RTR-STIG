@@ -27,8 +27,10 @@
       - V-216557
 
 - name: "LOW | CISC-RT-000160 | PATCH | The Cisco router must be configured to have IP directed broadcast disabled on all interfaces."
-  debug:
-    msg: "test"
+  ios_command:
+      commands:
+        - interface range {{ iosrtr_all_interfaces }}
+        - no ip directed-broadcast
   when:
       - cisc_rt_000160
   tags:
