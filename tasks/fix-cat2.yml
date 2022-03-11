@@ -716,8 +716,10 @@
       - V-230041
 
 - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces."
-  debug:
-    msg: "test"
+  ios_command:
+      commands:
+        - interface range {{ iosrtr_external_ipv6_interfaces }}
+        - ipv6 nd ra suppress
   when:
       - cisc_rt_000391
       - not cisc_rt_dodin_backbone
@@ -730,8 +732,9 @@
       - V-230044
 
 - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets."
-  debug:
-    msg: "test" 
+  ios_command:
+      commands:
+        - interface range
   when:
       - cisc_rt_000392
       - not cisc_rt_dodin_backbone
