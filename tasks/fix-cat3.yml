@@ -14,8 +14,10 @@
       - V-216556
 
 - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled."
-  debug:
-    msg: "test"
+  ios_config:
+      lines: no {{ item }}
+  with_items:
+      - "{{ iosrtr_non_essential_serv }}"
   when:
       - cisc_rt_000070
   tags:

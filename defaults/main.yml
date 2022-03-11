@@ -44,6 +44,7 @@ cisc_rt_000310: false
 cisc_rt_000010: false
 cisc_rt_000040: false
 cisc_rt_000050: false
+cisc_rt_000090: false
 cisc_rt_000120: false
 cisc_rt_000140: false
 cisc_rt_000150: false
@@ -145,8 +146,8 @@ cisc_rt_000236: true
 # GigabitEthernet 1/0/8-10,GigabitEthernet 1/0/13  <--- Ports 8-10 and 13
 # GigabitEthernet 1/0/8-10,GigabitEthernet 1/0/25-28,GigabitEthernet 1/0/16-20 <--- Ports 8-10, 25-28, and 16-20
 
-# iosstig_trunk_ports
-iosstig_trunk_ports: "GigabitEthernet 1/0/2"
+# iosrtr_all_interfaces
+iosrtr_all_interfaces: "GigabitEthernet 1/0/2"
 # iosstig_access_ports
 # These ports are used in control 90 to set Root Guard on all switch ports connecting to access layer switches.
 iosstig_rootguard_access_ports: "GigabitEthernet 1/0/3"
@@ -158,7 +159,7 @@ iosstig_untrusted_ports: "GigabitEthernet 1/0/16-19,GigabitEthernet 1/0/11"
 iosstig_blackhole_ports: "GigabitEthernet 1/0/20-23,GigabitEthernet 1/0/25-28"
 
 
-
+# iosrtr_unused_ports
 
 
 
@@ -171,3 +172,48 @@ iosstig_blackhole_ports: "GigabitEthernet 1/0/20-23,GigabitEthernet 1/0/25-28"
 
 
 # Cat 3
+
+
+#CISC-RT-000070
+# Not all Cisco Routers support these services please make sure you check your documentation.
+# Review the router configuration to verify that the switch does not have any unnecessary 
+# or non-secure services enabled. 
+# For example, the following commands should not be in the configuration: 
+# - boot network
+# - ip boot server
+# - ip bootp server
+# - ip dns server
+# - ip identd
+# - ip finger
+# - ip http server
+# - ip rcmd rcp-enable
+# - ip rcmd rsh-enable
+# - service config
+# - service finger
+# - service tcp-small-servers
+# - service udp-small-servers
+# - service pad
+iosrtr_non_essential_serv:
+    - ip finger
+    - ip http server
+    - ip rcmd rcp-enable
+    - ip rcmd rsh-enable
+    - service config
+    - service finger
+    - service tcp-small-servers
+    - service udp-small-servers
+    - service pad
+
+
+
+
+
+
+
+
+
+# CISC-RT-000236
+# iosrtr_ipv6_hop_limit is the hop limit for Router Advertisement messages.
+# Configure the router to advertise a hop limit of at least 32 in Router Advertisement messages.
+# The fix text calls for a limit of 128. 
+iosrtr_ipv6_hop_limit: "128"
