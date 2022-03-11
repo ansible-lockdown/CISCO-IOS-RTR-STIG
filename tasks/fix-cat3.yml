@@ -356,8 +356,9 @@
       - V-216991
 
 - name: "LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments."
-  debug:
-    msg: "test"
+  ios_command:
+      commands:
+        - ipv6 hop-limit {{ iosrtr_ipv6_hop_limit }}
   when:
       - cisc_rt_000236
   tags:

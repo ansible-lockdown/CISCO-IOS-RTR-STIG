@@ -1,7 +1,7 @@
 ---
-iosrtrstig_cat1_patch: true
+iosrtrstig_cat1_patch: false
 iosrtrstig_cat2_patch: false
-iosrtrstig_cat3_patch: false
+iosrtrstig_cat3_patch: true
 
 # We've defined complexity-high to mean that we cannot automatically remediate
 # the rule in question.  In the future this might mean that the remediation
@@ -31,7 +31,7 @@ cisc_rt_dodin_backbone: true
 
 # CAT 1 rules
 cisc_rt_000130: false
-cisc_rt_000240: true
+cisc_rt_000240: false
 cisc_rt_000280: false
 cisc_rt_000290: false
 cisc_rt_000630: false
@@ -131,7 +131,7 @@ cisc_rt_000930: false
 cisc_rt_000940: false
 cisc_rt_000950: false
 cisc_rt_000470: false
-cisc_rt_000236: false
+cisc_rt_000236: true
 
 
 

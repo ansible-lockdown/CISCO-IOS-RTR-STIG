@@ -37,7 +37,20 @@
       - CCI-000803
       - SRG-NET-000168-RTR-000078
       - SV-216555r531085_rule
-      - V-216555   
+      - V-216555  
+
+- name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network."
+  debug:
+    msg: "test"  
+  when:
+      - cisc_rt_000090
+  tags:
+      - CISC-RT-000090
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000109
+      - SV-216559r531085_rule
+      - V-216559
 
 - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection."
   debug:
