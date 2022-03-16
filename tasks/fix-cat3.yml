@@ -364,11 +364,26 @@
       - V-216991
 
 - name: "LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments."
-  ios_command:
-      commands:
-        - ipv6 hop-limit {{ iosrtr_ipv6_hop_limit }}
+  block:
+    - name: "LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments. | Retrieve Current Ipv6 hop-limit."
+      ios_command:
+          commands:
+            - show running-config | include ipv6 hop-limit
+      register: iosrtr_ipv6hoplimit_check
+
+    - name: "LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments. | Set Fact For Current Limit"
+      set_fact:
+        iosrtr_ipv6hoplimit_current: "{{ iosrtr_ipv6hoplimit_check.stdout_lines | regex_findall('ipv6 hop-limit .*') | regex_replace('ipv6 hop-limit ', '') | regex_findall('[0-9]+') }}"
+
+    - name: "LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments. | Change Hop Count"
+      ios_config:
+        lines:
+            - ipv6 hop-limit {{ iosrtr_ipv6_hop_limit }}
+      when: 
+          - iosrtr_ipv6hoplimit_current|int != iosrtr_ipv6_hop_limit
   when:
       - cisc_rt_000236
+      - 
   tags:
       - CISC-RT-000236
       - CAT2

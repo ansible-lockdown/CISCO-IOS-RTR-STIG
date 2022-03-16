@@ -196,18 +196,23 @@ iosstig_blackhole_ports: "GigabitEthernet 1/0/20-23,GigabitEthernet 1/0/25-28"
 # - ip identd
 # - ip finger
 # - ip http server
-# - ip rcmd rcp-enable
-# - ip rcmd rsh-enable
+# - ip rcmd rcp-enable 
+# - ip rcmd rsh-enable **
 # - service config
 # - service finger
 # - service tcp-small-servers
 # - service udp-small-servers
 # - service pad
 iosrtr_non_essential_serv:
+    - boot network
+    - ip boot server
+    - ip bootp server
+    - ip dns server
+    - ip identd
     - ip finger
     - ip http server
-    - ip rcmd rcp-enable
-    - ip rcmd rsh-enable
+    - ip rcmd rcp-enable 
+    - ip rcmd rsh-enable **
     - service config
     - service finger
     - service tcp-small-servers
@@ -226,4 +231,4 @@ iosrtr_non_essential_serv:
 # iosrtr_ipv6_hop_limit is the hop limit for Router Advertisement messages.
 # Configure the router to advertise a hop limit of at least 32 in Router Advertisement messages.
 # The fix text calls for a limit of 128. 
-iosrtr_ipv6_hop_limit: "128"
+iosrtr_ipv6_hop_limit: "129"
