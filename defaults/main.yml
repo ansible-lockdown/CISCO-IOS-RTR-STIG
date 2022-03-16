@@ -109,7 +109,7 @@ cisc_rt_000060: false
 cisc_rt_000070: false
 cisc_rt_000160: false
 cisc_rt_000200: false
-cisc_rt_000230: false
+cisc_rt_000230: true
 cisc_rt_000300: false
 cisc_rt_000360: false
 cisc_rt_000370: false
@@ -132,7 +132,7 @@ cisc_rt_000930: false
 cisc_rt_000940: false
 cisc_rt_000950: false
 cisc_rt_000470: false
-cisc_rt_000236: true
+cisc_rt_000236: false
 
 
 
@@ -147,7 +147,7 @@ cisc_rt_000236: true
 # GigabitEthernet 1/0/8-10,GigabitEthernet 1/0/25-28,GigabitEthernet 1/0/16-20 <--- Ports 8-10, 25-28, and 16-20
 
 # iosrtr_all_interfaces
-iosrtr_all_interfaces: "GigabitEthernet 1/0/2"
+iosrtr_all_interfaces: "fastEthernet 0/0"
 
 # iosrtr_external_ipv6_interfaces
 # These are external IPv6-enabled interfaces.  

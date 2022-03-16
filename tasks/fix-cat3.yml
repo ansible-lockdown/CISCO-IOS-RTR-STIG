@@ -29,8 +29,8 @@
       - V-216557
 
 - name: "LOW | CISC-RT-000160 | PATCH | The Cisco router must be configured to have IP directed broadcast disabled on all interfaces."
-  ios_command:
-      commands:
+  ios_config:
+      lines:
         - interface range {{ iosrtr_all_interfaces }}
         - no ip directed-broadcast
   when:
@@ -57,11 +57,11 @@
       - V-216568
 
 - name: "LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication."
-  ios_command:
-      commands:
-        - line aux 0
+  ios_config:
+      lines:
         - no exec
         - transport input none
+      parents: line aux 0
   when:
       - cisc_rt_000230
   tags:
