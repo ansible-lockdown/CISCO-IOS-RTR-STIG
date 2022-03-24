@@ -105,7 +105,7 @@ cisc_rt_000397: false
 cisc_rt_000398: false
 
 # CAT 3 rules
-cisc_rt_000060: false
+cisc_rt_000060: true
 cisc_rt_000070: false
 cisc_rt_000160: false
 cisc_rt_000200: false
@@ -152,6 +152,9 @@ iosrtr_all_interfaces: "fastEthernet 0/0"
 # iosrtr_external_ipv6_interfaces
 # These are external IPv6-enabled interfaces.  
 iosrtr_external_ipv6_interfaces: "GigabitEthernet 1/0/1"
+
+# iosrtr_inactive_interfaces
+iosrtr_inactive_interfaces: "FastEthernet 1/12 - 14"
 
 
 
@@ -212,7 +215,7 @@ iosrtr_non_essential_serv:
     - ip finger
     - ip http server
     - ip rcmd rcp-enable 
-    - ip rcmd rsh-enable **
+    - ip rcmd rsh-enable
     - service config
     - service finger
     - service tcp-small-servers
