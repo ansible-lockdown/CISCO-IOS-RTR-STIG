@@ -107,8 +107,8 @@ cisc_rt_000398: false
 # CAT 3 rules
 cisc_rt_000060: false
 cisc_rt_000070: false
-cisc_rt_000160: true
-cisc_rt_000200: false
+cisc_rt_000160: false
+cisc_rt_000200: true
 cisc_rt_000230: false
 cisc_rt_000300: false
 cisc_rt_000360: false
@@ -133,13 +133,14 @@ cisc_rt_000940: false
 cisc_rt_000950: false
 cisc_rt_000470: false
 cisc_rt_000236: false
+cisc_rt_acl: false
 
 
 
 
 
 
-# Global Variables
+# Global Variables Interfaces
 # Here are some examples of the values expected in the range.
 # GigabitEthernet 1/0/8 <--- Port 8
 # GigabitEthernet 1/0/8-10 <--- Ports 8-10
@@ -155,6 +156,19 @@ iosrtr_external_ipv6_interfaces: "FastEthernet 0/0"
 
 # iosrtr_inactive_interfaces
 iosrtr_inactive_interfaces: "Ethernet 1/3"
+
+
+# Global Variables ACLs
+
+# Extended ACLs
+
+# iosrtr_ingress_filter_global_name is the name of the filt
+iosrtr_ingress_filter_global_name: "INGRESS_FILTER"
+
+
+
+
+
 
 
 
@@ -226,7 +240,8 @@ iosrtr_non_essential_serv:
 
 
 
-
+# CISC-RT-000200
+iosrtr_ingress_filter_name: '{{ iosrtr_ingress_filter_global_name }}'
 
 
 

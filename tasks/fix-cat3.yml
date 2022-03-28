@@ -45,8 +45,22 @@
       - V-216564
 
 - name: "LOW | CISC-RT-000200 | PATCH | The Cisco router must be configured to log all packets that have been dropped at interfaces via an ACL."
-  debug:
-    msg: "test"
+  ios_acls:
+      config:
+          - afi: ipv4
+            acls:
+            - name: '{{ iosrtr_ingress_filter_global_name }}'
+              acl_type: extended
+              aces:
+              - grant: deny
+                protocol: ip
+                source: 
+                  any: true            
+                destination:
+                  any: true
+                log:
+                  set: true
+      state: merged
   when:
       - cisc_rt_000200
   tags:
@@ -392,3 +406,33 @@
       - SRG-NET-000512-RTR-000012
       - SV-230038r531386_rule
       - V-230038
+
+- name: Gather Acl Facts
+  block:
+    - name: Use the ACLs resource module to gather the current config
+      ios_acls:
+        state: gathered
+      register: acls 
+
+    - name: Print ACLs To Screen
+      debug:
+        msg: "{{ acls }}"
+
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name: Write ACL Configuration to File
+      copy:
+        content: "{{ acls | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
+  when:
+      - cisc_rt_acl
+  tags:
+      - CISC-RT-000470
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000124
+      - SV-216991r531085_rule
+      - V-216991
