@@ -102,8 +102,9 @@
       - V-216578
 
 - name: "LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces."
-  debug:
-    msg: "test"
+  ios_config:
+      lines:
+        - no lldp run
   when:
       - cisc_rt_000360
       - not cisc_rt_dodin_backbone
@@ -407,32 +408,32 @@
       - SV-230038r531386_rule
       - V-230038
 
-- name: Gather Acl Facts
-  block:
-    - name: Use the ACLs resource module to gather the current config
-      ios_acls:
-        state: gathered
-      register: acls 
+# - name: Gather Acl Facts
+#   block:
+#     - name: Use the ACLs resource module to gather the current config
+#       ios_acls:
+#         state: gathered
+#       register: acls 
 
-    - name: Print ACLs To Screen
-      debug:
-        msg: "{{ acls }}"
+#     - name: Print ACLs To Screen
+#       debug:
+#         msg: "{{ acls }}"
 
-    - name: Create Inventory Directory
-      file:
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
-        state: directory
+#     - name: Create Inventory Directory
+#       file:
+#         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+#         state: directory
 
-    - name: Write ACL Configuration to File
-      copy:
-        content: "{{ acls | to_nice_yaml }}"
-        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
-  when:
-      - cisc_rt_acl
-  tags:
-      - CISC-RT-000470
-      - CAT2
-      - CCI-002385
-      - SRG-NET-000362-RTR-000124
-      - SV-216991r531085_rule
-      - V-216991
+#     - name: Write ACL Configuration to File
+#       copy:
+#         content: "{{ acls | to_nice_yaml }}"
+#         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
+#   when:
+#       - cisc_rt_acl
+#   tags:
+#       - CISC-RT-000470
+#       - CAT2
+#       - CCI-002385
+#       - SRG-NET-000362-RTR-000124
+#       - SV-216991r531085_rule
+#       - V-216991

@@ -22,8 +22,8 @@ change_requires_reboot: false
 # DODIN Backbone Applicable Check
 # If you are on a DODIN Backbone set the toggle to true.  This will skip the controls that arenot applicable 
 # for the STIG.  Setting to false will allow the controls to run.  
-########### Control 400 QUestionable for this review late ###########
-cisc_rt_dodin_backbone: true
+########### Control 400 Questionable for this review late ###########
+cisc_rt_dodin_backbone: false
 
 # These variables correspond with the STIG IDs defined in the STIG and allows you to enable/disable specific rules.
 # PLEASE NOTE: These work in coordination with the cat1, cat2, cat3 group variables. You must enable an entire group
@@ -108,7 +108,7 @@ cisc_rt_000398: false
 cisc_rt_000060: false
 cisc_rt_000070: false
 cisc_rt_000160: false
-cisc_rt_000200: true
+cisc_rt_000200: false
 cisc_rt_000230: false
 cisc_rt_000300: false
 cisc_rt_000360: false
@@ -150,9 +150,13 @@ cisc_rt_acl: false
 # iosrtr_all_interfaces
 iosrtr_all_interfaces: "FastEthernet 0/0 , Ethernet 1/0 - 3"
 
+#EXTERNAL FACING PORTS
 # iosrtr_external_ipv6_interfaces
 # These are external IPv6-enabled interfaces.  
 iosrtr_external_ipv6_interfaces: "FastEthernet 0/0"
+
+iosrtr_all_external_interfaces: "FastEthernet 0/0"
+
 
 # iosrtr_inactive_interfaces
 iosrtr_inactive_interfaces: "Ethernet 1/3"
@@ -160,9 +164,12 @@ iosrtr_inactive_interfaces: "Ethernet 1/3"
 
 # Global Variables ACLs
 
-# Extended ACLs
+# Standard ACLs
 
-# iosrtr_ingress_filter_global_name is the name of the filt
+
+
+# Extended ACLs
+# iosrtr_ingress_filter_global_name is the name of the filter
 iosrtr_ingress_filter_global_name: "INGRESS_FILTER"
 
 
@@ -170,20 +177,6 @@ iosrtr_ingress_filter_global_name: "INGRESS_FILTER"
 
 
 
-
-
-
-
-
-# iosstig_access_ports
-# These ports are used in control 90 to set Root Guard on all switch ports connecting to access layer switches.
-iosstig_rootguard_access_ports: "GigabitEthernet 1/0/3"
-# iosstig_userfacing_ports
-iosstig_userfacing_ports: "GigabitEthernet 1/0/4-10,GigabitEthernet 1/0/12-15"
-# iosstig_untrusted_ports
-iosstig_untrusted_ports: "GigabitEthernet 1/0/16-19,GigabitEthernet 1/0/11"
-# iosstig_blackhole_ports
-iosstig_blackhole_ports: "GigabitEthernet 1/0/20-23,GigabitEthernet 1/0/25-28"
 
 
 # iosrtr_unused_ports
