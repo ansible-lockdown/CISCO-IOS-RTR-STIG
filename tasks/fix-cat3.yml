@@ -103,13 +103,13 @@
 
 - name: "LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces."
   block:
-      - name: Get Global LLDP Status
+      - name: "LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces. | Get Global LLDP Status."
         ios_command:
           commands :
             - show run | include lldp run
         register: cisc_rt_000360_lldp_status 
 
-      - name: Disable LLDp On External If Global Enabled
+      - name: "LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces. | Disable LLDP On External Interfaces If Global Enabled."
         ios_config:
           lines:
             - interface {{ item }}
@@ -128,11 +128,27 @@
       - V-216584
 
 - name: "LOW | CISC-RT-000370 | PATCH | The Cisco perimeter router must be configured to have Cisco Discovery Protocol (CDP) disabled on all external interfaces."
-  debug:
-    msg: "test"
+  block:
+      - name: Get Global CDP Status
+        ios_command:
+          commands:
+            - show run | include no cdp run
+        register: cisc_rt_000360_cdp_status 
+
+      - name: Print Debug
+        debug:
+          msg: "{{ cisc_rt_000360_cdp_status }} "
+
+      - name: Disable CDP On External If Global Enabled
+        ios_config:
+          lines:
+            - interface {{ item }}
+            - no cdp enable
+        with_items: "{{ iosrtr_cdp_external_interfaces }}"
+        when: "'no cdp run' not in cisc_rt_000360_cdp_status.stdout"
   when:
       - cisc_rt_000370
-      - not cisc_rt_dodin_backbone
+      - not cisc_rt_dodin_backbone 
   tags:
       - CISC-RT-000370
       - CAT2

@@ -111,8 +111,8 @@ cisc_rt_000160: false
 cisc_rt_000200: false
 cisc_rt_000230: false
 cisc_rt_000300: false
-cisc_rt_000360: true
-cisc_rt_000370: false
+cisc_rt_000360: false
+cisc_rt_000370: true
 cisc_rt_000540: false
 cisc_rt_000550: false
 cisc_rt_000570: false
@@ -246,8 +246,17 @@ iosrtr_ipv6_hop_limit: "129"
 
 # CISC-RT-000360
 # iosrtr_lldp_external_interfaces is the external facing interfaces that will have lldp 
-# shut off if the end user wants to have lldp enabled globally.  If not and lldp is disbaled globally
+# disabled if the end user wants to have lldp enabled globally.  If not and lldp is disabled globally
 # then no interfaces will be modified.
 iosrtr_lldp_external_interfaces: 
+    - 'GigabitEthernet 0/3'
+    - 'GigabitEthernet 0/4'
+
+
+# CISC-RT-000370
+# iosrtr_cdp_external_interfaces is the external facing interfaces that will have cdp
+# disabled if the end user wants to have cdp enabled globally.  If not and cdp is disabled globally
+# then no interfaces will be modified.
+iosrtr_cdp_external_interfaces: 
     - 'GigabitEthernet 0/3'
     - 'GigabitEthernet 0/4'
