@@ -1,0 +1,6 @@
+changed: false
+failed: false
+gathered:
+    as_number: '10'
+    bgp:
+        log_neighbor_changes: true

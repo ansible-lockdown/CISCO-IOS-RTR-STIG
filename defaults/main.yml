@@ -112,8 +112,8 @@ cisc_rt_000200: false
 cisc_rt_000230: false
 cisc_rt_000300: false
 cisc_rt_000360: false
-cisc_rt_000370: true
-cisc_rt_000540: false
+cisc_rt_000370: false
+cisc_rt_000540: true
 cisc_rt_000550: false
 cisc_rt_000570: false
 cisc_rt_000580: false
@@ -134,6 +134,7 @@ cisc_rt_000950: false
 cisc_rt_000470: false
 cisc_rt_000236: false
 cisc_rt_acl: false
+cisc_rt_bgp: true
 
 
 
@@ -260,3 +261,10 @@ iosrtr_lldp_external_interfaces:
 iosrtr_cdp_external_interfaces: 
     - 'GigabitEthernet 0/3'
     - 'GigabitEthernet 0/4'
+
+
+# CISC-RT-000540
+# iosrtr_bgp_autonomous_system_number is the variable that will be set that is associated
+# with with your devices AS (Autonomous System) number that BGP peers will receive in 
+# the router advertisements.  
+iosrtr_bgp_autonomous_system_number: "10"
