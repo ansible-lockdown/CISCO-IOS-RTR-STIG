@@ -113,10 +113,10 @@ cisc_rt_000230: false
 cisc_rt_000300: false
 cisc_rt_000360: false
 cisc_rt_000370: false
-cisc_rt_000540: true
+cisc_rt_000540: false
 cisc_rt_000550: false
 cisc_rt_000570: false
-cisc_rt_000580: false
+cisc_rt_000580: true
 cisc_rt_000590: false
 cisc_rt_000600: false
 cisc_rt_000610: false
@@ -134,7 +134,7 @@ cisc_rt_000950: false
 cisc_rt_000470: false
 cisc_rt_000236: false
 cisc_rt_acl: false
-cisc_rt_bgp: true
+cisc_rt_bgp: false
 
 
 
@@ -181,6 +181,12 @@ iosrtr_ingress_filter_global_name: "INGRESS_FILTER"
 
 
 # iosrtr_unused_ports
+
+
+# CISC-RT-000540
+# CISC-RT-000580
+iosrtr_local_bgp_autonomous_system_number: "1123"
+
 
 
 
@@ -267,4 +273,41 @@ iosrtr_cdp_external_interfaces:
 # iosrtr_bgp_autonomous_system_number is the variable that will be set that is associated
 # with with your devices AS (Autonomous System) number that BGP peers will receive in 
 # the router advertisements.  
-iosrtr_bgp_autonomous_system_number: "10"
+###### THIS REMOVES CURRENT AS AND ALL SETTINGS WILL NEED TO COME BACK TO THIS TO
+###### VERIFY MERGE OPTION WORKS LATER.
+
+
+# CISC_RT_000550
+###### NEED TO FINISH ######
+###### NEED TO FINISH ######
+###### NEED TO FINISH ######
+###### NEED TO FINISH ######
+###### NEED TO FINISH ######
+###### NEED TO FINISH ######
+# iosrtr_bgp_neighbor_address is used in the control to reject route advertisements from CE ( Customer Edge Routers )
+# routers with an originating AS in the AS_PATH attribute that does not belong to that customer. All PE ( Provider Edge )
+# routers miust be configed to reject routes with an AS other then that belonging to customer.  
+iosrtr_bgp_neighbor_address: "70.70.70.70"
+
+
+
+
+
+
+# CISC_RT_000580
+# iosrtr_ibgp_neighbor_loopback_ip is the ip address of the iBGP router that is a neighbor router that is not considered 
+# a eBGP router.  This is in list form so if you only have one router you are connecting to internally then you may remove 
+# the second line item.  
+iosrtr_ibgp_neighbor_loopback: 
+    - '7.7.7.7'
+    - '8.8.8.8'
+# iosrtr_remote_as_number is the Autonomous System number of the router you are creating the neighbor relationship with.
+# this can be the same AS as the current router or another depending on how you have your network design setup.  
+# This is in list form so if you only have one router you are connecting to internally then you may remove 
+# the second line item.  This pairs with the iosrtr_ibgp_neighbor_loopback_ip in the variable above. 
+iosrtr_remote_as_number: 
+    - '1123'
+    - '2255'
+# iosrtr_loopback_interface is the interface configured to use a loopback address as the source address for 
+# iBGP peering sessions.
+iosrtr_loopback_interface: 'Loopback 0'

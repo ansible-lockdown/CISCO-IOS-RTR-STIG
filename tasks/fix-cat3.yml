@@ -175,8 +175,18 @@
       - V-216602
 
 - name: "LOW | CISC-RT-000550 | PATCH | The Cisco BGP router must be configured to reject route advertisements from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer."
-  debug:
-    msg: "test"
+  block:
+    - name: Add AS-PATH Access Lists
+      ios_config:
+        commands:
+          - ip as-path access-list 10 permit ^yy$
+          - ip as-path access-list 10 deny .*
+
+    - name: Apply Access List Inbound
+      ios_config:
+        commands:
+          - router bgp {{ iosrtr_bgp_autonomous_system_number }}
+          - neighbor {{ iosrtr_bgp_neighbor_address }} filter-list 10 in
   when:
       - cisc_rt_000550
       - not cisc_rt_dodin_backbone
@@ -203,8 +213,19 @@
       - V-216605
 
 - name: "LOW | CISC-RT-000580 | PATCH | The Cisco BGP router must be configured to use its loopback address as the source address for iBGP peering sessions."
-  debug:
-    msg: "test" 
+  ios_bgp:
+    config:
+      bgp_as: "{{ iosrtr_local_bgp_autonomous_system_number }}"
+      address_family:
+        - afi: ipv4
+      neighbors:
+        - neighbor: "{{ item.0 }}"
+          remote_as: "{{ item.1 }}"
+          update_source: "{{ iosrtr_loopback_interface }}"
+    operation: merge
+  with_together:
+    - "{{ iosrtr_ibgp_neighbor_loopback }}"
+    - "{{ iosrtr_remote_as_number }}"
   when:
       - cisc_rt_000580
   tags:
@@ -440,36 +461,36 @@
       - V-230038
 
 
+- name: Gather Acl Facts
+  block:
+    - name: Use the ACLs resource module to gather the current config
+      ios_acls:
 
-# - name: Gather Acl Facts
-#   block:
-#     - name: Use the ACLs resource module to gather the current config
-#       ios_acls:
-#         state: gathered
-#       register: acls 
+        state: gathered
+      register: acls 
 
-#     - name: Print ACLs To Screen
-#       debug:
-#         msg: "{{ acls }}"
+    - name: Print ACLs To Screen
+      debug:
+        msg: "{{ acls }}"
 
-#     - name: Create Inventory Directory
-#       file:
-#         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
-#         state: directory
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
 
-#     - name: Write ACL Configuration to File
-#       copy:
-#         content: "{{ acls | to_nice_yaml }}"
-#         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
-#   when:
-#       - cisc_rt_acl
-#   tags:
-#       - CISC-RT-000470
-#       - CAT2
-#       - CCI-002385
-#       - SRG-NET-000362-RTR-000124
-#       - SV-216991r531085_rule
-#       - V-216991
+    - name: Write ACL Configuration to File
+      copy:
+        content: "{{ acls | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
+  when:
+      - cisc_rt_acl
+  tags:
+      - CISC-RT-000470
+      - CAT2
+      - CCI-002385
+      - SRG-NET-000362-RTR-000124
+      - SV-216991r531085_rule
+      - V-216991
 
 
 - name: Gather BGP Facts
