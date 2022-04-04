@@ -1,9 +1,12 @@
 ---
 - name: "LOW | CISC-RT-000060 | PATCH | The Cisco router must be configured to have all inactive interfaces disabled."
   ios_config:
-      lines:
-        - interface range {{ iosrtr_inactive_interfaces }}
-        - shutdown
+    parents:
+      - interface {{ item }}
+    lines:
+      - shutdown
+  with_items:
+      - "{{ iosrtr_inactive_interfaces }}"    
   when:
       - cisc_rt_000060
   tags:
