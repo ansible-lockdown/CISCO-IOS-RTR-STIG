@@ -116,12 +116,12 @@ cisc_rt_000370: false
 cisc_rt_000540: false
 cisc_rt_000550: false
 cisc_rt_000570: false
-cisc_rt_000580: true
+cisc_rt_000580: false
 cisc_rt_000590: false
 cisc_rt_000600: false
 cisc_rt_000610: false
 cisc_rt_000760: false
-cisc_rt_000770: false
+cisc_rt_000770: true
 cisc_rt_000810: false
 cisc_rt_000820: false
 cisc_rt_000830: false
@@ -149,7 +149,12 @@ cisc_rt_bgp: false
 # GigabitEthernet 1/0/8-10,GigabitEthernet 1/0/25-28,GigabitEthernet 1/0/16-20 <--- Ports 8-10, 25-28, and 16-20
 
 # iosrtr_all_interfaces
-iosrtr_all_interfaces: "FastEthernet 0/0 , Ethernet 1/0 - 3"
+iosrtr_all_interfaces: 
+    - FastEthernet 0/0
+    - Ethernet 1/0
+    - Ethernet 1/1
+    - Ethernet 1/2
+    - Ethernet 1/3
 
 #EXTERNAL FACING PORTS
 # iosrtr_external_ipv6_interfaces
@@ -307,7 +312,45 @@ iosrtr_ibgp_neighbor_loopback:
 # the second line item.  This pairs with the iosrtr_ibgp_neighbor_loopback_ip in the variable above. 
 iosrtr_remote_as_number: 
     - '1123'
-    - '2255'
+    - '1123'
 # iosrtr_loopback_interface is the interface configured to use a loopback address as the source address for 
 # iBGP peering sessions.
 iosrtr_loopback_interface: 'Loopback 0'
+
+
+
+
+
+# CISC-RT-000770
+iosrtr_classmap_name:
+    - PREFERRED_DATA
+    - CONTROL_PLANE
+    - VIDEO
+    - VOICE
+    - C2_VOICE
+
+iosrtr_classmap_dscp_value:
+    - af33
+    - cs6
+    - af41
+    - ef
+    - '47'
+
+
+iosrtr_policymap_name:
+    - CONTROL_PLANE
+    - C2_VOICE
+    - VOICE
+    - VIDEO
+    - PREFERRED_DATA
+    - class-default
+
+# By default in IOS a QoS policy applied will only reserve up to 75% of a link's available bandwidth. 
+# The idea behind this is to leave a bit of headroom for routing protocols and other critical traffic which might not otherwise be accounted for in a QoS policy. 
+iosrtr_policymap_bandwidth_percentage:
+    - '10'
+    - '10'
+    - '15'
+    - '25'
+    - '25'
+    - '15'

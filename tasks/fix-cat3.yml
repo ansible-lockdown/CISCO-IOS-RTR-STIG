@@ -31,9 +31,11 @@
 
 - name: "LOW | CISC-RT-000160 | PATCH | The Cisco router must be configured to have IP directed broadcast disabled on all interfaces."
   ios_config:
+      parents: 
+        - interface {{ item }}
       lines:
-        - interface range {{ iosrtr_all_interfaces }}
         - no ip directed-broadcast
+  with_items: "{{ iosrtr_all_interfaces }}"
   when:
       - cisc_rt_000160
   tags:
@@ -289,8 +291,37 @@
       - V-216619
 
 - name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
-  debug:
-    msg: "test"
+  block:
+    - name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure Class Maps And DSCP."
+      ios_config:
+        parents:
+            - class-map match-all {{ item.0 }}
+        lines:
+            - match ip dscp {{ item.1 }}
+      with_together:
+        - "{{ iosrtr_classmap_name }}"
+        - "{{ iosrtr_classmap_dscp_value }}"
+
+    - name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure A Policy Map."
+      ios_config:
+        parents: 
+          - policy-map QOS_POLICY
+          - class {{ item.0 }}
+        lines:
+          - priority percent {{ item.1 }}
+      with_together:
+        - "{{ iosrtr_policymap_name }}"
+        - "{{ iosrtr_policymap_bandwidth_percentage }}"
+      
+    - name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Apply Service Policy To All Interfaces."
+      ios_config:
+        parents:
+          - interface {{ item }}
+        lines:
+          - max-reserved-bandwidth 85
+          - service-policy output QOS_POLICY
+      with_items:
+          - "{{ iosrtr_all_interfaces }}"    
   when:
       - cisc_rt_000770
   tags:
