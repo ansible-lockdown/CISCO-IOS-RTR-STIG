@@ -120,8 +120,8 @@ cisc_rt_000580: false
 cisc_rt_000590: false
 cisc_rt_000600: false
 cisc_rt_000610: false
-cisc_rt_000760: false
-cisc_rt_000770: true
+cisc_rt_000760: true
+cisc_rt_000770: false
 cisc_rt_000810: false
 cisc_rt_000820: false
 cisc_rt_000830: false
@@ -321,7 +321,7 @@ iosrtr_loopback_interface: 'Loopback 0'
 
 
 
-# CISC-RT-000770
+# CISC-RT-000760
 iosrtr_classmap_name:
     - PREFERRED_DATA
     - CONTROL_PLANE

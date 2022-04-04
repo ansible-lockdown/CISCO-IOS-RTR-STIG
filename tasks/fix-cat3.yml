@@ -277,22 +277,13 @@
       - SV-216609r531085_rule
       - V-216609
 
-- name: "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
-  debug:
-    msg: "test"
-  when:
-      - cisc_rt_000760
-  tags:
-      - CISC-RT-000760
-      - CAT2
-      - CCI-001095
-      - SRG-NET-000193-RTR-000113
-      - SV-216619r531085_rule
-      - V-216619
-
-- name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+- name: |
+        "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+        "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
   block:
-    - name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure Class Maps And DSCP."
+    - name: | 
+            "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+            "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure Class Maps And DSCP."
       ios_config:
         parents:
             - class-map match-all {{ item.0 }}
@@ -302,7 +293,9 @@
         - "{{ iosrtr_classmap_name }}"
         - "{{ iosrtr_classmap_dscp_value }}"
 
-    - name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure A Policy Map."
+    - name: |
+            "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+            "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure A Policy Map."
       ios_config:
         parents: 
           - policy-map QOS_POLICY
@@ -313,7 +306,9 @@
         - "{{ iosrtr_policymap_name }}"
         - "{{ iosrtr_policymap_bandwidth_percentage }}"
       
-    - name: "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Apply Service Policy To All Interfaces."
+    - name: |
+            "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+            "LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Apply Service Policy To All Interfaces."
       ios_config:
         parents:
           - interface {{ item }}
@@ -323,13 +318,18 @@
       with_items:
           - "{{ iosrtr_all_interfaces }}"    
   when:
-      - cisc_rt_000770
+      - cisc_rt_000760 or 
+        cisc_rt_000770 
   tags:
+      - CISC-RT-000760
       - CISC-RT-000770
       - CAT2
       - CCI-001095
+      - SRG-NET-000193-RTR-000113
       - SRG-NET-000193-RTR-000114
+      - SV-216619r531085_rule
       - SV-216620r531085_rule
+      - V-216619
       - V-216620
 
 - name: "LOW | CISC-RT-000810 | PATCH | The Cisco multicast edge router must be configured to establish boundaries for administratively scoped multicast traffic."
