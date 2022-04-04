@@ -77,11 +77,21 @@
       - V-216568
 
 - name: "LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication."
-  ios_config:
-      lines:
-        - no exec
-        - transport input none
-      parents: line aux 0
+  block:
+    - name: "LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication. | Check For Aux Line No Exec."
+      ios_command:
+        commands:
+          - show run | section line aux 0 | no exec
+      register: cisc_rt_000230_line_aux_output
+
+    - name: "LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication. | Fix Line Aux No Exec."
+      ios_config:
+        parents: 
+          - line aux 0
+        lines:
+          - no exec
+          - transport input none
+      when: "'no exec' not in cisc_rt_000230_line_aux_output.stdout" 
   when:
       - cisc_rt_000230
   tags:

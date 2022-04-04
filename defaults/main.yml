@@ -105,11 +105,11 @@ cisc_rt_000397: false
 cisc_rt_000398: false
 
 # CAT 3 rules
-cisc_rt_000060: true
+cisc_rt_000060: false
 cisc_rt_000070: false
 cisc_rt_000160: false
 cisc_rt_000200: false
-cisc_rt_000230: false
+cisc_rt_000230: true
 cisc_rt_000300: false
 cisc_rt_000360: false
 cisc_rt_000370: false
