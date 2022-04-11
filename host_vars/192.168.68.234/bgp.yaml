@@ -1,9 +1,6 @@
 changed: false
 failed: false
 gathered:
-    as_number: '1123'
+    as_number: '1'
     bgp:
         log_neighbor_changes: true
-    neighbor:
-    -   address: 7.7.7.7
-        remote_as: 1123

@@ -38,7 +38,8 @@
         - interface {{ item }}
       lines:
         - no ip directed-broadcast
-  with_items: "{{ iosrtr_all_interfaces }}"
+  with_items: 
+      - "{{ iosrtr_all_interfaces }}"
   when:
       - cisc_rt_000160
   tags:
@@ -103,8 +104,97 @@
       - V-216571
 
 - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems."
-  debug:
-    msg: "test"
+  block:
+    - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Configure Prefix List For Any Static Routes W/ Alternate Gateway as Next Hop." 
+      ios_prefix_lists:
+        config:
+          - afi: ipv4
+            prefix_lists:
+              - name: ISP_PREFIX
+                description: 
+                entries:
+                  - action: permit
+                    sequence: "{{ item.0 }}"
+                    prefix: "{{ item.1 }}"
+        state: merged
+      with_together:
+        - "{{ iosrtr_static_route_sequence_number }}"
+        - "{{ iosrtr_static_routes_to_alternate_gateway }}"
+      when: 
+        - (iosrtr_ospf_staticroute_redistributed) or 
+          (iosrtr_eigrp_staticroute_redistributed) or 
+          (iosrtr_rip_staticroute_redistributed) or 
+          (iosrtr_bgp_staticroute_redistributed)
+
+
+    - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Configure Route Map That Will Deny The Static Routes To ISP."
+      ios_route_maps:
+          config:
+              - entries:
+                - sequence: 10
+                  action: deny
+                  match:
+                    ip:
+                        address:
+                            prefix_lists:
+                            - ISP_PREFIX
+                - sequence: 20
+                  action: permit
+                  continue_entry:
+                    entry_sequence: 20
+                  match:
+                    ip:
+                        address:
+                            prefix_lists:
+                route_map: FILTER_ISP_STATIC              
+          state: merged
+      when: 
+        - (iosrtr_ospf_staticroute_redistributed) or 
+          (iosrtr_eigrp_staticroute_redistributed) or 
+          (iosrtr_rip_staticroute_redistributed) or 
+          (iosrtr_bgp_staticroute_redistributed)
+
+    - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Apply Route Map to OSPF."
+      ios_config:
+        parents:
+          - router ospf {{ item }}
+        lines:
+          - redistribute static route-map FILTER_ISP_STATIC
+      with_items:
+      - "{{ iosrtr_ospf_router_number }}"
+      when: 
+      - iosrtr_ospf_staticroute_redistributed
+
+    - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Apply Route Map to EIGRP."
+      ios_config:
+        parents:
+          - router eigrp {{ item }}
+        lines:
+          - redistribute static route-map FILTER_ISP_STATIC
+      with_items:
+          - "{{ iosrtr_eigrp_router_number }}"
+      when: 
+      - iosrtr_eigrp_staticroute_redistributed
+
+    - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. Apply Route Map to RIP."
+      ios_config:
+        parents:
+            - router rip 
+        lines:
+            - redistribute static route-map FILTER_ISP_STATIC
+      when: 
+          - iosrtr_rip_staticroute_redistributed
+
+    - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Apply Route Map to BGP."
+      ios_config:
+        parents:
+            - router bgp {{ item }}
+        lines:
+            - redistribute static route-map FILTER_ISP_STATIC
+      with_items:
+      - "{{ iosrtr_bgp_router_number }}"
+      when: 
+          - iosrtr_bgp_staticroute_redistributed
   when:
       - cisc_rt_000300
       - not cisc_rt_dodin_backbone
@@ -505,6 +595,13 @@
       - V-230038
 
 
+
+
+
+
+
+
+
 - name: Gather Acl Facts
   block:
     - name: Use the ACLs resource module to gather the current config
@@ -528,13 +625,6 @@
         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
   when:
       - cisc_rt_acl
-  tags:
-      - CISC-RT-000470
-      - CAT2
-      - CCI-002385
-      - SRG-NET-000362-RTR-000124
-      - SV-216991r531085_rule
-      - V-216991
 
 
 - name: Gather BGP Facts
@@ -560,10 +650,63 @@
         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/bgp.yaml"
   when:
       - cisc_rt_bgp
-  tags:
-      - CISC-RT-000470
-      - CAT2
-      - CCI-002385
-      - SRG-NET-000362-RTR-000124
-      - SV-216991r531085_rule
-      - V-216991
+
+
+- name: Gather Route Maps Facts
+  block:
+    - name: Use the Route Maps resource module to gather the current config
+      ios_route_maps:
+        config:
+        state: gathered
+      register: route_maps
+
+    - name: Print Route Maps To Screen
+      debug:
+        msg: "{{ route_maps }}"
+
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name: Write Route Maps Configuration to File
+      copy:
+        content: "{{ route_maps | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/route_maps.yaml"
+  when:
+      - cisc_rt_route_maps
+
+
+- name: Gather Prefix Lists Facts
+  block:
+    - name: Use the Prefix Lists resource module to gather the current config
+      ios_prefix_lists:
+        config:
+        state: gathered
+  when:
+      - cisc_rt_prefix_lists
+
+- name: Gather ospf roesources Facts
+  block:
+    - name: Use the ospf interfaces resource module to gather the current config
+      ios_ospfv2:
+        config:
+        state: gathered
+      register: ios_ospfv2
+
+    - name: Print Route Maps To Screen
+      debug:
+        msg: "{{ ios_ospfv2 }}"
+
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name: Write ospf_resources Configuration to File
+      copy:
+        content: "{{ ios_ospfv2 | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/ios_ospf_interfaces.yaml"
+  when:
+      - cisc_rt_ospf_maps
+
