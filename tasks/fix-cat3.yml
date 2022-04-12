@@ -119,7 +119,7 @@
         state: merged
       with_together:
         - "{{ iosrtr_static_route_sequence_number }}"
-        - "{{ iosrtr_static_routes_to_alternate_gateway }}"
+        - "{{ iosrtr_static_routes_ip_to_alternate_gateway }}"
       when: 
         - (iosrtr_ospf_staticroute_redistributed) or 
           (iosrtr_eigrp_staticroute_redistributed) or 
@@ -161,7 +161,7 @@
         lines:
           - redistribute static route-map FILTER_ISP_STATIC
       with_items:
-      - "{{ iosrtr_ospf_router_number }}"
+      - "{{ iosrtr_ospf_process_number }}"
       when: 
       - iosrtr_ospf_staticroute_redistributed
 
@@ -172,7 +172,7 @@
         lines:
           - redistribute static route-map FILTER_ISP_STATIC
       with_items:
-          - "{{ iosrtr_eigrp_router_number }}"
+          - "{{ iosrtr_eigrp_as_number }}"
       when: 
       - iosrtr_eigrp_staticroute_redistributed
 
@@ -192,7 +192,7 @@
         lines:
             - redistribute static route-map FILTER_ISP_STATIC
       with_items:
-      - "{{ iosrtr_bgp_router_number }}"
+      - "{{ iosrtr_bgp_as_router_number }}"
       when: 
           - iosrtr_bgp_staticroute_redistributed
   when:
