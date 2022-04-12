@@ -110,14 +110,14 @@ cisc_rt_000070: false
 cisc_rt_000160: false
 cisc_rt_000200: false
 cisc_rt_000230: false
-cisc_rt_000300: true
+cisc_rt_000300: false
 cisc_rt_000360: false
 cisc_rt_000370: false
 cisc_rt_000540: false
 cisc_rt_000550: false
 cisc_rt_000570: false
 cisc_rt_000580: false
-cisc_rt_000590: false
+cisc_rt_000590: true
 cisc_rt_000600: false
 cisc_rt_000610: false
 cisc_rt_000760: false
@@ -185,7 +185,7 @@ iosrtr_inactive_interfaces:
 iosrtr_ingress_filter_global_name: "INGRESS_FILTER"
 
 
-
+isortr_loopback_0_ip_address: 
 
 
 
@@ -194,9 +194,13 @@ iosrtr_ingress_filter_global_name: "INGRESS_FILTER"
 # iosrtr_unused_ports
 
 
+
+
+
+
 # CISC-RT-000540
 # CISC-RT-000580
-iosrtr_local_bgp_autonomous_system_number: "1123"
+iosrtr_local_bgp_autonomous_system_number: "1"
 
 
 
@@ -307,7 +311,7 @@ iosrtr_eigrp_as_number:
 iosrtr_rip_staticroute_redistributed: false
 # iosrtr_bgp_staticroute_redistributed is the toggle for a BGP protocol if the static routes connect to one of the three 
 # listed above you must toggle it to true.
-iosrtr_bgp_staticroute_redistributed: true
+iosrtr_bgp_staticroute_redistributed: false
 # iosrtr_bgp_router_number is the AS (Autonomous System) number that you are assiging to the router or the group the router 
 # is part of. Note: The current module used here does not allow for a replacement of the BGP number at the moment.  This
 # should be run on a new config or assign it to match your existing BGP AS you have assigned to check compliance.    
@@ -393,6 +397,11 @@ iosrtr_remote_as_number:
 # iosrtr_loopback_interface is the interface configured to use a loopback address as the source address for 
 # iBGP peering sessions.
 iosrtr_loopback_interface: 'Loopback 0'
+
+# CISC-RT-000590
+# iosrtr_loopback_interface_source is the loopback interface that is used for LDP peering sessions. 
+iosrtr_loopback_interface_source: 'Loopback 0'
+
 
 
 

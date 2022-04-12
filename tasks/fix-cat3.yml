@@ -342,8 +342,9 @@
       - V-216606
 
 - name: "LOW | CISC-RT-000590 | PATCH | The Cisco MPLS router must be configured to use its loopback address as the source address for LDP peering sessions."
-  debug:
-    msg: "test"
+  ios_config:
+    lines:
+      -  mpls ldp router-id {{ iosrtr_loopback_interface_source }}
   when:
       - cisc_rt_000590
   tags:
