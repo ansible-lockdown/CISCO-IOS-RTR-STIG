@@ -1,4 +1,11 @@
 ---
+- name: get version information
+  cisco.ios.ios_command:
+    commands:
+      - show version
+  vars:
+    ansible_persistent_log_messages: True
+
 - name: "LOW | CISC-RT-000060 | PATCH | The Cisco router must be configured to have all inactive interfaces disabled."
   ios_config:
     parents:
@@ -304,8 +311,31 @@
       - V-216603
 
 - name: "LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer."
-  debug:
-    msg: "test"
+  block:
+    - name: "Configure PREFIX LISTS Permit"
+      ios_prefix_lists:
+        config:
+          - afi: ipv4
+            prefix_lists:
+              - name: FILTER_PREFIX_LENGTH
+                description: 
+                entries:
+                  - action: "{{ item.action }}"
+                    prefix: "{{ item.prefix }}"
+                    ge: "{{ item.ge | default(omit) }}"
+                    le: "{{ item.le | default(omit) }}"
+                    sequence: "{{ item.seq }}"
+      with_items:
+        - "{{ iosrtr_flattened }}"
+    
+    - name: Apply To All eBGP (Exterior Border Gateway Protocol) Peer Neighbors
+      ios_config:
+        parents: 
+          - router bgp {{ iosrtr_local_bgp_autonomous_system_number }}
+        lines:
+          - neighbor {{ item }} prefix-list FILTER_PREFIX_LENGTH in
+      with_items:
+        - "{{ iosrtr_ebgp_neighbors }}"
   when:
       - cisc_rt_000570
       - not cisc_rt_dodin_backbone
@@ -327,7 +357,7 @@
         - neighbor: "{{ item.0 }}"
           remote_as: "{{ item.1 }}"
           update_source: "{{ iosrtr_loopback_interface }}"
-    operation: merge
+    operation: replaced
   with_together:
     - "{{ iosrtr_ibgp_neighbor_loopback }}"
     - "{{ iosrtr_remote_as_number }}"
@@ -695,7 +725,7 @@
         state: gathered
       register: ios_ospfv2
 
-    - name: Print Route Maps To Screen
+    - name: Print ospf interfaces To Screen
       debug:
         msg: "{{ ios_ospfv2 }}"
 

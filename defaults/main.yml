@@ -115,9 +115,9 @@ cisc_rt_000360: false
 cisc_rt_000370: false
 cisc_rt_000540: false
 cisc_rt_000550: false
-cisc_rt_000570: false
+cisc_rt_000570: true
 cisc_rt_000580: false
-cisc_rt_000590: true
+cisc_rt_000590: false
 cisc_rt_000600: false
 cisc_rt_000610: false
 cisc_rt_000760: false
@@ -200,7 +200,7 @@ isortr_loopback_0_ip_address:
 
 # CISC-RT-000540
 # CISC-RT-000580
-iosrtr_local_bgp_autonomous_system_number: "1"
+iosrtr_local_bgp_autonomous_system_number: "1123"
 
 
 
@@ -291,7 +291,7 @@ iosrtr_static_routes_ip_to_alternate_gateway:
 # protocols you are using that connect to.
 # iosrtr_ospf_staticroute_redistributed is the toggle for a OSPF protocol if the static routes connect to one of the three 
 # listed above you must toggle it to true.
-iosrtr_ospf_staticroute_redistributed: false
+iosrtr_ospf_staticroute_redistributed: true
 # iosrtr_ospf_process_number is the number assigned when setting up new ospf routes or assigned to exisitng routes
 # you already have configred in your router.  If you have more then one you can add them in list form here to be checked
 # for compliance if you know they are distributed into the netowrks listed above.  
@@ -377,6 +377,18 @@ iosrtr_bgp_neighbor_address: "70.70.70.70"
 
 
 
+# CISC_RT_000570
+# { seq: mandatory, action: mandatory, prefix: mandatory, ge: can be omitted, le: can be omitted }
+iosrtr_flattened:
+    - { seq: 5, action: permit, prefix: 13.0.0.0/8, ge: 10, le: 24 }
+    - { seq: 10, action: deny, prefix: 12.0.0.0/8, le: 32 }
+
+iosrtr_ebgp_neighbors:
+    - '1.1.1.1'
+
+
+
+
 
 
 
@@ -397,6 +409,8 @@ iosrtr_remote_as_number:
 # iosrtr_loopback_interface is the interface configured to use a loopback address as the source address for 
 # iBGP peering sessions.
 iosrtr_loopback_interface: 'Loopback 0'
+
+
 
 # CISC-RT-000590
 # iosrtr_loopback_interface_source is the loopback interface that is used for LDP peering sessions. 

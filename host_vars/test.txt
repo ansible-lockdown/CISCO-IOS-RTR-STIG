@@ -1,0 +1,1 @@
+ip prefix-list FILTER_PREFIX_LENGTH seq 15 permit 13.0.0.0/24 ge 8 le 24
