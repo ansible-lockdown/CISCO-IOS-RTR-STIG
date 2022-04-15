@@ -312,7 +312,7 @@
 
 - name: "LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer."
   block:
-    - name: "Configure PREFIX LISTS Permit"
+    - name: "LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer. | Configure Router To Limit Prefix Size"
       ios_prefix_lists:
         config:
           - afi: ipv4
@@ -328,7 +328,7 @@
       with_items:
         - "{{ iosrtr_flattened }}"
     
-    - name: Apply To All eBGP (Exterior Border Gateway Protocol) Peer Neighbors
+    - name: "LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer. | Apply To All eBGP (Exterior Border Gateway Protocol) Peer Neighbors."
       ios_config:
         parents: 
           - router bgp {{ iosrtr_local_bgp_autonomous_system_number }}

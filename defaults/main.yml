@@ -385,6 +385,7 @@ iosrtr_flattened:
 
 iosrtr_ebgp_neighbors:
     - '1.1.1.1'
+    - '13.13.13.13'
 
 
 
