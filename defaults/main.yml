@@ -115,10 +115,10 @@ cisc_rt_000360: false
 cisc_rt_000370: false
 cisc_rt_000540: false
 cisc_rt_000550: false
-cisc_rt_000570: true
+cisc_rt_000570: false
 cisc_rt_000580: false
 cisc_rt_000590: false
-cisc_rt_000600: false
+cisc_rt_000600: true
 cisc_rt_000610: false
 cisc_rt_000760: false
 cisc_rt_000770: false
@@ -417,9 +417,12 @@ iosrtr_loopback_interface_source: 'Loopback 0'
 
 
 # CISC-RT-000600
+iosrtr_opsf_process_id:
+    - '1'
+iosrtr_ospf_ldp_sync: true
 
-
-
+# iosrtr_isis_ldp_sync is to be set true if you habe 
+iosrtr_isis_ldp_sync: false      
 
 
 

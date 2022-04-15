@@ -386,15 +386,26 @@
       - V-216607
 
 - name: "LOW | CISC-RT-000600 | PATCH | The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange."
-  ios_config:
-    parents:
-      - router ospf {{ item }}
-    lines:
-      - mpls ldp sync
-  with_items: 
+  block:
+    - name: "LOW | CISC-RT-000600 | PATCH | The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange. | Configure the MPLS router to synchronize IGP and LDP In OSPF."
+      ios_config:
+        parents:
+          - router ospf {{ item }}
+        lines:
+          - mpls ldp sync
+      with_items: 
+          - "{{ iosrtr_opsf_process_id }}"
+      when:
+        - iosrtr_ospf_ldp_sync
 
-
-
+    - name: "LOW | CISC-RT-000600 | PATCH | The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange. | Configure the MPLS router to synchronize IGP and LDP In IS-IS."
+      ios_config:
+        parents: 
+          - router isis
+        lines:
+          - mpls ldp sync
+      when: 
+        - iosrtr_isis_ldp_sync
   when:
       - cisc_rt_000600
   tags:
