@@ -417,11 +417,15 @@ iosrtr_loopback_interface_source: 'Loopback 0'
 
 
 # CISC-RT-000600
+# iosrtr_opsf_process_id is the variable to set for the ospf processes need to have ldp sync applied to 
+# to make sure that they are in compliance.  
 iosrtr_opsf_process_id:
     - '1'
-iosrtr_ospf_ldp_sync: true
-
-# iosrtr_isis_ldp_sync is to be set true if you habe 
+# iosrtr_ospf_ldp_sync is to be set to true to apply the rule to make it compliant.  Set to False if you would 
+# like the task skipped. 
+iosrtr_ospf_ldp_sync: false
+# iosrtr_isis_ldp_sync is to be set to true to apply the rule to make it compliant.  Set to False if you would 
+# like the task skipped. 
 iosrtr_isis_ldp_sync: false      
 
 

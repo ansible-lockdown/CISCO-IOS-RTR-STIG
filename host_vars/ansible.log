@@ -19296,3 +19296,1082 @@ configuration like passwords. USE WITH CAUTION!
 2022-04-15 11:21:36,766 p=55334 u=stephenw n=ansible | PLAY RECAP ***************************************************************************************************************
 2022-04-15 11:21:36,766 p=55334 u=stephenw n=ansible | 192.168.68.114             : ok=2    changed=0    unreachable=0    failed=0    skipped=130  rescued=0    ignored=0   
 2022-04-15 11:21:36,867 p=55412 u=stephenw n=ansible | shutdown complete
+2022-04-15 11:28:22,935 p=55614 u=stephenw n=ansible | ansible-playbook [core 2.12.1]
+  config file = /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/ansible.cfg
+  configured module search path = ['/Users/stephenw/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/Cellar/ansible/5.0.1/libexec/lib/python3.10/site-packages/ansible
+  ansible collection location = /Users/stephenw/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible-playbook
+  python version = 3.10.1 (main, Dec  6 2021, 23:20:29) [Clang 13.0.0 (clang-1300.0.29.3)]
+  jinja version = 3.0.3
+  libyaml = True
+2022-04-15 11:28:22,937 p=55614 u=stephenw n=ansible | Using /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/ansible.cfg as config file
+2022-04-15 11:28:22,939 p=55614 u=stephenw n=ansible | setting up inventory plugins
+2022-04-15 11:28:22,949 p=55614 u=stephenw n=ansible | host_list declined parsing /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/hosts as it did not pass its verify_file() method
+2022-04-15 11:28:22,950 p=55614 u=stephenw n=ansible | script declined parsing /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/hosts as it did not pass its verify_file() method
+2022-04-15 11:28:22,950 p=55614 u=stephenw n=ansible | auto declined parsing /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/hosts as it did not pass its verify_file() method
+2022-04-15 11:28:22,953 p=55614 u=stephenw n=ansible | Parsed /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/hosts inventory source with ini plugin
+2022-04-15 11:28:23,169 p=55614 u=stephenw n=ansible | statically imported: /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/tasks/fix-cat1.yml
+2022-04-15 11:28:23,172 p=55614 u=stephenw n=ansible | Loading collection cisco.ios from /Users/stephenw/.ansible/collections/ansible_collections/cisco/ios
+2022-04-15 11:28:23,235 p=55614 u=stephenw n=ansible | statically imported: /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/tasks/fix-cat2.yml
+2022-04-15 11:28:23,251 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:23,251 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:23,270 p=55614 u=stephenw n=ansible | statically imported: /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/tasks/fix-cat3.yml
+2022-04-15 11:28:23,270 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:23,270 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,274 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,274 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,275 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_acls to cisco.ios.ios
+2022-04-15 11:28:23,275 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:23,276 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,276 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_prefix_lists to cisco.ios.ios
+2022-04-15 11:28:23,277 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_route_maps to cisco.ios.ios
+2022-04-15 11:28:23,277 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,277 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,278 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,278 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,279 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:23,279 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,280 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:23,280 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,281 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_bgp_global to cisco.ios.ios
+2022-04-15 11:28:23,281 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,282 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,282 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,282 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_prefix_lists to cisco.ios.ios
+2022-04-15 11:28:23,283 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,283 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_bgp to cisco.ios.ios
+2022-04-15 11:28:23,284 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,301 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,302 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,303 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,304 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,304 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,309 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:23,310 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:23,311 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_acls to cisco.ios.ios
+2022-04-15 11:28:23,319 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_bgp_global to cisco.ios.ios
+2022-04-15 11:28:23,320 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_route_maps to cisco.ios.ios
+2022-04-15 11:28:23,322 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_prefix_lists to cisco.ios.ios
+2022-04-15 11:28:23,323 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_ospfv2 to cisco.ios.ios
+2022-04-15 11:28:23,329 p=55614 u=stephenw n=ansible | Loading callback plugin default of type stdout, v2.0 from /usr/local/Cellar/ansible/5.0.1/libexec/lib/python3.10/site-packages/ansible/plugins/callback/default.py
+2022-04-15 11:28:23,337 p=55614 u=stephenw n=ansible | Skipping callback 'default', as we already have a stdout callback.
+2022-04-15 11:28:23,338 p=55614 u=stephenw n=ansible | Skipping callback 'minimal', as we already have a stdout callback.
+2022-04-15 11:28:23,338 p=55614 u=stephenw n=ansible | Skipping callback 'oneline', as we already have a stdout callback.
+2022-04-15 11:28:23,338 p=55614 u=stephenw n=ansible | PLAYBOOK: site.yml *******************************************************************************************************
+2022-04-15 11:28:23,338 p=55614 u=stephenw n=ansible | 1 plays in site.yml
+2022-04-15 11:28:23,339 p=55614 u=stephenw n=ansible | PLAY [all] ***************************************************************************************************************
+2022-04-15 11:28:23,393 p=55614 u=stephenw n=ansible | META: ran handlers
+2022-04-15 11:28:23,396 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself.] ***
+2022-04-15 11:28:23,413 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,417 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception.] ***
+2022-04-15 11:28:23,433 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,437 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space.] ***
+2022-04-15 11:28:23,453 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,458 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider.] ***
+2022-04-15 11:28:23,474 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,479 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000630 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs.] ***
+2022-04-15 11:28:23,495 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,499 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000640 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance with the appropriate Route Target (RT).] ***
+2022-04-15 11:28:23,518 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,522 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000670 | PATCH | The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit.] ***
+2022-04-15 11:28:23,539 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,543 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure.] ***
+2022-04-15 11:28:23,561 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,566 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure.] ***
+2022-04-15 11:28:23,583 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,588 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies.] ***
+2022-04-15 11:28:23,604 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,610 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000040 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies.] ***
+2022-04-15 11:28:23,626 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,631 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000050 | PATCH | The Cisco router must be configured to authenticate all routing protocol messages using NIST-validated FIPS 198-1 message authentication code algorithm.] ***
+2022-04-15 11:28:23,648 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,653 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network.] ***
+2022-04-15 11:28:23,669 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,674 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection.] ***
+2022-04-15 11:28:23,691 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,695 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000140 | PATCH | The Cisco router must be configured to drop all fragmented Internet Control Message Protocol (ICMP) packets destined to itself.] ***
+2022-04-15 11:28:23,712 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,717 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000150 | PATCH | The Cisco router must be configured to have Gratuitous ARP disabled on all external interfaces.] ***
+2022-04-15 11:28:23,733 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,738 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000170 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) unreachable messages disabled on all external interfaces.] ***
+2022-04-15 11:28:23,755 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,760 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces.] ***
+2022-04-15 11:28:23,776 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,781 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces.] ***
+2022-04-15 11:28:23,798 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,802 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred.] ***
+2022-04-15 11:28:23,819 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,825 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000220 | PATCH | The Cisco router must be configured to produce audit records containing information to establish the source of the events.] ***
+2022-04-15 11:28:23,841 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,846 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy.] ***
+2022-04-15 11:28:23,862 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,867 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations.] ***
+2022-04-15 11:28:23,884 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,889 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes.] ***
+2022-04-15 11:28:23,905 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,910 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000320 | PATCH | The Cisco perimeter router must be configured to filter traffic destined to the enclave in accordance with the guidelines contained in DoD Instruction 8551.1.] ***
+2022-04-15 11:28:23,928 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,933 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000330 | PATCH | The Cisco perimeter router must be configured to filter ingress traffic at the external interface on an inbound direction.] ***
+2022-04-15 11:28:23,950 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,955 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000340 | PATCH | The Cisco perimeter router must be configured to filter egress traffic at the internal interface on an inbound direction.] ***
+2022-04-15 11:28:23,972 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,977 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces.] ***
+2022-04-15 11:28:23,994 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:23,999 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000390 | PATCH | The Cisco perimeter router must be configured to block all outbound management traffic.] ***
+2022-04-15 11:28:24,015 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,020 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000400 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to transport management traffic to the Network Operations Center (NOC) via dedicated circuit, MPLS/VPN service, or IPsec tunnel.] ***
+2022-04-15 11:28:24,037 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,042 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000410 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to forward only authorized management traffic to the Network Operations Center (NOC).] ***
+2022-04-15 11:28:24,059 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,064 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000420 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to have separate IGP instances for the managed network and management network.] ***
+2022-04-15 11:28:24,081 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,086 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000430 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to not redistribute routes between the management network routing domain and the managed network routing domain.] ***
+2022-04-15 11:28:24,102 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,107 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000440 | PATCH | The Cisco out-of-band management (OOBM) gateway router must be configured to block any traffic destined to itself that is not sourced from the OOBM network or the Network Operations Center (NOC).] ***
+2022-04-15 11:28:24,124 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,128 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000450 | PATCH | The Cisco router must be configured to only permit management traffic that ingresses and egresses the out-of-band management (OOBM) interface.] ***
+2022-04-15 11:28:24,144 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,149 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000460 | PATCH | The Cisco router providing connectivity to the Network Operations Center (NOC) must be configured to forward all in-band management traffic via an IPsec tunnel.] ***
+2022-04-15 11:28:24,166 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,170 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000490 | PATCH | The Cisco BGP router must be configured to reject inbound route advertisements for any Bogon prefixes.] ***
+2022-04-15 11:28:24,187 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,192 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000500 | PATCH | The Cisco BGP router must be configured to reject inbound route advertisements for any prefixes belonging to the local autonomous system (AS).] ***
+2022-04-15 11:28:24,209 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,214 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000510 | PATCH | The Cisco BGP router must be configured to reject inbound route advertisements from a customer edge (CE) router for prefixes that are not allocated to that customer.] ***
+2022-04-15 11:28:24,231 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,237 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000520 | PATCH | The Cisco BGP router must be configured to reject outbound route advertisements for any prefixes that do not belong to any customers or the local autonomous system (AS).] ***
+2022-04-15 11:28:24,253 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,258 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000530 | PATCH | The Cisco BGP router must be configured to reject outbound route advertisements for any prefixes belonging to the IP core.] ***
+2022-04-15 11:28:24,274 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,278 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000560 | PATCH | The Cisco BGP router must be configured to use the maximum prefixes feature to protect against route table flooding and prefix de-aggregation attacks.] ***
+2022-04-15 11:28:24,295 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,300 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000620 | PATCH | The Cisco MPLS router must be configured to have TTL Propagation disabled.] ***
+2022-04-15 11:28:24,318 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,323 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000650 | PATCH | The Cisco PE router must be configured to have each VRF with the appropriate Route Distinguisher (RD).] ***
+2022-04-15 11:28:24,339 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,344 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000660 | PATCH | The Cisco PE router must be configured to have each VRF with the appropriate Route Distinguisher (RD).] ***
+2022-04-15 11:28:24,361 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,365 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces.] ***
+2022-04-15 11:28:24,383 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,387 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000780 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy to limit the effects of packet flooding denial-of-service (DoS) attacks.] ***
+2022-04-15 11:28:24,403 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,408 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing.] ***
+2022-04-15 11:28:24,425 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,429 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled.] ***
+2022-04-15 11:28:24,446 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,451 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000850 | PATCH | The Cisco multicast Rendezvous Point (RP) must be configured to rate limit the number of Protocol Independent Multicast (PIM) Register messages.] ***
+2022-04-15 11:28:24,467 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,472 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization.] ***
+2022-04-15 11:28:24,489 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,493 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports.] ***
+2022-04-15 11:28:24,509 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,514 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000890 | PATCH | The Cisco multicast Designated Router (DR) must be configured to set the shortest-path tree (SPT) threshold to infinity to minimalize source-group (S, G) state within the multicast topology where Any Source Multicast (ASM) is deployed.] ***
+2022-04-15 11:28:24,531 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,536 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000900 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to only accept MSDP packets from known MSDP peers.] ***
+2022-04-15 11:28:24,553 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,558 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000910 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to authenticate all received MSDP packets.] ***
+2022-04-15 11:28:24,575 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,580 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000020 | PATCH | The Cisco router must be configured to implement message authentication for all control plane protocols.] ***
+2022-04-15 11:28:24,598 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,603 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000030 | PATCH | The Cisco router must be configured to use keys with a duration not exceeding 180 days for authenticating routing protocol messages.] ***
+2022-04-15 11:28:24,621 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,625 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000080 | PATCH | The Cisco router must not be configured to have any feature enabled that calls home to the vendor.] ***
+2022-04-15 11:28:24,642 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,646 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000350 | PATCH | The Cisco perimeter router must be configured to block all packets with any IP options.] ***
+2022-04-15 11:28:24,663 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,668 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000480 | PATCH | The Cisco BGP router must be configured to use a unique key for each autonomous system (AS) that it peers with.] ***
+2022-04-15 11:28:24,685 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,690 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000750 | PATCH | The Cisco PE router must be configured to drop all packets with any IP options.] ***
+2022-04-15 11:28:24,706 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,711 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled.] ***
+2022-04-15 11:28:24,728 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,733 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000237 | PATCH | The Cisco router must not be configured to use IPv6 Site Local Unicast addresses.] ***
+2022-04-15 11:28:24,749 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,755 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:24,757 p=55614 u=stephenw n=ansible | Loading collection ansible.netcommon from /Users/stephenw/.ansible/collections/ansible_collections/ansible/netcommon
+2022-04-15 11:28:24,768 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces.] ***
+2022-04-15 11:28:24,784 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:24,789 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:24,789 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets.] ***
+2022-04-15 11:28:24,807 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:24,811 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000393 | PATCH | The Cisco perimeter router must be configured drop IPv6 packets with a Routing Header type 0, 1, or 3-255.] ***
+2022-04-15 11:28:24,828 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,833 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000394 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Hop-by-Hop header with invalid option type values.] ***
+2022-04-15 11:28:24,850 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,854 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000395 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Destination Option header with invalid option type values.] ***
+2022-04-15 11:28:24,871 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,876 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000396 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing an extension header with the Endpoint Identification option.] ***
+2022-04-15 11:28:24,892 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,897 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000397 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing the NSAP address option within Destination Option header.] ***
+2022-04-15 11:28:24,913 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,918 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : MEDIUM | CISC-RT-000398 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Hop-by-Hop or Destination Option extension header with an undefined option type.] ***
+2022-04-15 11:28:24,935 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:24,940 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:24,940 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : get version information] ********************************
+2022-04-15 11:28:24,969 p=55693 u=stephenw n=ansible | redirecting (type: terminal) ansible.builtin.ios to cisco.ios.ios
+2022-04-15 11:28:24,974 p=55693 u=stephenw n=ansible | redirecting (type: cliconf) ansible.builtin.ios to cisco.ios.ios
+2022-04-15 11:28:24,980 p=55693 u=stephenw n=ansible | redirecting (type: become) ansible.builtin.enable to ansible.netcommon.enable
+2022-04-15 11:28:24,982 p=55693 u=stephenw n=ansible | <192.168.68.114> attempting to start connection
+2022-04-15 11:28:24,982 p=55693 u=stephenw n=ansible | <192.168.68.114> using connection plugin ansible.netcommon.network_cli
+2022-04-15 11:28:24,983 p=55693 u=stephenw n=ansible | Found ansible-connection at path /usr/local/bin/ansible-connection
+2022-04-15 11:28:25,387 p=55697 u=stephenw n=ansible | Loading collection ansible.netcommon from /Users/stephenw/.ansible/collections/ansible_collections/ansible/netcommon
+2022-04-15 11:28:25,409 p=55697 u=stephenw n=ansible | redirecting (type: terminal) ansible.builtin.ios to cisco.ios.ios
+2022-04-15 11:28:25,413 p=55697 u=stephenw n=ansible | Loading collection cisco.ios from /Users/stephenw/.ansible/collections/ansible_collections/cisco/ios
+2022-04-15 11:28:25,416 p=55697 u=stephenw n=ansible | redirecting (type: cliconf) ansible.builtin.ios to cisco.ios.ios
+2022-04-15 11:28:25,425 p=55697 u=stephenw n=ansible | jsonrpc request: b'{"jsonrpc": "2.0", "method": "pop_messages", "id": "751673c6-80b7-460c-94ef-b15d777749e2", "params": [[], {}]}'
+2022-04-15 11:28:25,425 p=55697 u=stephenw n=ansible | jsonrpc response: {"jsonrpc": "2.0", "id": "751673c6-80b7-460c-94ef-b15d777749e2", "result_type": "pickle", "result": "(lp0\n(Vvvvv\np1\nVloaded cliconf plugin ansible_collections.cisco.ios.plugins.cliconf.ios from path /Users/stephenw/.ansible/collections/ansible_collections/cisco/ios/plugins/cliconf/ios.py for network_os ios\np2\ntp3\na(Vlog\np4\nVnetwork_os is set to ios\np5\ntp6\na(Vwarning\np7\nVPersistent connection logging is enabled for 192.168.68.114. This will log ALL interactions to /Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/host_vars/ansible.log and WILL NOT redact sensitive configuration like passwords. USE WITH CAUTION!\np8\ntp9\na(g1\nVssh type is set to paramiko\np10\ntp11\na."}
+2022-04-15 11:28:26,089 p=55693 u=stephenw n=ansible | <192.168.68.114> local domain socket does not exist, starting it
+2022-04-15 11:28:26,090 p=55693 u=stephenw n=ansible | <192.168.68.114> control socket path is /Users/stephenw/.ansible/pc/b8af2ee17a
+2022-04-15 11:28:26,090 p=55693 u=stephenw n=ansible | <192.168.68.114> Loading collection ansible.netcommon from /Users/stephenw/.ansible/collections/ansible_collections/ansible/netcommon
+2022-04-15 11:28:26,091 p=55693 u=stephenw n=ansible | <192.168.68.114> redirecting (type: terminal) ansible.builtin.ios to cisco.ios.ios
+2022-04-15 11:28:26,091 p=55693 u=stephenw n=ansible | <192.168.68.114> Loading collection cisco.ios from /Users/stephenw/.ansible/collections/ansible_collections/cisco/ios
+2022-04-15 11:28:26,092 p=55693 u=stephenw n=ansible | <192.168.68.114> redirecting (type: cliconf) ansible.builtin.ios to cisco.ios.ios
+2022-04-15 11:28:26,092 p=55693 u=stephenw n=ansible | <192.168.68.114> local domain socket listeners started successfully
+2022-04-15 11:28:26,093 p=55693 u=stephenw n=ansible | <192.168.68.114> loaded cliconf plugin ansible_collections.cisco.ios.plugins.cliconf.ios from path /Users/stephenw/.ansible/collections/ansible_collections/cisco/ios/plugins/cliconf/ios.py for network_os ios
+2022-04-15 11:28:26,093 p=55693 u=stephenw n=ansible | network_os is set to ios
+2022-04-15 11:28:26,094 p=55693 u=stephenw n=ansible | [WARNING]: Persistent connection logging is enabled for 192.168.68.114. This will log ALL interactions to
+/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG/host_vars/ansible.log and WILL NOT redact sensitive
+configuration like passwords. USE WITH CAUTION!
+
+2022-04-15 11:28:26,095 p=55693 u=stephenw n=ansible | <192.168.68.114> ssh type is set to paramiko
+2022-04-15 11:28:26,095 p=55693 u=stephenw n=ansible | <192.168.68.114> 
+2022-04-15 11:28:26,095 p=55693 u=stephenw n=ansible | <192.168.68.114> local domain socket path is /Users/stephenw/.ansible/pc/b8af2ee17a
+2022-04-15 11:28:26,098 p=55693 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:26,099 p=55693 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:26,099 p=55693 u=stephenw n=ansible | <192.168.68.114> ANSIBLE_NETWORK_IMPORT_MODULES: disabled
+2022-04-15 11:28:26,100 p=55693 u=stephenw n=ansible | <192.168.68.114> ANSIBLE_NETWORK_IMPORT_MODULES: module execution time may be extended
+2022-04-15 11:28:26,100 p=55693 u=stephenw n=ansible | <192.168.68.114> ESTABLISH LOCAL CONNECTION FOR USER: stephenw
+2022-04-15 11:28:26,101 p=55693 u=stephenw n=ansible | <192.168.68.114> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo `"&& mkdir "` echo /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/ansible-tmp-1650036506.1007202-55693-136231159824215 `" && echo ansible-tmp-1650036506.1007202-55693-136231159824215="` echo /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/ansible-tmp-1650036506.1007202-55693-136231159824215 `" ) && sleep 0'
+2022-04-15 11:28:26,294 p=55693 u=stephenw n=ansible | Using module file /Users/stephenw/.ansible/collections/ansible_collections/cisco/ios/plugins/modules/ios_command.py
+2022-04-15 11:28:26,295 p=55693 u=stephenw n=ansible | <192.168.68.114> PUT /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/tmp05ctjhss TO /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/ansible-tmp-1650036506.1007202-55693-136231159824215/AnsiballZ_ios_command.py
+2022-04-15 11:28:26,296 p=55693 u=stephenw n=ansible | <192.168.68.114> EXEC /bin/sh -c 'chmod u+x /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/ansible-tmp-1650036506.1007202-55693-136231159824215/ /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/ansible-tmp-1650036506.1007202-55693-136231159824215/AnsiballZ_ios_command.py && sleep 0'
+2022-04-15 11:28:26,308 p=55693 u=stephenw n=ansible | <192.168.68.114> EXEC /bin/sh -c '/usr/local/Cellar/ansible/5.0.1/libexec/bin/python3.10 /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/ansible-tmp-1650036506.1007202-55693-136231159824215/AnsiballZ_ios_command.py && sleep 0'
+2022-04-15 11:28:26,514 p=55697 u=stephenw n=ansible | jsonrpc request: b'{"jsonrpc": "2.0", "method": "get_capabilities", "id": "468654d0-b306-41f2-93af-745e1fb62b93", "params": [[], {}]}'
+2022-04-15 11:28:26,516 p=55697 u=stephenw n=ansible | <192.168.68.114> ESTABLISH PARAMIKO SSH CONNECTION FOR USER: mpg on PORT 22 TO 192.168.68.114
+2022-04-15 11:28:26,553 p=55697 u=stephenw n=p=55697 u=stephenw | paramiko [192.168.68.114] | Connected (version 1.99, client Cisco-1.25)
+2022-04-15 11:28:27,075 p=55697 u=stephenw n=p=55697 u=stephenw | paramiko [192.168.68.114] | Authentication (password) successful!
+2022-04-15 11:28:27,851 p=55697 u=stephenw n=ansible | jsonrpc response: {"jsonrpc": "2.0", "id": "468654d0-b306-41f2-93af-745e1fb62b93", "result": "{\"rpc\": [\"get_config\", \"edit_config\", \"get_capabilities\", \"get\", \"enable_response_logging\", \"disable_response_logging\", \"edit_banner\", \"get_diff\", \"run_commands\", \"get_defaults_flag\"], \"device_info\": {\"network_os\": \"ios\", \"network_os_version\": \"12.4(15)T14\", \"network_os_model\": \"3725\", \"network_os_hostname\": \"R5\", \"network_os_image\": \"tftp://255.255.255.255/unknown\", \"network_os_type\": \"L3\"}, \"network_api\": \"cliconf\", \"device_operations\": {\"supports_diff_replace\": true, \"supports_commit\": false, \"supports_rollback\": false, \"supports_defaults\": true, \"supports_onbox_diff\": false, \"supports_commit_comment\": false, \"supports_multiline_delimiter\": true, \"supports_diff_match\": true, \"supports_diff_ignore_lines\": true, \"supports_generate_diff\": true, \"supports_replace\": false}, \"format\": [\"text\"], \"diff_match\": [\"line\", \"strict\", \"exact\", \"none\"], \"diff_replace\": [\"line\", \"block\"], \"output\": []}"}
+2022-04-15 11:28:27,852 p=55697 u=stephenw n=ansible | jsonrpc request: b'{"jsonrpc": "2.0", "method": "run_commands", "id": "3fd00b05-e6be-49e3-9cfe-2106f820e8e9", "params": [[], {"commands": [{"command": "show version", "output": null, "prompt": null, "answer": null, "newline": true, "sendonly": false, "check_all": false}], "check_rc": true}]}'
+2022-04-15 11:28:27,974 p=55697 u=stephenw n=ansible | jsonrpc response: {"jsonrpc": "2.0", "id": "3fd00b05-e6be-49e3-9cfe-2106f820e8e9", "result_type": "pickle", "result": "(lp0\nVCisco IOS Software, 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\\u000aTechnical Support: http://www.cisco.com/techsupport\\u000aCopyright (c) 1986-2010 by Cisco Systems, Inc.\\u000aCompiled Tue 17-Aug-10 12:08 by prod_rel_team\\u000a\\u000aROM: ROMMON Emulation Microcode\\u000aROM: 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\\u000a\\u000aR5 uptime is 1 day, 2 hours, 17 minutes\\u000aSystem returned to ROM by unknown reload cause - suspect boot_data[BOOT_COUNT] 0x0, BOOT_COUNT 0, BOOTDATA 19\\u000aSystem image file is \"tftp://255.255.255.255/unknown\"\\u000a\\u000a\\u000aThis product contains cryptographic features and is subject to United\\u000aStates and local country laws governing import, export, transfer and\\u000ause. Delivery of Cisco cryptographic products does not imply\\u000athird-party authority to import, export, distribute or use encryption.\\u000aImporters, exporters, distributors and users are responsible for\\u000acompliance with U.S. and local country laws. By using this product you\\u000aagree to comply with applicable laws and regulations. If you are unable\\u000ato comply with U.S. and local laws, return this product immediately.\\u000a\\u000aA summary of U.S. laws governing Cisco cryptographic products may be found at:\\u000ahttp://www.cisco.com/wwl/export/crypto/tool/stqrg.html\\u000a\\u000aIf you require further assistance please contact us by sending email to\\u000aexport@cisco.com.\\u000a\\u000aCisco 3725 (R7000) processor (revision 0.1) with 124928K/6144K bytes of memory.\\u000aProcessor board ID FTX0945W0MY\\u000aR7000 CPU at 240MHz, Implementation 39, Rev 2.1, 256KB L2, 512KB L3 Cache\\u000a3 FastEthernet interfaces\\u000a4 Serial interfaces\\u000aDRAM configuration is 64 bits wide with parity enabled.\\u000a55K bytes of NVRAM.\\u000a\\u000aConfiguration register is 0x2102\np1\na."}
+2022-04-15 11:28:27,998 p=55693 u=stephenw n=ansible | <192.168.68.114> EXEC /bin/sh -c 'rm -f -r /Users/stephenw/.ansible/tmp/ansible-local-556144suzfszo/ansible-tmp-1650036506.1007202-55693-136231159824215/ > /dev/null 2>&1 && sleep 0'
+2022-04-15 11:28:28,019 p=55614 u=stephenw n=ansible | ok: [192.168.68.114] => {
+    "changed": false,
+    "invocation": {
+        "module_args": {
+            "commands": [
+                "show version"
+            ],
+            "interval": 1,
+            "match": "all",
+            "provider": null,
+            "retries": 10,
+            "wait_for": null
+        }
+    },
+    "stdout": [
+        "Cisco IOS Software, 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2010 by Cisco Systems, Inc.\nCompiled Tue 17-Aug-10 12:08 by prod_rel_team\n\nROM: ROMMON Emulation Microcode\nROM: 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\n\nR5 uptime is 1 day, 2 hours, 17 minutes\nSystem returned to ROM by unknown reload cause - suspect boot_data[BOOT_COUNT] 0x0, BOOT_COUNT 0, BOOTDATA 19\nSystem image file is \"tftp://255.255.255.255/unknown\"\n\n\nThis product contains cryptographic features and is subject to United\nStates and local country laws governing import, export, transfer and\nuse. Delivery of Cisco cryptographic products does not imply\nthird-party authority to import, export, distribute or use encryption.\nImporters, exporters, distributors and users are responsible for\ncompliance with U.S. and local country laws. By using this product you\nagree to comply with applicable laws and regulations. If you are unable\nto comply with U.S. and local laws, return this product immediately.\n\nA summary of U.S. laws governing Cisco cryptographic products may be found at:\nhttp://www.cisco.com/wwl/export/crypto/tool/stqrg.html\n\nIf you require further assistance please contact us by sending email to\nexport@cisco.com.\n\nCisco 3725 (R7000) processor (revision 0.1) with 124928K/6144K bytes of memory.\nProcessor board ID FTX0945W0MY\nR7000 CPU at 240MHz, Implementation 39, Rev 2.1, 256KB L2, 512KB L3 Cache\n3 FastEthernet interfaces\n4 Serial interfaces\nDRAM configuration is 64 bits wide with parity enabled.\n55K bytes of NVRAM.\n\nConfiguration register is 0x2102"
+    ],
+    "stdout_lines": [
+        [
+            "Cisco IOS Software, 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)",
+            "Technical Support: http://www.cisco.com/techsupport",
+            "Copyright (c) 1986-2010 by Cisco Systems, Inc.",
+            "Compiled Tue 17-Aug-10 12:08 by prod_rel_team",
+            "",
+            "ROM: ROMMON Emulation Microcode",
+            "ROM: 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)",
+            "",
+            "R5 uptime is 1 day, 2 hours, 17 minutes",
+            "System returned to ROM by unknown reload cause - suspect boot_data[BOOT_COUNT] 0x0, BOOT_COUNT 0, BOOTDATA 19",
+            "System image file is \"tftp://255.255.255.255/unknown\"",
+            "",
+            "",
+            "This product contains cryptographic features and is subject to United",
+            "States and local country laws governing import, export, transfer and",
+            "use. Delivery of Cisco cryptographic products does not imply",
+            "third-party authority to import, export, distribute or use encryption.",
+            "Importers, exporters, distributors and users are responsible for",
+            "compliance with U.S. and local country laws. By using this product you",
+            "agree to comply with applicable laws and regulations. If you are unable",
+            "to comply with U.S. and local laws, return this product immediately.",
+            "",
+            "A summary of U.S. laws governing Cisco cryptographic products may be found at:",
+            "http://www.cisco.com/wwl/export/crypto/tool/stqrg.html",
+            "",
+            "If you require further assistance please contact us by sending email to",
+            "export@cisco.com.",
+            "",
+            "Cisco 3725 (R7000) processor (revision 0.1) with 124928K/6144K bytes of memory.",
+            "Processor board ID FTX0945W0MY",
+            "R7000 CPU at 240MHz, Implementation 39, Rev 2.1, 256KB L2, 512KB L3 Cache",
+            "3 FastEthernet interfaces",
+            "4 Serial interfaces",
+            "DRAM configuration is 64 bits wide with parity enabled.",
+            "55K bytes of NVRAM.",
+            "",
+            "Configuration register is 0x2102"
+        ]
+    ]
+}
+2022-04-15 11:28:28,024 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,024 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000060 | PATCH | The Cisco router must be configured to have all inactive interfaces disabled.] ***
+2022-04-15 11:28:28,052 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/2)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/2",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,053 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/3)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/3",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,059 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,059 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled.] ***
+2022-04-15 11:28:28,084 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=boot network)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "boot network",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,089 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip boot server)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip boot server",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,089 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip bootp server)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip bootp server",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,097 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip dns server)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip dns server",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,102 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip identd)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip identd",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,102 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip finger)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip finger",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,103 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip http server)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip http server",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,110 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip rcmd rcp-enable)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip rcmd rcp-enable",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,111 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=ip rcmd rsh-enable)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "ip rcmd rsh-enable",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,116 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=service config)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "service config",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,117 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=service finger)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "service finger",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,124 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=service tcp-small-servers)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "service tcp-small-servers",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,124 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=service udp-small-servers)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "service udp-small-servers",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,125 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=service pad)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "service pad",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,131 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,131 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000160 | PATCH | The Cisco router must be configured to have IP directed broadcast disabled on all interfaces.] ***
+2022-04-15 11:28:28,155 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=FastEthernet 0/0)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "FastEthernet 0/0",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,157 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/0)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/0",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,160 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/1)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/1",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,163 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/2)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/2",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,164 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/3)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/3",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,171 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_acls to cisco.ios.ios
+2022-04-15 11:28:28,171 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000200 | PATCH | The Cisco router must be configured to log all packets that have been dropped at interfaces via an ACL.] ***
+2022-04-15 11:28:28,189 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,193 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:28,193 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication. | Check For Aux Line No Exec.] ***
+2022-04-15 11:28:28,213 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,218 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,218 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000230 | PATCH | The Cisco router must be configured to disable the auxiliary port unless it is connected to a secured modem providing encryption and authentication. | Fix Line Aux No Exec.] ***
+2022-04-15 11:28:28,237 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,242 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_prefix_lists to cisco.ios.ios
+2022-04-15 11:28:28,242 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Configure Prefix List For Any Static Routes W/ Alternate Gateway as Next Hop.] ***
+2022-04-15 11:28:28,271 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['5', '11.0.0.0/8'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "5",
+        "11.0.0.0/8"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,272 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['10', '10.0.0.0/8'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "10",
+        "10.0.0.0/8"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,277 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_route_maps to cisco.ios.ios
+2022-04-15 11:28:28,277 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Configure Route Map That Will Deny The Static Routes To ISP.] ***
+2022-04-15 11:28:28,295 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,300 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,300 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Apply Route Map to OSPF.] ***
+2022-04-15 11:28:28,326 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=1)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "1",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,327 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=2)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "2",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,332 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,332 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Apply Route Map to EIGRP.] ***
+2022-04-15 11:28:28,357 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=1)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "1",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,358 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=2)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "2",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,363 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,363 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. Apply Route Map to RIP.] ***
+2022-04-15 11:28:28,381 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,385 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,386 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Apply Route Map to BGP.] ***
+2022-04-15 11:28:28,407 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=1)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "1",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,413 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:28,413 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces. | Get Global LLDP Status.] ***
+2022-04-15 11:28:28,432 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,436 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,437 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces. | Disable LLDP On External Interfaces If Global Enabled.] ***
+2022-04-15 11:28:28,463 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=GigabitEthernet 0/3)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "GigabitEthernet 0/3",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,463 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=GigabitEthernet 0/4)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "GigabitEthernet 0/4",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,468 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:28,468 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000370 | PATCH | The Cisco perimeter router must be configured to have Cisco Discovery Protocol (CDP) disabled on all external interfaces. | Get Global CDP Status.] ***
+2022-04-15 11:28:28,487 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,491 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,492 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000370 | PATCH | The Cisco perimeter router must be configured to have Cisco Discovery Protocol (CDP) disabled on all external interfaces. | Disable CDP On External Interfaces If Global Enabled.] ***
+2022-04-15 11:28:28,517 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=GigabitEthernet 0/3)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "GigabitEthernet 0/3",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,518 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=GigabitEthernet 0/4)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "GigabitEthernet 0/4",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,523 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_bgp_global to cisco.ios.ios
+2022-04-15 11:28:28,523 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute. | Remove Existing AS Setting."] ***
+2022-04-15 11:28:28,541 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,545 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,546 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute. | Set New AS Settings."] ***
+2022-04-15 11:28:28,564 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,569 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,569 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Add AS-PATH Access Lists] *******************************
+2022-04-15 11:28:28,588 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,592 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,593 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Apply Access List Inbound] ******************************
+2022-04-15 11:28:28,611 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,616 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_prefix_lists to cisco.ios.ios
+2022-04-15 11:28:28,616 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer. | Configure Router To Limit Prefix Size] ***
+2022-04-15 11:28:28,643 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item={'seq': 5, 'action': 'permit', 'prefix': '13.0.0.0/8', 'ge': 10, 'le': 24})  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": {
+        "action": "permit",
+        "ge": 10,
+        "le": 24,
+        "prefix": "13.0.0.0/8",
+        "seq": 5
+    },
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,644 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item={'seq': 10, 'action': 'deny', 'prefix': '12.0.0.0/8', 'le': 32})  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": {
+        "action": "deny",
+        "le": 32,
+        "prefix": "12.0.0.0/8",
+        "seq": 10
+    },
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,649 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,649 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer. | Apply To All eBGP (Exterior Border Gateway Protocol) Peer Neighbors.] ***
+2022-04-15 11:28:28,676 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=1.1.1.1)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "1.1.1.1",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,677 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=13.13.13.13)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "13.13.13.13",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,682 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_bgp to cisco.ios.ios
+2022-04-15 11:28:28,683 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000580 | PATCH | The Cisco BGP router must be configured to use its loopback address as the source address for iBGP peering sessions.] ***
+2022-04-15 11:28:28,710 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['7.7.7.7', '1123'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "7.7.7.7",
+        "1123"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,711 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['8.8.8.8', '1123'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "8.8.8.8",
+        "1123"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,717 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,717 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000590 | PATCH | The Cisco MPLS router must be configured to use its loopback address as the source address for LDP peering sessions.] ***
+2022-04-15 11:28:28,735 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,740 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,740 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000600 | PATCH | The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange. | Configure the MPLS router to synchronize IGP and LDP In OSPF.] ***
+2022-04-15 11:28:28,766 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=1)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "1",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,771 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,772 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000600 | PATCH | The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange. | Configure the MPLS router to synchronize IGP and LDP In IS-IS.] ***
+2022-04-15 11:28:28,791 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,796 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers.] ***
+2022-04-15 11:28:28,815 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:28,819 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,820 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+"LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure Class Maps And DSCP."] ***
+2022-04-15 11:28:28,845 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['PREFERRED_DATA', 'af33'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "PREFERRED_DATA",
+        "af33"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,847 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['CONTROL_PLANE', 'cs6'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "CONTROL_PLANE",
+        "cs6"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,851 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['VIDEO', 'af41'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "VIDEO",
+        "af41"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,855 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['VOICE', 'ef'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "VOICE",
+        "ef"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,855 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['C2_VOICE', '47'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "C2_VOICE",
+        "47"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,862 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,863 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+"LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Configure A Policy Map."] ***
+2022-04-15 11:28:28,889 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['CONTROL_PLANE', '10'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "CONTROL_PLANE",
+        "10"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,891 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['C2_VOICE', '10'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "C2_VOICE",
+        "10"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,895 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['VOICE', '15'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "VOICE",
+        "15"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,898 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['VIDEO', '25'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "VIDEO",
+        "25"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,902 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['PREFERRED_DATA', '25'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "PREFERRED_DATA",
+        "25"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,902 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=['class-default', '15'])  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": [
+        "class-default",
+        "15"
+    ],
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,909 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:28,910 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : "LOW | CISC-RT-000760 | PATCH | The Cisco PE router must be configured to enforce a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile."
+"LOW | CISC-RT-000770 | PATCH | The Cisco PE router must be configured to implement a Quality-of-Service (QoS) policy in accordance with the QoS DODIN Technical Profile. | Apply Service Policy To All Interfaces."] ***
+2022-04-15 11:28:28,934 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=FastEthernet 0/0)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "FastEthernet 0/0",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,936 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/0)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/0",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,940 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/1)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/1",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,943 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/2)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/2",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,943 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => (item=Ethernet 1/3)  => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "Ethernet 1/3",
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:28,950 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000810 | PATCH | The Cisco multicast edge router must be configured to establish boundaries for administratively scoped multicast traffic.] ***
+2022-04-15 11:28:28,968 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:28,973 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries.] ***
+2022-04-15 11:28:28,991 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:28,995 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000830 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Register messages received from the Designated Router (DR) for any undesirable multicast groups and sources.] ***
+2022-04-15 11:28:29,013 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,018 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups.] ***
+2022-04-15 11:28:29,037 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,042 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000860 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization.] ***
+2022-04-15 11:28:29,060 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,066 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources.] ***
+2022-04-15 11:28:29,084 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,089 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000930 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter source-active multicast advertisements to external MSDP peers to avoid global visibility of local-only multicast sources and groups.] ***
+2022-04-15 11:28:29,108 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,113 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000940 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to limit the amount of source-active messages it accepts on a per-peer basis.] ***
+2022-04-15 11:28:29,132 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,137 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000950 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to use a loopback address as the source address when originating MSDP traffic.] ***
+2022-04-15 11:28:29,156 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,161 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000470 | PATCH | The Cisco BGP router must be configured to enable the Generalized TTL Security Mechanism (GTSM).] ***
+2022-04-15 11:28:29,180 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,184 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_command to cisco.ios.ios
+2022-04-15 11:28:29,185 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments. | Retrieve Current Ipv6 hop-limit.] ***
+2022-04-15 11:28:29,204 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,210 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments. | Set Fact For Current Limit] ***
+2022-04-15 11:28:29,229 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,234 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_config to cisco.ios.ios
+2022-04-15 11:28:29,234 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : LOW | CISC-RT-000236 | PATCH | The Cisco router must be configured to advertise a hop limit of at least 32 in Router Advertisement messages for IPv6 stateless auto-configuration deployments. | Change Hop Count] ***
+2022-04-15 11:28:29,253 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,258 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_acls to cisco.ios.ios
+2022-04-15 11:28:29,259 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Use the ACLs resource module to gather the current config] ***
+2022-04-15 11:28:29,277 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,282 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Print ACLs To Screen] ***********************************
+2022-04-15 11:28:29,301 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,306 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Create Inventory Directory] *****************************
+2022-04-15 11:28:29,324 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,330 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Write ACL Configuration to File] ************************
+2022-04-15 11:28:29,348 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,352 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_bgp_global to cisco.ios.ios
+2022-04-15 11:28:29,353 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Use the bgps resource module to gather the current config] ***
+2022-04-15 11:28:29,371 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,376 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Print bgps To Screen] ***********************************
+2022-04-15 11:28:29,394 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,399 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Create Inventory Directory] *****************************
+2022-04-15 11:28:29,417 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,421 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Write bgp Configuration to File] ************************
+2022-04-15 11:28:29,441 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,446 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_route_maps to cisco.ios.ios
+2022-04-15 11:28:29,446 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Use the Route Maps resource module to gather the current config] ***
+2022-04-15 11:28:29,465 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,470 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Print Route Maps To Screen] *****************************
+2022-04-15 11:28:29,488 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,493 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Create Inventory Directory] *****************************
+2022-04-15 11:28:29,511 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,516 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Write Route Maps Configuration to File] *****************
+2022-04-15 11:28:29,535 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,539 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_prefix_lists to cisco.ios.ios
+2022-04-15 11:28:29,540 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Use the Prefix Lists resource module to gather the current config] ***
+2022-04-15 11:28:29,557 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,562 p=55614 u=stephenw n=ansible | redirecting (type: action) cisco.ios.ios_ospfv2 to cisco.ios.ios
+2022-04-15 11:28:29,562 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Use the ospf interfaces resource module to gather the current config] ***
+2022-04-15 11:28:29,581 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,586 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Print ospf interfaces To Screen] ************************
+2022-04-15 11:28:29,604 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {}
+2022-04-15 11:28:29,609 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Create Inventory Directory] *****************************
+2022-04-15 11:28:29,626 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,631 p=55614 u=stephenw n=ansible | TASK [/Users/stephenw/Documents/Development/CISCO-IOS-RTR-STIG : Write ospf_resources Configuration to File] *************
+2022-04-15 11:28:29,649 p=55614 u=stephenw n=ansible | skipping: [192.168.68.114] => {
+    "changed": false,
+    "skip_reason": "Conditional result was False"
+}
+2022-04-15 11:28:29,654 p=55614 u=stephenw n=ansible | META: role_complete for 192.168.68.114
+2022-04-15 11:28:29,658 p=55614 u=stephenw n=ansible | META: ran handlers
+2022-04-15 11:28:29,661 p=55614 u=stephenw n=ansible | META: ran handlers
+2022-04-15 11:28:29,661 p=55697 u=stephenw n=ansible | jsonrpc request: b'{"jsonrpc": "2.0", "method": "reset", "id": "8f960515-edfe-48d7-a28a-4bfed846f9a5", "params": [[], {}]}'
+2022-04-15 11:28:29,662 p=55697 u=stephenw n=ansible | jsonrpc response: {"jsonrpc": "2.0", "id": "8f960515-edfe-48d7-a28a-4bfed846f9a5", "result_type": "pickle", "result": "N."}
+2022-04-15 11:28:29,664 p=55614 u=stephenw n=ansible | PLAY RECAP ***************************************************************************************************************
+2022-04-15 11:28:29,664 p=55614 u=stephenw n=ansible | 192.168.68.114             : ok=1    changed=0    unreachable=0    failed=0    skipped=131  rescued=0    ignored=0   
+2022-04-15 11:28:29,764 p=55697 u=stephenw n=ansible | invoked shell using ssh_type: paramiko
+2022-04-15 11:28:29,765 p=55697 u=stephenw n=ansible | ssh connection done, setting terminal
+2022-04-15 11:28:29,765 p=55697 u=stephenw n=ansible | loaded terminal plugin for network_os ios
+2022-04-15 11:28:29,765 p=55697 u=stephenw n=ansible | command: None
+2022-04-15 11:28:29,766 p=55697 u=stephenw n=ansible | response-1: b'\r\nR5#'
+2022-04-15 11:28:29,766 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b'\r\nR5#''
+2022-04-15 11:28:29,766 p=55697 u=stephenw n=ansible | Response received, triggered 'persistent_buffer_read_timeout' timer of 0.1 seconds
+2022-04-15 11:28:29,767 p=55697 u=stephenw n=ansible | firing event: on_become
+2022-04-15 11:28:29,767 p=55697 u=stephenw n=ansible | send command: b'show privilege\r'
+2022-04-15 11:28:29,767 p=55697 u=stephenw n=ansible | command: b'show privilege'
+2022-04-15 11:28:29,768 p=55697 u=stephenw n=ansible | response-1: b's'
+2022-04-15 11:28:29,768 p=55697 u=stephenw n=ansible | response-2: b'h'
+2022-04-15 11:28:29,768 p=55697 u=stephenw n=ansible | response-3: b'o'
+2022-04-15 11:28:29,769 p=55697 u=stephenw n=ansible | response-4: b'w'
+2022-04-15 11:28:29,769 p=55697 u=stephenw n=ansible | response-5: b' '
+2022-04-15 11:28:29,769 p=55697 u=stephenw n=ansible | response-6: b'p'
+2022-04-15 11:28:29,770 p=55697 u=stephenw n=ansible | response-7: b'r'
+2022-04-15 11:28:29,770 p=55697 u=stephenw n=ansible | response-8: b'i'
+2022-04-15 11:28:29,771 p=55697 u=stephenw n=ansible | response-9: b'v'
+2022-04-15 11:28:29,771 p=55697 u=stephenw n=ansible | response-10: b'i'
+2022-04-15 11:28:29,771 p=55697 u=stephenw n=ansible | response-11: b'l'
+2022-04-15 11:28:29,772 p=55697 u=stephenw n=ansible | response-12: b'e'
+2022-04-15 11:28:29,772 p=55697 u=stephenw n=ansible | response-13: b'g'
+2022-04-15 11:28:29,772 p=55697 u=stephenw n=ansible | response-14: b'e'
+2022-04-15 11:28:29,773 p=55697 u=stephenw n=ansible | response-15: b'\r\n'
+2022-04-15 11:28:29,773 p=55697 u=stephenw n=ansible | response-16: b'Current privilege level is 15\r\nR5#'
+2022-04-15 11:28:29,773 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b'show privilege\r\nCurrent privilege level is 15\r\nR5#''
+2022-04-15 11:28:29,774 p=55697 u=stephenw n=ansible | Response received, triggered 'persistent_buffer_read_timeout' timer of 0.1 seconds
+2022-04-15 11:28:29,774 p=55697 u=stephenw n=ansible | firing event: on_open_shell()
+2022-04-15 11:28:29,774 p=55697 u=stephenw n=ansible | send command: b'terminal length 0\r'
+2022-04-15 11:28:29,775 p=55697 u=stephenw n=ansible | command: b'terminal length 0'
+2022-04-15 11:28:29,775 p=55697 u=stephenw n=ansible | response-1: b'termi'
+2022-04-15 11:28:29,775 p=55697 u=stephenw n=ansible | response-2: b'na'
+2022-04-15 11:28:29,776 p=55697 u=stephenw n=ansible | response-3: b'l'
+2022-04-15 11:28:29,776 p=55697 u=stephenw n=ansible | response-4: b' l'
+2022-04-15 11:28:29,776 p=55697 u=stephenw n=ansible | response-5: b'engt'
+2022-04-15 11:28:29,777 p=55697 u=stephenw n=ansible | response-6: b'h'
+2022-04-15 11:28:29,777 p=55697 u=stephenw n=ansible | response-7: b' '
+2022-04-15 11:28:29,777 p=55697 u=stephenw n=ansible | response-8: b'0'
+2022-04-15 11:28:29,778 p=55697 u=stephenw n=ansible | response-9: b'\r\n'
+2022-04-15 11:28:29,778 p=55697 u=stephenw n=ansible | response-10: b'R5#'
+2022-04-15 11:28:29,778 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b'terminal length 0\r\nR5#''
+2022-04-15 11:28:29,779 p=55697 u=stephenw n=ansible | Response received, triggered 'persistent_buffer_read_timeout' timer of 0.1 seconds
+2022-04-15 11:28:29,779 p=55697 u=stephenw n=ansible | send command: b'terminal width 512\r'
+2022-04-15 11:28:29,779 p=55697 u=stephenw n=ansible | command: b'terminal width 512'
+2022-04-15 11:28:29,780 p=55697 u=stephenw n=ansible | response-1: b't'
+2022-04-15 11:28:29,780 p=55697 u=stephenw n=ansible | response-2: b'e'
+2022-04-15 11:28:29,780 p=55697 u=stephenw n=ansible | response-3: b'r'
+2022-04-15 11:28:29,780 p=55697 u=stephenw n=ansible | response-4: b'm'
+2022-04-15 11:28:29,781 p=55697 u=stephenw n=ansible | response-5: b'inal'
+2022-04-15 11:28:29,781 p=55697 u=stephenw n=ansible | response-6: b' width '
+2022-04-15 11:28:29,781 p=55697 u=stephenw n=ansible | response-7: b'5'
+2022-04-15 11:28:29,782 p=55697 u=stephenw n=ansible | response-8: b'1'
+2022-04-15 11:28:29,782 p=55697 u=stephenw n=ansible | response-9: b'2\r\n'
+2022-04-15 11:28:29,782 p=55697 u=stephenw n=ansible | response-10: b'R5#'
+2022-04-15 11:28:29,783 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b'terminal width 512\r\nR5#''
+2022-04-15 11:28:29,783 p=55697 u=stephenw n=ansible | Response received, triggered 'persistent_buffer_read_timeout' timer of 0.1 seconds
+2022-04-15 11:28:29,783 p=55697 u=stephenw n=ansible | send command: b'terminal width 0\r'
+2022-04-15 11:28:29,784 p=55697 u=stephenw n=ansible | command: b'terminal width 0'
+2022-04-15 11:28:29,784 p=55697 u=stephenw n=ansible | response-1: b't'
+2022-04-15 11:28:29,784 p=55697 u=stephenw n=ansible | response-2: b'e'
+2022-04-15 11:28:29,785 p=55697 u=stephenw n=ansible | response-3: b'r'
+2022-04-15 11:28:29,785 p=55697 u=stephenw n=ansible | response-4: b'm'
+2022-04-15 11:28:29,785 p=55697 u=stephenw n=ansible | response-5: b'inal'
+2022-04-15 11:28:29,785 p=55697 u=stephenw n=ansible | response-6: b' '
+2022-04-15 11:28:29,786 p=55697 u=stephenw n=ansible | response-7: b'width '
+2022-04-15 11:28:29,786 p=55697 u=stephenw n=ansible | response-8: b'0'
+2022-04-15 11:28:29,786 p=55697 u=stephenw n=ansible | response-9: b'\r\n'
+2022-04-15 11:28:29,787 p=55697 u=stephenw n=ansible | response-10: b'R5#'
+2022-04-15 11:28:29,787 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b'terminal width 0\r\nR5#''
+2022-04-15 11:28:29,787 p=55697 u=stephenw n=ansible | Response received, triggered 'persistent_buffer_read_timeout' timer of 0.1 seconds
+2022-04-15 11:28:29,788 p=55697 u=stephenw n=ansible | ssh connection has completed successfully
+2022-04-15 11:28:29,788 p=55697 u=stephenw n=ansible | send command: b'show version\r'
+2022-04-15 11:28:29,788 p=55697 u=stephenw n=ansible | command: b'show version'
+2022-04-15 11:28:29,789 p=55697 u=stephenw n=ansible | response-1: b'sh'
+2022-04-15 11:28:29,789 p=55697 u=stephenw n=ansible | response-2: b'o'
+2022-04-15 11:28:29,789 p=55697 u=stephenw n=ansible | response-3: b'w'
+2022-04-15 11:28:29,790 p=55697 u=stephenw n=ansible | response-4: b' ve'
+2022-04-15 11:28:29,790 p=55697 u=stephenw n=ansible | response-5: b'r'
+2022-04-15 11:28:29,790 p=55697 u=stephenw n=ansible | response-6: b's'
+2022-04-15 11:28:29,791 p=55697 u=stephenw n=ansible | response-7: b'ion'
+2022-04-15 11:28:29,791 p=55697 u=stephenw n=ansible | response-8: b'\r\n'
+2022-04-15 11:28:29,791 p=55697 u=stephenw n=ansible | response-9: b'Cisco IOS Software, 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2010 by Cisco Systems, Inc.\r\nCompiled Tue 17-Aug-10 12:08 by prod_rel_team\r\n\r\n'
+2022-04-15 11:28:29,791 p=55697 u=stephenw n=ansible | response-10: b'ROM: ROMMON Emulation Microcode\r\nROM: 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\r\n\r\nR5 uptime is 1 day, 2 hours, 17 minutes\r\nSystem returned to ROM by unknown reload cause - suspect boot_data[BOOT_COUNT] 0x0, BOOT_'
+2022-04-15 11:28:29,792 p=55697 u=stephenw n=ansible | response-11: b'COUNT 0, BOOTDATA 19\r\nSystem image file is "tftp://255.255.255.255/unknown"\r\n\r\n\r\nThis product contains cryptographic features and is subject to United\r\nStates and local country laws governing import, export, transfer and\r\nuse. Delivery of Cisco cryptograph'
+2022-04-15 11:28:29,792 p=55697 u=stephenw n=ansible | response-12: b'ic products does not imply\r\nthird-party authority to import, export, distribute or use encryption.\r\nImporters, exporters, distributors and users are responsible for\r\ncompliance with U.S. and local country laws. By using this product you\r\nagree to comply wi'
+2022-04-15 11:28:29,792 p=55697 u=stephenw n=ansible | response-13: b'th applicable laws and regulations. If you are unable\r\nto comply with U.S. and local laws, return this product immediately.\r\n\r\nA summary of U.S. laws governing Cisco cryptographic products may be found at:\r\nhttp://www.cisco.com/wwl/export/crypto/tool/stqrg'
+2022-04-15 11:28:29,793 p=55697 u=stephenw n=ansible | response-14: b'.html\r\n\r\nIf you require further assistance please contact us by sending email to\r\nexport@cisco.com.\r\n\r\nCisco 3725 (R7000) processor (revision 0.1) with 124928K/6144K bytes of memory.\r\nProcessor board ID FTX0945W0MY\r\nR7000 CPU at 240MHz, Implementation 39, '
+2022-04-15 11:28:29,793 p=55697 u=stephenw n=ansible | response-15: b'Rev 2.1, 256KB L2, 512KB L3 Cache\r\n3 FastEthernet interfaces\r\n4 Serial interfaces\r\nDRAM configuration is 64 bits wide with parity enabled.\r\n55K bytes of NVRAM.\r\n\r\nConfiguration register is 0x2102\r\n\r\nR5#'
+2022-04-15 11:28:29,793 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b' FTX0945W0MY\r\nR7000 CPU at 240MHz, Implementation 39, Rev 2.1, 256KB L2, 512KB L3 Cache\r\n3 FastEthernet interfaces\r\n4 Serial interfaces\r\nDRAM configuration is 64 bits wide with parity enabled.\r\n55K bytes of NVRAM.\r\n\r\nConfiguration register is 0x2102\r\n\r\nR5#''
+2022-04-15 11:28:29,794 p=55697 u=stephenw n=ansible | Response received, triggered 'persistent_buffer_read_timeout' timer of 0.1 seconds
+2022-04-15 11:28:29,794 p=55697 u=stephenw n=ansible | send command: b'show vlan\r'
+2022-04-15 11:28:29,794 p=55697 u=stephenw n=ansible | command: b'show vlan'
+2022-04-15 11:28:29,794 p=55697 u=stephenw n=ansible | response-1: b's'
+2022-04-15 11:28:29,795 p=55697 u=stephenw n=ansible | response-2: b'h'
+2022-04-15 11:28:29,795 p=55697 u=stephenw n=ansible | response-3: b'ow'
+2022-04-15 11:28:29,795 p=55697 u=stephenw n=ansible | response-4: b' vlan\r\n'
+2022-04-15 11:28:29,796 p=55697 u=stephenw n=ansible | response-5: b'% Ambiguous command:  "show vlan"\r\nR5#'
+2022-04-15 11:28:29,796 p=55697 u=stephenw n=ansible | matched error regex (terminal_stderr_re) 'b'(?:incomplete|ambiguous) command'' from response 'b'show vlan\r\n% Ambiguous command:  "show vlan"\r\nR5#''
+2022-04-15 11:28:29,796 p=55697 u=stephenw n=ansible | matched stdout regex (terminal_stdout_re) 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from error response 'b'show vlan\r\n% Ambiguous command:  "show vlan"\r\nR5#''
+2022-04-15 11:28:29,796 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b'show vlan\r\n% Ambiguous command:  "show vlan"\r\nR5#''
+2022-04-15 11:28:29,797 p=55697 u=stephenw n=ansible | send command: b'show version\r'
+2022-04-15 11:28:29,797 p=55697 u=stephenw n=ansible | command: b'show version'
+2022-04-15 11:28:29,797 p=55697 u=stephenw n=ansible | response-1: b's'
+2022-04-15 11:28:29,798 p=55697 u=stephenw n=ansible | response-2: b'h'
+2022-04-15 11:28:29,798 p=55697 u=stephenw n=ansible | response-3: b'o'
+2022-04-15 11:28:29,798 p=55697 u=stephenw n=ansible | response-4: b'w'
+2022-04-15 11:28:29,799 p=55697 u=stephenw n=ansible | response-5: b' '
+2022-04-15 11:28:29,799 p=55697 u=stephenw n=ansible | response-6: b'v'
+2022-04-15 11:28:29,799 p=55697 u=stephenw n=ansible | response-7: b'e'
+2022-04-15 11:28:29,799 p=55697 u=stephenw n=ansible | response-8: b'r'
+2022-04-15 11:28:29,800 p=55697 u=stephenw n=ansible | response-9: b's'
+2022-04-15 11:28:29,800 p=55697 u=stephenw n=ansible | response-10: b'i'
+2022-04-15 11:28:29,800 p=55697 u=stephenw n=ansible | response-11: b'o'
+2022-04-15 11:28:29,801 p=55697 u=stephenw n=ansible | response-12: b'n'
+2022-04-15 11:28:29,801 p=55697 u=stephenw n=ansible | response-13: b'\r\n'
+2022-04-15 11:28:29,801 p=55697 u=stephenw n=ansible | response-14: b'Cisco IOS Software, 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopyright (c) 1986-2010 by Cisco Systems, Inc.\r\nCompiled Tue 17-Aug-10 12:08 by prod_rel_team\r\n\r\n'
+2022-04-15 11:28:29,801 p=55697 u=stephenw n=ansible | response-15: b'ROM: ROMMON Emulation Microcode\r\nROM: 3700 Software (C3725-ADVENTERPRISEK9-M), Version 12.4(15)T14, RELEASE SOFTWARE (fc2)\r\n\r\nR5 uptime is 1 day, 2 hours, 17 minutes\r\nSystem returned to ROM by unknown reload cause - suspect boot_data[BOOT_COUNT] 0x0, BOOT_'
+2022-04-15 11:28:29,802 p=55697 u=stephenw n=ansible | response-16: b'COUNT 0, BOOTDATA 19\r\nSystem image file is "tftp://255.255.255.255/unknown"\r\n\r\n\r\nThis product contains cryptographic features and is subject to United\r\nStates and local country laws governing import, export, transfer and\r\nuse. Delivery of Cisco cryptograph'
+2022-04-15 11:28:29,802 p=55697 u=stephenw n=ansible | response-17: b'ic products does not imply\r\nthird-party authority to import, export, distribute or use encryption.\r\nImporters, exporters, distributors and users are responsible for\r\ncompliance with U.S. and local country laws. By using this product you\r\nagree to comply wi'
+2022-04-15 11:28:29,802 p=55697 u=stephenw n=ansible | response-18: b'th applicable laws and regulations. If you are unable\r\nto comply with U.S. and local laws, return this product immediately.\r\n\r\nA summary of U.S. laws governing Cisco cryptographic products may be found at:\r\nhttp://www.cisco.com/wwl/export/crypto/tool/stqrg'
+2022-04-15 11:28:29,803 p=55697 u=stephenw n=ansible | response-19: b'.html\r\n\r\nIf you require further assistance please contact us by sending email to\r\nexport@cisco.com.\r\n\r\nCisco 3725 (R7000) processor (revision 0.1) with 124928K/6144K bytes of memory.\r\nProcessor board ID FTX0945W0MY\r\nR7000 CPU at 240MHz, Implementation 39, '
+2022-04-15 11:28:29,803 p=55697 u=stephenw n=ansible | response-20: b'Rev 2.1, 256KB L2, 512KB L3 Cache\r\n3 FastEthernet interfaces\r\n4 Serial interfaces\r\nDRAM configuration is 64 bits wide with parity enabled.\r\n55K bytes of NVRAM.\r\n\r\nConfiguration register is 0x2102\r\n\r\nR5#'
+2022-04-15 11:28:29,803 p=55697 u=stephenw n=ansible | matched cli prompt 'b'\nR5#'' with regex 'b'[\\r\\n]?[\\w\\+\\-\\.:\\/\\[\\]]+(?:\\([^\\)]+\\)){0,3}(?:[>#]) ?$'' from response 'b' FTX0945W0MY\r\nR7000 CPU at 240MHz, Implementation 39, Rev 2.1, 256KB L2, 512KB L3 Cache\r\n3 FastEthernet interfaces\r\n4 Serial interfaces\r\nDRAM configuration is 64 bits wide with parity enabled.\r\n55K bytes of NVRAM.\r\n\r\nConfiguration register is 0x2102\r\n\r\nR5#''
+2022-04-15 11:28:29,804 p=55697 u=stephenw n=ansible | Response received, triggered 'persistent_buffer_read_timeout' timer of 0.1 seconds
+2022-04-15 11:28:29,804 p=55697 u=stephenw n=ansible | resetting persistent connection for socket_path /Users/stephenw/.ansible/pc/b8af2ee17a
+2022-04-15 11:28:29,804 p=55697 u=stephenw n=ansible | closing ssh connection to device
+2022-04-15 11:28:29,804 p=55697 u=stephenw n=ansible | firing event: on_close_shell()
+2022-04-15 11:28:29,805 p=55697 u=stephenw n=ansible | cli session is now closed
+2022-04-15 11:28:29,805 p=55697 u=stephenw n=ansible | ssh connection has been closed successfully
+2022-04-15 11:28:29,805 p=55697 u=stephenw n=ansible | reset call on connection instance
+2022-04-15 11:28:29,806 p=55697 u=stephenw n=ansible | shutdown complete
