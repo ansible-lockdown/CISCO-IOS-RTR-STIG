@@ -378,6 +378,8 @@ iosrtr_bgp_neighbor_address: "70.70.70.70"
 
 
 # CISC_RT_000570
+# NOTE: Currently there is a known issue with ansible where if the wrong prefix and subnet are entered
+# the task does not fail properly.  PLEASE DOUBLE CHECK YOUR PREFIX'S WHEN ENTERING THEM.  
 # { seq: mandatory, action: mandatory, prefix: mandatory, ge: can be omitted, le: can be omitted }
 iosrtr_flattened:
     - { seq: 5, action: permit, prefix: 13.0.0.0/8, ge: 10, le: 24 }
@@ -386,10 +388,6 @@ iosrtr_flattened:
 iosrtr_ebgp_neighbors:
     - '1.1.1.1'
     - '13.13.13.13'
-
-
-
-
 
 
 
@@ -416,6 +414,10 @@ iosrtr_loopback_interface: 'Loopback 0'
 # CISC-RT-000590
 # iosrtr_loopback_interface_source is the loopback interface that is used for LDP peering sessions. 
 iosrtr_loopback_interface_source: 'Loopback 0'
+
+
+# CISC-RT-000600
+
 
 
 
