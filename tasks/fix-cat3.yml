@@ -170,7 +170,7 @@
       with_items:
       - "{{ iosrtr_ospf_process_number }}"
       when: 
-      - iosrtr_ospf_staticroute_redistributed
+        - iosrtr_ospf_staticroute_redistributed
 
     - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. | Apply Route Map to EIGRP."
       ios_config:
@@ -181,7 +181,7 @@
       with_items:
           - "{{ iosrtr_eigrp_as_number }}"
       when: 
-      - iosrtr_eigrp_staticroute_redistributed
+        - iosrtr_eigrp_staticroute_redistributed
 
     - name: "LOW | CISC-RT-000300 | PATCH | The Cisco perimeter router must be configured to not redistribute static routes to an alternate gateway service provider into BGP or an IGP peering with the NIPRNet or to other autonomous systems. Apply Route Map to RIP."
       ios_config:
@@ -386,8 +386,15 @@
       - V-216607
 
 - name: "LOW | CISC-RT-000600 | PATCH | The Cisco MPLS router must be configured to synchronize IGP and LDP to minimize packet loss when an IGP adjacency is established prior to LDP peers completing label exchange."
-  debug:
-    msg: "test"
+  ios_config:
+    parents:
+      - router ospf {{ item }}
+    lines:
+      - mpls ldp sync
+  with_items: 
+
+
+
   when:
       - cisc_rt_000600
   tags:
