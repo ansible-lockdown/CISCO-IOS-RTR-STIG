@@ -118,8 +118,8 @@ cisc_rt_000550: false
 cisc_rt_000570: false
 cisc_rt_000580: false
 cisc_rt_000590: false
-cisc_rt_000600: true
-cisc_rt_000610: false
+cisc_rt_000600: false
+cisc_rt_000610: true
 cisc_rt_000760: false
 cisc_rt_000770: false
 cisc_rt_000810: false
@@ -381,7 +381,7 @@ iosrtr_bgp_neighbor_address: "70.70.70.70"
 # NOTE: Currently there is a known issue with ansible where if the wrong prefix and subnet are entered
 # the task does not fail properly.  PLEASE DOUBLE CHECK YOUR PREFIX'S WHEN ENTERING THEM.  
 # { seq: mandatory, action: mandatory, prefix: mandatory, ge: can be omitted, le: can be omitted }
-iosrtr_flattened:
+iosrtr_prefix_limit_data:
     - { seq: 5, action: permit, prefix: 13.0.0.0/8, ge: 10, le: 24 }
     - { seq: 10, action: deny, prefix: 12.0.0.0/8, le: 32 }
 
@@ -423,11 +423,25 @@ iosrtr_opsf_process_id:
     - '1'
 # iosrtr_ospf_ldp_sync is to be set to true to apply the rule to make it compliant.  Set to False if you would 
 # like the task skipped. 
-iosrtr_ospf_ldp_sync: false
+iosrtr_ospf_ldp_sync: true
 # iosrtr_isis_ldp_sync is to be set to true to apply the rule to make it compliant.  Set to False if you would 
 # like the task skipped. 
-iosrtr_isis_ldp_sync: false      
+iosrtr_isis_ldp_sync: false
 
+
+# CISC-RT-000610
+# Control CISC-RT-000610 will enable MPLS TE Globally but at least one interface must be set with the 
+# mpls traffic-eng tunnels.  Below is where you can add those interfaces to assign mpls traffic-eng tunnels
+# to on the router. RSVP rate limiting maintains, on an outgoing interface basis.
+iosrtr_interfaces_mpls_traffic_eng_tunnels:
+    - 'FastEthernet0/0'
+    - 'FastEthernet0/1'
+# The variables below in iosrtr_ip_rsvp_signalling_rate_limit are all optional commands for Cisco to adjust defaults.
+# For the router to be compliant these variables in the command line must be set to rate limit RSVP messages 
+# based on the link speed and input queue size of the adjacent core routers.
+# For the items to be passed properly make sure you not only include the names but also the numbers you are wanting to apply. 
+iosrtr_ip_rsvp_signalling_rate_limit: 
+    - { period: period 30, burst: burst 9, maxsize: maxsize 2100, limit: limit 50}
 
 
 

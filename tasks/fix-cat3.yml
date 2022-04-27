@@ -326,7 +326,7 @@
                     le: "{{ item.le | default(omit) }}"
                     sequence: "{{ item.seq }}"
       with_items:
-        - "{{ iosrtr_flattened }}"
+        - "{{ osrtr_prefix_limit_data }}"
     
     - name: "LOW | CISC-RT-000570 | PATCH | The Cisco BGP router must be configured to limit the prefix size on any inbound route advertisement to /24 or the least significant prefixes issued to the customer. | Apply To All eBGP (Exterior Border Gateway Protocol) Peer Neighbors."
       ios_config:
@@ -417,8 +417,41 @@
       - V-216608
 
 - name: "LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers."
-  debug:
-    msg: "test"
+  block:
+    - name: "LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers. | Enable MPLS Traffic-Eng Globally."
+      ios_config:
+        lines:
+          - mpls traffic-eng tunnels
+
+    - name: "LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers. | Apply To At Least One Interface."
+      ios_config:
+        parents: 
+          - interface {{ item }}
+        lines:
+          - mpls traffic-eng tunnels
+      with_items:
+          - "{{ iosrtr_interfaces_mpls_traffic_eng_tunnels }}"
+
+    # Checking to see if limit is a option on router if not it skips variable.
+    - name: "LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers. | Check Rate Limit."
+      ios_config:
+        lines:
+          - ip rsvp signalling rate-limit limit
+      changed_when: false
+      register: check_rate_limit_feature
+      failed_when: check_rate_limit_feature.rc not in [ 0, 1 ]
+
+    - name: "LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers. | Set fact For Check Rate Limit."
+      set_fact:
+        limit_allowed: false
+      when: '"Invalid input detected at" in check_rate_limit_feature.module_stderr'
+
+    - name: "LOW | CISC-RT-000610 | PATCH | The MPLS router with RSVP-TE enabled must be configured with message pacing to adjust maximum burst and maximum number of RSVP messages to an output queue based on the link speed and input queue size of adjacent core routers. | Apply IP RSV Signalling Rate Limit."
+      ios_config:
+        lines:
+          - ip rsvp signalling rate-limit {{ item.period | default(omit) }} {{ item.burst | default(omit) }} {{ item.maxsize | default(omit) }} {% if limit_allowed %}{{ item.limit }}{% endif %}
+      with_items:
+        - "{{ iosrtr_ip_rsvp_signalling_rate_limit }}"
   when:
       - cisc_rt_000610
   tags:
