@@ -288,13 +288,13 @@
 
 - name: "LOW | CISC-RT-000550 | PATCH | The Cisco BGP router must be configured to reject route advertisements from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer."
   block:
-    - name: Add AS-PATH Access Lists
+    - name: "LOW | CISC-RT-000550 | PATCH | The Cisco BGP router must be configured to reject route advertisements from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer. | Add AS-PATH Access Lists."
       ios_config:
         commands:
           - ip as-path access-list 10 permit ^yy$
           - ip as-path access-list 10 deny .*
 
-    - name: Apply Access List Inbound
+    - name: "LOW | CISC-RT-000550 | PATCH | The Cisco BGP router must be configured to reject route advertisements from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer. | Apply Access List Inbound."
       ios_config:
         commands:
           - router bgp {{ iosrtr_bgp_autonomous_system_number }}
