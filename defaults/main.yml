@@ -119,10 +119,10 @@ cisc_rt_000570: false
 cisc_rt_000580: false
 cisc_rt_000590: false
 cisc_rt_000600: false
-cisc_rt_000610: true
+cisc_rt_000610: false
 cisc_rt_000760: false
 cisc_rt_000770: false
-cisc_rt_000810: false
+cisc_rt_000810: true
 cisc_rt_000820: false
 cisc_rt_000830: false
 cisc_rt_000840: false
@@ -444,7 +444,6 @@ iosrtr_ip_rsvp_signalling_rate_limit:
     - { period: period 30, burst: burst 9, maxsize: maxsize 2100, limit: limit 50}
 
 
-
 # CISC-RT-000760
 iosrtr_classmap_name:
     - PREFERRED_DATA
@@ -459,7 +458,6 @@ iosrtr_classmap_dscp_value:
     - af41
     - ef
     - '47'
-
 
 iosrtr_policymap_name:
     - CONTROL_PLANE
@@ -478,3 +476,27 @@ iosrtr_policymap_bandwidth_percentage:
     - '25'
     - '25'
     - '15'
+
+# CISC-RT-000810
+# iosrtr_scoped_multicast_traffic_access_list_name_old is used here to delete a old access conrtrol list to prepare the router for a new
+# acl for the multicast traffic.  In the even that you need to update a existing access conrtrol list that is already in place the ios_acl 
+# module does not allow for merging updates into a existing access conrtrol list that defined.  You must used replaced or overridden.
+# In testing replaced and overridden does not function correctly when looping over a list for data, as it runs and applies the 
+# first line but then removes it to do the second sequence line in the acl.  
+iosrtr_scoped_multicast_traffic_access_list_name_old: MULTICAST_SCOPE
+# iosrtr_scoped_multicast_traffic_access_list_name is the name of the new acl for 
+iosrtr_scoped_multicast_traffic_access_list_name: MULTICAST_SCOPE
+# iosrtr_scoped_multicast_traffic_acl has 5 variables which can all be modified.  The list can be extended but make sure you keep the list 
+# in sequence order to keep the access control list right.  Action, source_address, source_wildcard_bits can be left blank to default omit it.
+# If you are not going to use source_any you must put 0 in there default omit does not work in thay field.  
+# Example Below is of the code below it. 
+# ip access-list standard MULTICAST_SCOPE
+#  deny   239.0.0.0 0.255.255.255
+#  permit any
+iosrtr_scoped_multicast_traffic_acl:
+    - { seq: 10, action: deny, source_address: 239.0.0.0, source_wildcard_bits: 0.255.255.255, source_any: 0 }
+    - { seq: 20, action: permit, source_address: , source_wildcard_bits: , source_any: true}
+# iosrtr_multicast_boundary_interfaces are the interfaces that the access conrtrol list will be attached to.
+iosrtr_multicast_boundary_interfaces:
+    - FastEthernet2/0
+

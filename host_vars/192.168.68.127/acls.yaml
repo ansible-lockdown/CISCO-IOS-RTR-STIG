@@ -1,0 +1,7 @@
+changed: false
+failed: false
+gathered:
+-   acls:
+    -   acl_type: standard
+        name: MULTICAST_SCOPE
+    afi: ipv4

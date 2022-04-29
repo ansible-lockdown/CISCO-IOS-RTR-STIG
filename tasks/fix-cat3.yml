@@ -1,10 +1,10 @@
----
-- name: get version information
-  cisco.ios.ios_command:
-    commands:
-      - show version
-  vars:
-    ansible_persistent_log_messages: True
+# ---
+# - name: get version information
+#   cisco.ios.ios_command:
+#     commands:
+#       - show version
+#   vars:
+#     ansible_persistent_log_messages: True
 
 - name: "LOW | CISC-RT-000060 | PATCH | The Cisco router must be configured to have all inactive interfaces disabled."
   ios_config:
@@ -518,8 +518,41 @@
       - V-216620
 
 - name: "LOW | CISC-RT-000810 | PATCH | The Cisco multicast edge router must be configured to establish boundaries for administratively scoped multicast traffic."
-  debug:
-    msg: "test"
+  block:
+    - name: "LOW | CISC-RT-000810 | PATCH | The Cisco multicast edge router must be configured to establish boundaries for administratively scoped multicast traffic. | Remove Old Multicast Traffic ACL."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_scoped_multicast_traffic_access_list_name_old }}"
+          state: deleted
+
+    - name: "LOW | CISC-RT-000810 | PATCH | The Cisco multicast edge router must be configured to establish boundaries for administratively scoped multicast traffic. | Setup New ACL For Mutlicast."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_scoped_multicast_traffic_access_list_name }}"
+                  acl_type: standard
+                  aces:
+                  - grant: '{{ item.action | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    protocol:
+                    source: 
+                      any: '{{ item.source_any  | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+      with_items:
+        - "{{ iosrtr_scoped_multicast_traffic_acl }}"
+
+    - name: "LOW | CISC-RT-000810 | PATCH | The Cisco multicast edge router must be configured to establish boundaries for administratively scoped multicast traffic. | Apply To Interfaces."
+      ios_config:
+        parents:
+            - interface {{ item }}
+        lines:
+            - ip multicast boundary {{ iosrtr_scoped_multicast_traffic_access_list_name }}
+      with_items:
+        - "{{ iosrtr_multicast_boundary_interfaces }}"
   when:
       - cisc_rt_000810
   tags:
