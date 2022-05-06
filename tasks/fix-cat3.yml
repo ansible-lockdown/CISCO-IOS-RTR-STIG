@@ -533,13 +533,13 @@
               - afi: ipv4
                 acls:
                 - name: "{{ iosrtr_scoped_multicast_traffic_access_list_name }}"
-                  acl_type: standard
+                  acl_type: "{{ iosrtr_scoped_multicast_traffic_access_list_type }}"
                   aces:
-                  - grant: '{{ item.action | default(omit) }}'
+                  - grant: '{{ item.grant | default(omit) }}'
                     sequence: '{{ item.seq | default(omit) }}'
                     protocol:
                     source: 
-                      any: '{{ item.source_any  | default(omit) }}'
+                      any: '{{ item.source_any | default(omit) }}'
                       address: '{{ item.source_address | default(omit) }}'
                       wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
       with_items:
@@ -564,8 +564,89 @@
       - V-216624
 
 - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries."
-  debug:
-    msg: "test"
+  block:
+    # - name: Step 1
+    #   ios_acls:
+    #       config:
+    #           - afi: ipv4
+    #             acls:
+    #               - name: "{{ iosrtr_pim_register_filter_acl_name_old }}"
+    #       state: deleted
+
+    # - name: Step 2
+    #   ios_acls:
+    #       config:
+    #           - afi: ipv4
+    #             acls:
+    #             - name: "{{ iosrtr_pim_register_filter_acl_name_new }}"
+    #               acl_type: "{{ iosrtr_pim_register_filter_acl_type }}"
+    #               aces:
+    #               - grant: '{{ item.grant | default(omit) }}'
+    #                 sequence: '{{ item.seq | default(omit) }}'
+    #                 protocol: '{{ item.protocol | default(omit) }}'
+    #                 source: 
+    #                   any: '{{ item.source_any | default(omit) }}'
+    #                   host: '{{ item.source_host | default(omit) }}'
+    #                   address: '{{ item.source_address | default(omit) }}'
+    #                   wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+    #                 destination:
+    #                   any: '{{ item.destination_any | default(omit) }}'
+    #                   host: '{{ item.destination_host | default(omit) }}'
+    #                   address: '{{ item.destination_address | default(omit) }}'
+    #                   wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+    #   with_items:
+    #     - "{{ iosrtr_pim_register_filter_traffic_acl }}"
+
+    # - name: Step 2.5
+    #   ios_config:
+    #     lines: 
+    #       - ip pim accept-register list {{ iosrtr_pim_register_filter_acl_name_new }}
+    
+    # - name: Step 2.75
+    #   ios_config:
+    #     lines: ip pim register-rate-limit {{ iosrtr_pim_register_rate_limit }}
+    
+    - name: Step 3 Remove old Acl For MSDP
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_msdp_known_peers_acl_name_old }}"
+          state: deleted 
+
+    - name: Step 3.5 Accept MSDP Packets From Known MSDP Peers
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_msdp_known_peers_acl_name_new }}"
+                  acl_type: "{{ iosrtr_msdp_known_peers_acl_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    protocol: '{{ item.protocol | default(omit) }}'
+                    protocol_options: 
+                      tcp:
+                        established: '{{ item.destination_protocol_options_tcp_established | default(omit) }}'
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+                    destination:
+                      any: '{{ item.destination_any | default(omit) }}'
+                      host: '{{ item.destination_host | default(omit) }}'
+                      address: '{{ item.destination_address | default(omit) }}'
+                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}'
+                    
+      with_items:
+        - "{{ iosrtr_msdp_known_peers_acl }}"
+
+
+
+
   when:
       - cisc_rt_000820
   tags:

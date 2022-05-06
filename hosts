@@ -9,18 +9,6 @@
 #172.16.184.94
 192.168.68.127
 
-#Define Host By Naming Convention
-#Switch1 ansible_host=192.168.68.230
-#Switch2 ansible_host=192.168.68.233
-#Switch3 ansible_host=192.168.68.233
-
-#Router1 ansible_host=192.168.68.233
-#Router2 ansible_host=192.168.68.233
-#Router3 ansible_host=192.168.68.233
-
-#Define Host By Hostname
-#test.dyndns.com
-
 [cisco:vars] 
 ansible_network_os=ios 
 ansible_ssh_user=mpg

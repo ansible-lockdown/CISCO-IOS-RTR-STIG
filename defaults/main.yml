@@ -122,8 +122,8 @@ cisc_rt_000600: false
 cisc_rt_000610: false
 cisc_rt_000760: false
 cisc_rt_000770: false
-cisc_rt_000810: true
-cisc_rt_000820: false
+cisc_rt_000810: false
+cisc_rt_000820: true
 cisc_rt_000830: false
 cisc_rt_000840: false
 cisc_rt_000860: false
@@ -133,7 +133,7 @@ cisc_rt_000940: false
 cisc_rt_000950: false
 cisc_rt_000470: false
 cisc_rt_000236: false
-cisc_rt_acl: false
+cisc_rt_acl: true
 cisc_rt_bgp: false
 cisc_rt_route_maps: false
 cisc_rt_prefix_lists: false
@@ -479,13 +479,15 @@ iosrtr_policymap_bandwidth_percentage:
 
 # CISC-RT-000810
 # iosrtr_scoped_multicast_traffic_access_list_name_old is used here to delete a old access conrtrol list to prepare the router for a new
-# acl for the multicast traffic.  In the even that you need to update a existing access conrtrol list that is already in place the ios_acl 
-# module does not allow for merging updates into a existing access conrtrol list that defined.  You must used replaced or overridden.
+# acl for the multicast traffic.  In the event that you need to update a existing access conrtrol list that is already in place the ios_acl 
+# module does not allow for merging updates into a existing access conrtrol list that is defined.  You must used replaced or overridden.
 # In testing replaced and overridden does not function correctly when looping over a list for data, as it runs and applies the 
 # first line but then removes it to do the second sequence line in the acl.  
 iosrtr_scoped_multicast_traffic_access_list_name_old: MULTICAST_SCOPE
 # iosrtr_scoped_multicast_traffic_access_list_name is the name of the new acl for 
 iosrtr_scoped_multicast_traffic_access_list_name: MULTICAST_SCOPE
+# iosrtr_scoped_multicast_traffic_access_list_type is the setting for a standard or extended access-list.  In this case it should be set for standard. 
+iosrtr_scoped_multicast_traffic_access_list_type: standard
 # iosrtr_scoped_multicast_traffic_acl has 5 variables which can all be modified.  The list can be extended but make sure you keep the list 
 # in sequence order to keep the access control list right.  Action, source_address, source_wildcard_bits can be left blank to default omit it.
 # If you are not going to use source_any you must put 0 in there default omit does not work in thay field.  
@@ -494,9 +496,50 @@ iosrtr_scoped_multicast_traffic_access_list_name: MULTICAST_SCOPE
 #  deny   239.0.0.0 0.255.255.255
 #  permit any
 iosrtr_scoped_multicast_traffic_acl:
-    - { seq: 10, action: deny, source_address: 239.0.0.0, source_wildcard_bits: 0.255.255.255, source_any: 0 }
-    - { seq: 20, action: permit, source_address: , source_wildcard_bits: , source_any: true}
+    - { seq: 10, grant: deny, source_address: 239.0.0.0, source_wildcard_bits: 0.255.255.255, source_any: 0 }
+    - { seq: 20, grant: permit, source_address: , source_wildcard_bits: , source_any: true}
 # iosrtr_multicast_boundary_interfaces are the interfaces that the access conrtrol list will be attached to.
 iosrtr_multicast_boundary_interfaces:
     - FastEthernet2/0
+
+
+
+
+
+
+
+# CISC-RT-000820
+
+iosrtr_pim_register_filter_acl_name_old: PIM_REGISTER_FILTER
+
+iosrtr_pim_register_filter_acl_name_new: PIM_REGISTER_FILTER
+
+iosrtr_pim_register_filter_acl_type: extended
+
+iosrtr_pim_register_filter_traffic_acl:
+    - { seq: 10, grant: deny, protocol: ip, source_any: true, source_host: , source_address: , source_wildcard_bits: , destination_any: false, destination_host: , destination_address: 239.5.0.0, destination_wildcard_bits: 0.0.255.255}
+    - { seq: 20, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.6, source_address: , source_wildcard_bits: , destination_any: true, destination_host: , destination_address: , destination_wildcard_bits: }
+    - { seq: 30, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.7, source_address: , source_wildcard_bits: , destination_any: true, destination_host: , destination_address: , destination_wildcard_bits: }
+    - { seq: 40, grant: deny, protocol: ip, source_any: true, source_host: , source_address:  , source_wildcard_bits: , destination_any: true, destination_host: , destination_address: , destination_wildcard_bits: }
+
+iosrtr_pim_register_rate_limit: '50'
+
+
+iosrtr_msdp_known_peers_acl_name_old: EXTERNAL_ACL_INBOUND
+
+iosrtr_msdp_known_peers_acl_name_new: EXTERNAL_ACL_INBOUND
+
+iosrtr_msdp_known_peers_acl_type: extended
+
+#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , destination_protocol_options_tcp_established: }
+
+iosrtr_msdp_known_peers_acl:
+    - {seq: 10, grant: permit, protocol: tcp, source_any: true, destination_any: true, destination_protocol_options_tcp_established: true}
+    - {seq: 20, grant: permit, protocol: tcp, source_host: 1.1.28.2, destination_host: 2.1.28.8, destination_port_protocol_eq: 639}
+    - {seq: 30, grant: deny, protocol: tcp, source_any: true, destination_host: 2.1.28.8, destination_port_protocol_eq: 639}
+    - {seq: 40, grant: permit, protocol: tcp, source_host: 1.1.28.2, destination_host: 2.1.28.8, destination_port_protocol_eq: bgp}
+    - {seq: 50, grant: permit, protocol: tcp, source_host: 1.1.28.2, source_port_protocol_eq: bgp, destination_host: 2.1.28.8}
+    - {seq: 60, grant: permit, protocol: pim, source_host: 1.1.28.2, destination_host: 2.1.28.8}
+    - {seq: 70, grant: deny, protocol: ip, source_any: true, destination_any: true}
+
 
