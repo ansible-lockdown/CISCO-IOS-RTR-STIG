@@ -509,30 +509,52 @@ iosrtr_multicast_boundary_interfaces:
 
 
 # CISC-RT-000820
-
+# iosrtr_pim_register_filter_acl_name_old is used to remove the old access control list for the pim register filter.  
+# If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_pim_register_filter_acl_name_old: PIM_REGISTER_FILTER
-
+# iosrtr_pim_register_filter_acl_name_new is the name of the new access control list used to configure the  
+# router to filter PIM register messages received from a multicast DR for any undesirable multicast groups and sources.
 iosrtr_pim_register_filter_acl_name_new: PIM_REGISTER_FILTER
-
+# iosrtr_pim_register_filter_acl_type is the setting for a standard or extended access-list.  In this case it should be set for extended. 
 iosrtr_pim_register_filter_acl_type: extended
-
+# Below is the example of a access control list for configuring the router to filter PIM register messages received from a multicast DR for any undesirable multicast 
+# groups and sources. The example below will deny any multicast streams for groups 239.5.0.0/16 and allow from only sources 10.1.2.6 and 10.1.2.7. 
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current ones that are configured to be used. 
+# - { seq: , grant: , protocol: , source_any: , source_host: , source_host: , source_wildcard_bits: , destination_any: , destination_host: , destination_wildcard_bits: }
+# The configuration below yields the following example on the router.
+# ip access-list extended PIM_REGISTER_FILTER
+# deny   ip any 239.5.0.0 0.0.255.255
+# permit ip host 10.1.2.6 any
+# permit ip host 10.1.2.7 any
+# deny   ip any any
 iosrtr_pim_register_filter_traffic_acl:
-    - { seq: 10, grant: deny, protocol: ip, source_any: true, source_host: , source_address: , source_wildcard_bits: , destination_any: false, destination_host: , destination_address: 239.5.0.0, destination_wildcard_bits: 0.0.255.255}
-    - { seq: 20, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.6, source_address: , source_wildcard_bits: , destination_any: true, destination_host: , destination_address: , destination_wildcard_bits: }
-    - { seq: 30, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.7, source_address: , source_wildcard_bits: , destination_any: true, destination_host: , destination_address: , destination_wildcard_bits: }
-    - { seq: 40, grant: deny, protocol: ip, source_any: true, source_host: , source_address:  , source_wildcard_bits: , destination_any: true, destination_host: , destination_address: , destination_wildcard_bits: }
-
+    - { seq: 10, grant: deny, protocol: ip, source_any: true, destination_any: false, destination_address: 239.5.0.0, destination_wildcard_bits: 0.0.255.255 }
+    - { seq: 20, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.6, destination_any: true }
+    - { seq: 30, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.7, destination_any: true }
+    - { seq: 40, grant: deny, protocol: ip, source_any: true, destination_any: true }
+# iosrtr_pim_register_rate_limit is used to configure the RP to rate limit the number of multicast register messages.
 iosrtr_pim_register_rate_limit: '50'
 
-
+# iosrtr_msdp_known_peers_acl_name_old is used to remove the old access control list for msdp known peers.  
+# If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_msdp_known_peers_acl_name_old: EXTERNAL_ACL_INBOUND
-
+# iosrtr_msdp_known_peers_acl_name_new is the name of the new access control list used to configure the receive 
+# path or interface ACLs to only accepts MSDP packets from known MSDP peers.
 iosrtr_msdp_known_peers_acl_name_new: EXTERNAL_ACL_INBOUND
-
+# iosrtr_msdp_known_peers_acl_type # iosrtr_scoped_multicast_traffic_access_list_type is the setting for a standard or extended access-list.  In this case it should be set for extended. 
 iosrtr_msdp_known_peers_acl_type: extended
-
+# Below is the example of a access control list for configuring the receive path or interface ACLs to only accepts MSDP packets from known MSDP peers. 
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current ones that are configured to be used. 
 #  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , destination_protocol_options_tcp_established: }
-
+# The configuration below yields the following example on the router.
+# ip access-list extended EXTERNAL_ACL_INBOUND
+# permit tcp any any established
+# permit tcp host 1.1.28.2 host 2.1.28.8 eq 639
+# deny   tcp any host 2.1.28.8 eq 639
+# permit tcp host 1.1.28.2 host 2.1.28.8 eq bgp
+# permit tcp host 1.1.28.2 host 2.1.28.8
+# permit pim host 1.1.28.2 host 2.1.28.8
+# deny   ip any any
 iosrtr_msdp_known_peers_acl:
     - {seq: 10, grant: permit, protocol: tcp, source_any: true, destination_any: true, destination_protocol_options_tcp_established: true}
     - {seq: 20, grant: permit, protocol: tcp, source_host: 1.1.28.2, destination_host: 2.1.28.8, destination_port_protocol_eq: 639}
