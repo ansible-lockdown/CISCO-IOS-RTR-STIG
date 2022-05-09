@@ -540,6 +540,7 @@
                     protocol:
                     source: 
                       any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
                       address: '{{ item.source_address | default(omit) }}'
                       wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
       with_items:
@@ -565,7 +566,7 @@
 
 - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries."
   block:
-    - name: Step 1
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove Old PIM Access Control List."
       ios_acls:
           config:
               - afi: ipv4
@@ -573,7 +574,7 @@
                   - name: "{{ iosrtr_pim_register_filter_acl_name_old }}"
           state: deleted
 
-    - name: Step 2
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Creates The New PIM Access Control List."
       ios_acls:
           config:
               - afi: ipv4
@@ -597,16 +598,16 @@
       with_items:
         - "{{ iosrtr_pim_register_filter_traffic_acl }}"
 
-    - name: Step 2.5
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Registers accept filter For PIM."
       ios_config:
         lines: 
           - ip pim accept-register list {{ iosrtr_pim_register_filter_acl_name_new }}
     
-    - name: Step 2.75
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Configure the Rendezvous Point (RP) to rate limit mullticast register messages."
       ios_config:
         lines: ip pim register-rate-limit {{ iosrtr_pim_register_rate_limit }}
     
-    - name: Step 3 Remove old Acl For MSDP
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove MSDP Control Access List."
       ios_acls:
           config:
               - afi: ipv4
@@ -614,7 +615,7 @@
                   - name: "{{ iosrtr_msdp_known_peers_acl_name_old }}"
           state: deleted 
 
-    - name: Step 3.5 Accept MSDP Packets From Known MSDP Peers
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Creates The New MSDP Access Control List."
       ios_acls:
           config:
               - afi: ipv4
@@ -639,14 +640,9 @@
                       address: '{{ item.destination_address | default(omit) }}'
                       wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
                       port_protocol:
-                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}'
-                    
+                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
       with_items:
         - "{{ iosrtr_msdp_known_peers_acl }}"
-
-
-
-
   when:
       - cisc_rt_000820
   tags:

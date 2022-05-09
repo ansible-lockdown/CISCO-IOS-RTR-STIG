@@ -64,6 +64,18 @@ gathered:
         acl_type: extended
         name: EXTERNAL_ACL_INBOUND
     -   aces:
+        -   grant: deny
+            sequence: 10
+            source:
+                address: 239.0.0.0
+                wildcard_bits: 0.255.255.255
+        -   grant: permit
+            sequence: 20
+            source:
+                address: any
+        acl_type: standard
+        name: MULTICAST_SCOPE
+    -   aces:
         -   destination:
                 address: 239.5.0.0
                 wildcard_bits: 0.0.255.255
