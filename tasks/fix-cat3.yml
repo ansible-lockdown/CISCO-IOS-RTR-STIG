@@ -564,17 +564,24 @@
       - SV-216624r531085_rule
       - V-216624
 
-- name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries."
+- name: |
+        "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries."
+        "LOW | CISC-RT-000830 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Register messages received from the Designated Router (DR) for any undesirable multicast groups and sources."
   block:
-    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove Old PIM Access Control List."
+    - name: |
+            "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove Old PIM Access Control List."
+            "LOW | CISC-RT-000830 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Register messages received from the Designated Router (DR) for any undesirable multicast groups and sources."
       ios_acls:
           config:
               - afi: ipv4
                 acls:
                   - name: "{{ iosrtr_pim_register_filter_acl_name_old }}"
           state: deleted
+      when: cisc_rt_000820 or cisc_rt_000830
 
-    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Creates The New PIM Access Control List."
+    - name: |
+            "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Creates The New PIM Access Control List."         
+            "LOW | CISC-RT-000830 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Register messages received from the Designated Router (DR) for any undesirable multicast groups and sources."
       ios_acls:
           config:
               - afi: ipv4
@@ -595,6 +602,7 @@
                       host: '{{ item.destination_host | default(omit) }}'
                       address: '{{ item.destination_address | default(omit) }}'
                       wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+      when: cisc_rt_000820 or cisc_rt_000830
       with_items:
         - "{{ iosrtr_pim_register_filter_traffic_acl }}"
 
@@ -602,10 +610,12 @@
       ios_config:
         lines: 
           - ip pim accept-register list {{ iosrtr_pim_register_filter_acl_name_new }}
+      when: cisc_rt_000820 or cisc_rt_000830
     
     - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Configure the Rendezvous Point (RP) to rate limit mullticast register messages."
       ios_config:
         lines: ip pim register-rate-limit {{ iosrtr_pim_register_rate_limit }}
+      when: cisc_rt_000820
     
     - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove MSDP Control Access List."
       ios_acls:
@@ -614,6 +624,7 @@
                 acls:
                   - name: "{{ iosrtr_msdp_known_peers_acl_name_old }}"
           state: deleted 
+      when: cisc_rt_000820
 
     - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Creates The New MSDP Access Control List."
       ios_acls:
@@ -643,28 +654,23 @@
                         eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
       with_items:
         - "{{ iosrtr_msdp_known_peers_acl }}"
+      when: cisc_rt_000820
   when:
-      - cisc_rt_000820
+      - cisc_rt_000820 or cisc_rt_000830
   tags:
       - CISC-RT-000820
-      - CAT2
-      - CCI-002385
-      - SRG-NET-000362-RTR-000120
-      - SV-216625r531085_rule
-      - V-216625
-
-- name: "LOW | CISC-RT-000830 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Register messages received from the Designated Router (DR) for any undesirable multicast groups and sources."
-  debug:
-    msg: "test"
-  when:
-      - cisc_rt_000830
-  tags:
       - CISC-RT-000830
       - CAT2
+      - CCI-002385
       - CCI-001414
+      - SRG-NET-000362-RTR-000120
       - SRG-NET-000019-RTR-000013
+      - SV-216625r531085_rule
       - SV-216626r531085_rule	
+      - V-216625
       - V-216626
+
+
 
 - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups."
   debug:
