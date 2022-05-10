@@ -680,7 +680,7 @@
                   - name: "{{ iosrtr_filter_pim_joins_access_list_name_old }}"
           state: deleted
 
-    - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Create PIM Filter Joins Access Control List."
+    - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Create New PIM Filter Joins Access Control List."
       ios_acls:
           config:
               - afi: ipv4
@@ -714,7 +714,7 @@
 
 - name: "LOW | CISC-RT-000860 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization."
   block:
-    - name: Remove OLD LIST
+    - name: "LOW | CISC-RT-000860 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization. | Remove Old IGMP Filter."
       ios_acls:
           config:
               - afi: ipv4
@@ -722,7 +722,7 @@
                   - name: "{{ iosrtr_filter_igmp_joins_access_list_name_old }}"
           state: deleted
 
-    - name: Step 1
+    - name: "LOW | CISC-RT-000860 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization. | Create New IGMP Join Filter Access List."
       ios_acls:
           config:
               - afi: ipv4
@@ -741,7 +741,7 @@
       with_items:
         - "{{ iosrtr_igmp_join_filter_acl }}"
 
-    - name: Apply Filter To All Host facing INterfaces
+    - name: "LOW | CISC-RT-000860 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization. | Apply Filter To All Host facing Interfaces."
       ios_config:
         parents:
             - interface {{ item }}
@@ -749,7 +749,6 @@
             - ip igmp access-group {{ iosrtr_filter_igmp_joins_access_list_name }}
       with_items:
         - "{{ iosrtr_igmp_join_filter_host_facing_interfaces }}"
-
   when:
       - cisc_rt_000860
   tags:
