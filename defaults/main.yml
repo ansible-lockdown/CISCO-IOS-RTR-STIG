@@ -124,8 +124,8 @@ cisc_rt_000760: false
 cisc_rt_000770: false
 cisc_rt_000810: false
 cisc_rt_000820: false
-cisc_rt_000830: true
-cisc_rt_000840: false
+cisc_rt_000830: false
+cisc_rt_000840: true
 cisc_rt_000860: false
 cisc_rt_000920: false
 cisc_rt_000930: false
@@ -177,6 +177,9 @@ iosrtr_inactive_interfaces:
 # Global Variables ACLs
 
 # Standard ACLs
+
+
+ios_rtr_rendezvous_point_router_ip_address_for_group: 10.2.2.2
 
 
 
@@ -564,4 +567,23 @@ iosrtr_msdp_known_peers_acl:
     - {seq: 70, grant: deny, protocol: ip, source_any: true, destination_any: true}
 
 
-
+# CISC-RT-000840
+# iosrtr_filter_pim_joins_access_list_name_old is used to remove the old Protocol Independent Multicast (PIM) Join messages 
+# received from the Designated Router (DR) for any undesirable multicast groups.
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_filter_pim_joins_access_list_name_old: PIM_JOIN_FILTER
+# iosrtr_filter_pim_joins_access_list_name is the name of the new access control list used to configure The Cisco multicast Rendezvous Point (RP) router to be configured to filter Protocol 
+# Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups.
+iosrtr_filter_pim_joins_access_list_name: PIM_JOIN_FILTER
+# iosrtr_filter_pim_joins_access_list_type is the setting for a standard or extended access-list.  In this case it should be set for standard. 
+iosrtr_filter_pim_joins_access_list_type: standard
+# Below is the example of a access control list for making sure the router 
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current ones that are configured to be used. 
+# - { seq: , grant: , source_any: , source_host: , source_address: , source_wildcard_bits: }
+# The configuration below yields the following example on the router.
+# ip access-list standard PIM_JOIN_FILTER
+# deny   239.0.0.0 0.0.255.255
+# permit any
+iosrtr_filter_pim_joins_acl:
+    - { seq: 10, grant: deny, source_address: 239.0.0.0, source_wildcard_bits: 0.0.255.255}
+    - { seq: 20, grant: permit, source_any: true}

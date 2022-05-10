@@ -617,7 +617,7 @@
         lines: ip pim register-rate-limit {{ iosrtr_pim_register_rate_limit }}
       when: cisc_rt_000820
     
-    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove MSDP Control Access List."
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove Old MSDP Control Access List."
       ios_acls:
           config:
               - afi: ipv4
@@ -670,11 +670,38 @@
       - V-216625
       - V-216626
 
-
-
 - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups."
-  debug:
-    msg: "test"
+  block:
+    - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Remove Old PIM Join Filter."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_filter_pim_joins_access_list_name_old }}"
+          state: deleted
+
+    - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Create PIM Filter Joins Access Control List."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_filter_pim_joins_access_list_name }}"
+                  acl_type: "{{ iosrtr_filter_pim_joins_access_list_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    protocol:
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+      with_items:
+        - "{{ iosrtr_filter_pim_joins_acl }}"
+
+    - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Attach Join Messages ACL To Rendezvous Point Router Address."
+      ios_config:
+        lines: ip pim accept-rp {{ ios_rtr_rendezvous_point_router_ip_address_for_group }} {{ iosrtr_filter_pim_joins_access_list_name }}     
   when:
       - cisc_rt_000840
   tags:
