@@ -697,7 +697,7 @@
                       address: '{{ item.source_address | default(omit) }}'
                       wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
       with_items:
-        - "{{ iosrtr_filter_pim_joins_acl }}"
+        - "{{ iosrtr_pim_join_filter_acl }}"
 
     - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Attach Join Messages ACL To Rendezvous Point Router Address."
       ios_config:
@@ -713,8 +713,28 @@
       - V-216627
 
 - name: "LOW | CISC-RT-000860 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization."
-  debug:
-    msg: "test"
+  block:
+    - name: Step 1
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_filter_igmp_joins_access_list_name }}"
+                  acl_type: "{{ iosrtr_filter_igmp_joins_access_list_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    protocol:
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+      with_items:
+        - "{{ iosrtr_igmp_join_filter_acl }}"
+
+    # - name: step 2
+
   when:
       - cisc_rt_000860
   tags:

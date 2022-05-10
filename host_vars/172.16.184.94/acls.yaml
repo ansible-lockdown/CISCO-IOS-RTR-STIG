@@ -6,6 +6,18 @@ gathered:
         -   grant: deny
             sequence: 10
             source:
+                address: 239.8.0.0
+                wildcard_bits: 0.0.255.255
+        -   grant: permit
+            sequence: 20
+            source:
+                address: any
+        acl_type: standard
+        name: IGMP_JOIN_FILTER
+    -   aces:
+        -   grant: deny
+            sequence: 10
+            source:
                 address: 239.0.0.0
                 wildcard_bits: 0.0.255.255
         -   grant: permit

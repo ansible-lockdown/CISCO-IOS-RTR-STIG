@@ -125,8 +125,8 @@ cisc_rt_000770: false
 cisc_rt_000810: false
 cisc_rt_000820: false
 cisc_rt_000830: false
-cisc_rt_000840: true
-cisc_rt_000860: false
+cisc_rt_000840: false
+cisc_rt_000860: true
 cisc_rt_000920: false
 cisc_rt_000930: false
 cisc_rt_000940: false
@@ -568,7 +568,7 @@ iosrtr_msdp_known_peers_acl:
 
 
 # CISC-RT-000840
-# iosrtr_filter_pim_joins_access_list_name_old is used to remove the old Protocol Independent Multicast (PIM) Join messages 
+# iosrtr_filter_pim_joins_access_list_name_old is used to remove the old access control list for Protocol Independent Multicast (PIM) Join messages 
 # received from the Designated Router (DR) for any undesirable multicast groups.
 # If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_filter_pim_joins_access_list_name_old: PIM_JOIN_FILTER
@@ -577,13 +577,36 @@ iosrtr_filter_pim_joins_access_list_name_old: PIM_JOIN_FILTER
 iosrtr_filter_pim_joins_access_list_name: PIM_JOIN_FILTER
 # iosrtr_filter_pim_joins_access_list_type is the setting for a standard or extended access-list.  In this case it should be set for standard. 
 iosrtr_filter_pim_joins_access_list_type: standard
-# Below is the example of a access control list for making sure the router 
+# Below is the example of a access control list for making sure the Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol 
+# Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups.
 # Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current ones that are configured to be used. 
 # - { seq: , grant: , source_any: , source_host: , source_address: , source_wildcard_bits: }
 # The configuration below yields the following example on the router.
 # ip access-list standard PIM_JOIN_FILTER
 # deny   239.0.0.0 0.0.255.255
 # permit any
-iosrtr_filter_pim_joins_acl:
+iosrtr_pim_join_filter_acl:
     - { seq: 10, grant: deny, source_address: 239.0.0.0, source_wildcard_bits: 0.0.255.255}
+    - { seq: 20, grant: permit, source_any: true}
+
+
+# CISC-RT-000860
+# iosrtr_filter_pim_joins_access_list_name_old is used to remove the old access list that is used to filter IGMP or MLD Membership Report messages,
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_filter_igmp_joins_access_list_name_old: IGMP_JOIN_FILTER
+# iosrtr_filter_igmp_joins_access_list_name is the name of the new access control list to Configure the Designated Router (DR) to filter 
+# the IGMP or MLD Membership Report messages to allow hosts to join only those multicast groups that have been approved.
+iosrtr_filter_igmp_joins_access_list_name: IGMP_JOIN_FILTER
+# iosrtr_filter_pim_joins_access_list_type is the setting for a standard or extended access-list.  In this case it should be set for standard. 
+iosrtr_filter_igmp_joins_access_list_type: standard
+# Below is the example of a access control list for making sure the Cisco multicast Designated Router (DR) must be configured to filter the Internet 
+# Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join only multicast groups that have been approved by the organization.
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current ones that are configured to be used. 
+# - { seq: , grant: , source_any: , source_host: , source_address: , source_wildcard_bits: }
+# The configuration below yields the following example on the router.
+# ip access-list standard IGMP_JOIN_FILTER
+# deny   239.8.0.0 0.0.255.255
+# permit any
+iosrtr_igmp_join_filter_acl:
+    - { seq: 10, grant: deny, source_address: 239.8.0.0, source_wildcard_bits: 0.0.255.255}
     - { seq: 20, grant: permit, source_any: true}
