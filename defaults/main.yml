@@ -610,3 +610,7 @@ iosrtr_filter_igmp_joins_access_list_type: standard
 iosrtr_igmp_join_filter_acl:
     - { seq: 10, grant: deny, source_address: 239.8.0.0, source_wildcard_bits: 0.0.255.255}
     - { seq: 20, grant: permit, source_any: true}
+# iosrtr_multicast_boundary_interfaces are the interfaces that the access conrtrol list will be attached to.
+iosrtr_igmp_join_filter_host_facing_interfaces:
+    - FastEthernet0/0
+    - FastEthernet0/1
