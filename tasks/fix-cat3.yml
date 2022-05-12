@@ -701,7 +701,7 @@
 
     - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Attach Join Messages ACL To Rendezvous Point Router Address."
       ios_config:
-        lines: ip pim accept-rp {{ ios_rtr_rendezvous_point_router_ip_address_for_group }} {{ iosrtr_filter_pim_joins_access_list_name }}     
+        lines: ip pim accept-rp {{ iosrtr_rendezvous_point_router_ip_address_for_group }} {{ iosrtr_filter_pim_joins_access_list_name }}     
   when:
       - cisc_rt_000840
   tags:
@@ -761,25 +761,25 @@
 
 - name: "LOW | CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources."
   block:
-    - name: 
+    - name: REMOVE OLD
       ios_acls:
           config:
               - afi: ipv4
                 acls:
-                  - name: "{{ ios_rtr_msdp_sa_filter_acl_name_old }}"
+                  - name: "{{ iosrtr_inbound_msdp_sa_filter_acl_name_old }}"
           state: deleted
 
-    - name: 
+    - name: PUT NEW
       ios_acls:
           config:
               - afi: ipv4
                 acls:
-                - name: "{{  }}"
-                  acl_type: "{{ }}"
+                - name: "{{ iosrtr_inbound_msdp_sa_filter_acl_name }}"
+                  acl_type: "{{ iosrtr_inbound_msdp_sa_filter_acl_type }}"
                   aces:
                   - grant: '{{ item.grant | default(omit) }}'
                     sequence: '{{ item.seq | default(omit) }}'
-                    protocol:
+                    protocol: '{{ item.protocol | default(omit) }}'
                     source: 
                       any: '{{ item.source_any | default(omit) }}'
                       host: '{{ item.source_host | default(omit) }}'
@@ -791,21 +791,11 @@
                       address: '{{ item.destination_address | default(omit) }}'
                       wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
       with_items:
-        - "{{ ios_rtr_msdp_sa_filter_acl }}"
+        - "{{ iosrtr_inbound_msdp_sa_filter_acl }}"
 
-    - name: "LOW | CISC-RT-000840 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to filter Protocol Independent Multicast (PIM) Join messages received from the Designated Router (DR) for any undesirable multicast groups. | Attach Join Messages ACL To Rendezvous Point Router Address."
+    - name: Attach 
       ios_config:
-        lines: ip pim accept-rp {{ ios_rtr_rendezvous_point_router_ip_address_for_group }} {{ iosrtr_filter_pim_joins_access_list_name }}     
-
-
-
-
-
-
-
-
-
-
+        lines: ip msdp sa-filter in {{ iosrtr_inbound_msdp_peer_sa_filter_address }} list {{ iosrtr_inbound_msdp_sa_filter_acl_name }}
   when:
       - cisc_rt_000920
   tags:
@@ -896,6 +886,24 @@
       - SRG-NET-000512-RTR-000012
       - SV-230038r531386_rule
       - V-230038
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
