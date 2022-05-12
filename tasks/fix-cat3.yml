@@ -761,7 +761,7 @@
 
 - name: "LOW | CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources."
   block:
-    - name: REMOVE OLD
+    - name: CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Remove Old MSDP SA Filter."
       ios_acls:
           config:
               - afi: ipv4
@@ -769,7 +769,7 @@
                   - name: "{{ iosrtr_inbound_msdp_sa_filter_acl_name_old }}"
           state: deleted
 
-    - name: PUT NEW
+    - name: CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Create New MSDP SA Filter Access List."
       ios_acls:
           config:
               - afi: ipv4
@@ -793,7 +793,7 @@
       with_items:
         - "{{ iosrtr_inbound_msdp_sa_filter_acl }}"
 
-    - name: Attach 
+    - name: CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Attach To Each MSDP Peer."
       ios_config:
         lines: ip msdp sa-filter in {{ iosrtr_inbound_msdp_peer_sa_filter_address }} list {{ iosrtr_inbound_msdp_sa_filter_acl_name }}
   when:
