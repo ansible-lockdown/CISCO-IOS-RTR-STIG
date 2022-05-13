@@ -823,7 +823,7 @@
 
 - name: "LOW | CISC-RT-000940 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to limit the amount of source-active messages it accepts on a per-peer basis."
   ios_config: 
-    lines: ip msdp sa-limit {{ item.msdp_peer | default(omit) }} {{ item.source_active_msg_limit }}
+    lines: ip msdp sa-limit {{ item.msdp_peer | default(omit) }} {{ item.source_active_msg_limit | default(omit) }}
   with_items:
     - "{{ iosrtr_msdp_source_active_msg_per_peers }}"
   when:
@@ -837,8 +837,10 @@
       - V-216637
 
 - name: "LOW | CISC-RT-000950 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to use a loopback address as the source address when originating MSDP traffic."
-  debug:
-    msg: "test"
+  ios_config: 
+    lines: ip msdp peer {{ item.msdp_peer | default(omit) }} connect-source {{ item.loopback_interface | default(omit) }} remote-as {{ item.remote_as | default(omit) }}
+  with_items:
+    - "{{ iosrtr_msdp_packets_sending_loopback_address }}"
   when:
       - cisc_rt_000950
   tags:

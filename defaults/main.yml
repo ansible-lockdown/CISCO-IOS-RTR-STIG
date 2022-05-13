@@ -127,10 +127,10 @@ cisc_rt_000820: false
 cisc_rt_000830: false
 cisc_rt_000840: false
 cisc_rt_000860: false
-cisc_rt_000920: true
+cisc_rt_000920: false
 cisc_rt_000930: false
-cisc_rt_000940: true
-cisc_rt_000950: false
+cisc_rt_000940: false
+cisc_rt_000950: true
 cisc_rt_000470: false
 cisc_rt_000236: false
 cisc_rt_acl: true
@@ -683,11 +683,21 @@ iosrtr_inbound_msdp_peer_source_active_filter_peer_address:
 
 
 # CISC-RT-000940
-# iosrtr_msdp_source_active_msg_per_peers is the variables that need to be set to limit the amount of source-active 
-# messages it accepts on a per-peer basis. 
+# iosrtr_msdp_source_active_msg_per_peers is the variables that need to be set to limit the amount of source-active messages it accepts on a per-peer basis. 
 # Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
 # - { msdp_peer: , source_active_msg_limit: }
 # The configuration below yields the following example on the router.
 # ip msdp sa-limit 1.1.28.2 320
 iosrtr_msdp_source_active_msg_per_peers:
     - { msdp_peer: 1.1.28.2, source_active_msg_limit: 320}
+
+
+# CISC-RT-000940
+# iosrtr_msdp_packets_sending_loopback_address is the configuration to use its loopback address is used as the source address when sending MSDP packets.
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
+# - { msdp_peer: , loopback_interface: , remote_as: }
+# The configuration below yields the following example on the router.
+# ip msdp peer 1.44.2.34 connect-source Loopback0 remote-as 2
+iosrtr_msdp_packets_sending_loopback_address:
+    - { msdp_peer: 1.44.2.34 , loopback_interface: loopback 0, remote_as: 2}
+
