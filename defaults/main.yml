@@ -129,7 +129,7 @@ cisc_rt_000840: false
 cisc_rt_000860: false
 cisc_rt_000920: true
 cisc_rt_000930: false
-cisc_rt_000940: false
+cisc_rt_000940: true
 cisc_rt_000950: false
 cisc_rt_000470: false
 cisc_rt_000236: false
@@ -670,7 +670,24 @@ iosrtr_inbound_msdp_sa_filter_acl:
     - {seq: 75, grant: deny, protocol: ip, source_address: 192.168.0.0, source_wildcard_bits: 0.0.255.255, destination_any: true}
 # Permit Ip Any Any
     - {seq: 80, grant: permit, protocol: ip, source_any: true, destination_any: true}
-# iosrtr_inbound_msdp_peer_sa_filter_address is the addresss of the inbound MSDP peer the source-active filter is bound to.  You may 
+# iosrtr_inbound_msdp_peer_source_active_filter_peer_address is the addresss of the inbound MSDP peer the source-active filter is bound to.  You may 
 # add additional address below in list form to attach it to more then one peer.  
-iosrtr_inbound_msdp_peer_sa_filter_address: 
-    - 1.1.28.2
+iosrtr_inbound_msdp_peer_source_active_filter_peer_address: 
+    - {peer_address: 1.1.28.2}
+
+
+
+
+# CISC-RT-000930
+
+
+
+# CISC-RT-000940
+# iosrtr_msdp_source_active_msg_per_peers is the variables that need to be set to limit the amount of source-active 
+# messages it accepts on a per-peer basis. 
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
+# - { msdp_peer: , source_active_msg_limit: }
+# The configuration below yields the following example on the router.
+# ip msdp sa-limit 1.1.28.2 320
+iosrtr_msdp_source_active_msg_per_peers:
+    - { msdp_peer: 1.1.28.2, source_active_msg_limit: 320}
