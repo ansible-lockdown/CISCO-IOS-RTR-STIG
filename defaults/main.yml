@@ -130,8 +130,8 @@ cisc_rt_000860: false
 cisc_rt_000920: false
 cisc_rt_000930: false
 cisc_rt_000940: false
-cisc_rt_000950: true
-cisc_rt_000470: false
+cisc_rt_000950: false
+cisc_rt_000470: true
 cisc_rt_000236: false
 cisc_rt_acl: true
 cisc_rt_bgp: false
@@ -318,8 +318,7 @@ iosrtr_bgp_staticroute_redistributed: false
 # iosrtr_bgp_router_number is the AS (Autonomous System) number that you are assiging to the router or the group the router 
 # is part of. Note: The current module used here does not allow for a replacement of the BGP number at the moment.  This
 # should be run on a new config or assign it to match your existing BGP AS you have assigned to check compliance.    
-iosrtr_bgp_as_router_number: 
-    - '1'
+iosrtr_bgp_as_router_number: 1123
 
 
 
@@ -689,7 +688,7 @@ iosrtr_inbound_msdp_peer_source_active_filter_peer_address:
 # The configuration below yields the following example on the router.
 # ip msdp sa-limit 1.1.28.2 320
 iosrtr_msdp_source_active_msg_per_peers:
-    - { msdp_peer: 1.1.28.2, source_active_msg_limit: 320}
+    - {msdp_peer: 1.1.28.2, source_active_msg_limit: 320}
 
 
 # CISC-RT-000940
@@ -699,5 +698,9 @@ iosrtr_msdp_source_active_msg_per_peers:
 # The configuration below yields the following example on the router.
 # ip msdp peer 1.44.2.34 connect-source Loopback0 remote-as 2
 iosrtr_msdp_packets_sending_loopback_address:
-    - { msdp_peer: 1.44.2.34 , loopback_interface: loopback 0, remote_as: 2}
+    - {msdp_peer: 1.44.2.34 , loopback_interface: loopback 0, remote_as: 2}
 
+# CISC-RT-000470
+
+iosrtr_ebgp_ttl_security_settings:
+    - {ebgp_neighbor_address: 7.7.7.7, ttl_security_number_of_hops: 10}

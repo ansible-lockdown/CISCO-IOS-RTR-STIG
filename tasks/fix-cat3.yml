@@ -761,39 +761,39 @@
 
 - name: "LOW | CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources."
   block:
-    # - name: CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Remove Old MSDP SA Filter."
-    #   ios_acls:
-    #       config:
-    #           - afi: ipv4
-    #             acls:
-    #               - name: "{{ iosrtr_inbound_msdp_sa_filter_acl_name_old }}"
-    #       state: deleted
+    - name: CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Remove Old MSDP SA Filter."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_inbound_msdp_sa_filter_acl_name_old }}"
+          state: deleted
 
-    # - name: CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Create New MSDP SA Filter Access List."
-    #   ios_acls:
-    #       config:
-    #           - afi: ipv4
-    #             acls:
-    #             - name: "{{ iosrtr_inbound_msdp_sa_filter_acl_name }}"
-    #               acl_type: "{{ iosrtr_inbound_msdp_sa_filter_acl_type }}"
-    #               aces:
-    #               - grant: '{{ item.grant | default(omit) }}'
-    #                 sequence: '{{ item.seq | default(omit) }}'
-    #                 protocol: '{{ item.protocol | default(omit) }}'
-    #                 source: 
-    #                   any: '{{ item.source_any | default(omit) }}'
-    #                   host: '{{ item.source_host | default(omit) }}'
-    #                   address: '{{ item.source_address | default(omit) }}'
-    #                   wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
-    #                 destination:
-    #                   any: '{{ item.destination_any | default(omit) }}'
-    #                   host: '{{ item.destination_host | default(omit) }}'
-    #                   address: '{{ item.destination_address | default(omit) }}'
-    #                   wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
-    #   with_items:
-    #     - "{{ iosrtr_inbound_msdp_sa_filter_acl }}"
+    - name: "LOW | CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Create New MSDP SA Filter Access List."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_inbound_msdp_sa_filter_acl_name }}"
+                  acl_type: "{{ iosrtr_inbound_msdp_sa_filter_acl_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    protocol: '{{ item.protocol | default(omit) }}'
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+                    destination:
+                      any: '{{ item.destination_any | default(omit) }}'
+                      host: '{{ item.destination_host | default(omit) }}'
+                      address: '{{ item.destination_address | default(omit) }}'
+                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+      with_items:
+        - "{{ iosrtr_inbound_msdp_sa_filter_acl }}"
 
-    - name: CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Attach To Each MSDP Peer."
+    - name: "LOW | CISC-RT-000920 | PATCH | The Cisco Multicast Source Discovery Protocol (MSDP) router must be configured to filter received source-active multicast advertisements for any undesirable multicast groups and sources. | Attach To Each MSDP Peer."
       ios_config:
         lines: ip msdp sa-filter in {{ item.peer_address }} list {{ iosrtr_inbound_msdp_sa_filter_acl_name }}
       with_items:
@@ -852,8 +852,13 @@
       - V-216638
 
 - name: "LOW | CISC-RT-000470 | PATCH | The Cisco BGP router must be configured to enable the Generalized TTL Security Mechanism (GTSM)."
-  debug:
-    msg: "test"
+  ios_config:
+    parents:
+      - router bgp {{ iosrtr_bgp_as_router_number }} 
+    lines:
+      - neighbor {{ item.ebgp_neighbor_address }} ttl-security hops {{ item.ttl_security_number_of_hops }}
+  with_items:
+    - "{{ iosrtr_ebgp_ttl_security_settings }}"
   when:
       - cisc_rt_000470
   tags:
