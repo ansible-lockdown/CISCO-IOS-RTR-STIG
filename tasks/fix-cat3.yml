@@ -1,11 +1,4 @@
-# ---
-# - name: get version information
-#   cisco.ios.ios_command:
-#     commands:
-#       - show version
-#   vars:
-#     ansible_persistent_log_messages: True
-
+---
 - name: "LOW | CISC-RT-000060 | PATCH | The Cisco router must be configured to have all inactive interfaces disabled."
   ios_config:
     parents:
@@ -62,18 +55,19 @@
       config:
           - afi: ipv4
             acls:
-            - name: '{{ iosrtr_ingress_filter_global_name }}'
-              acl_type: extended
+            - name: '{{ item.name }}'
+              acl_type: '{{ item.acl_type }}'
               aces:
-              - grant: deny
-                protocol: ip
+              - grant: '{{ item.grant }}'
+                protocol: '{{ item.protocol }}'
                 source: 
-                  any: true            
+                  any: '{{ item.source_any }}'
                 destination:
-                  any: true
+                  any: '{{ item.destination_any }}'
                 log:
-                  set: true
-      state: merged
+                  set: '{{ item.log_set }}'
+      state: deleted
+  with_items: " {{ iosrtr_acl_dropped_packet_log }}"
   when:
       - cisc_rt_000200
   tags:

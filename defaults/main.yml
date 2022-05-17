@@ -108,7 +108,7 @@ cisc_rt_000398: false
 cisc_rt_000060: false
 cisc_rt_000070: false
 cisc_rt_000160: false
-cisc_rt_000200: false
+cisc_rt_000200: true
 cisc_rt_000230: false
 cisc_rt_000300: false
 cisc_rt_000360: false
@@ -155,10 +155,12 @@ cisc_rt_ospf_maps: false
 # iosrtr_all_interfaces
 iosrtr_all_interfaces: 
     - FastEthernet 0/0
-    - Ethernet 1/0
-    - Ethernet 1/1
-    - Ethernet 1/2
-    - Ethernet 1/3
+    - FastEthernet 0/1
+    - Serial1/0
+    - Serial1/1
+    - Serial1/2
+    - Serial1/3
+    - FastEthernet2/0
 
 #EXTERNAL FACING PORTS
 # iosrtr_external_ipv6_interfaces
@@ -170,8 +172,9 @@ iosrtr_external_ipv6_interfaces: "FastEthernet 0/0"
 
 # iosrtr_inactive_interfaces
 iosrtr_inactive_interfaces: 
-  - Ethernet 1/2
-  - Ethernet 1/3
+  - Serial1/1
+  - Serial1/2
+  - Serial1/3
 
 
 # Global Variables ACLs
@@ -182,10 +185,6 @@ iosrtr_inactive_interfaces:
 iosrtr_rendezvous_point_router_ip_address_for_group: 10.2.2.2
 
 
-
-# Extended ACLs
-# iosrtr_ingress_filter_global_name is the name of the filter
-iosrtr_ingress_filter_global_name: "INGRESS_FILTER"
 
 
 isortr_loopback_0_ip_address: 
@@ -259,7 +258,12 @@ iosrtr_non_essential_serv:
 
 
 # CISC-RT-000200
-iosrtr_ingress_filter_name: '{{ iosrtr_ingress_filter_global_name }}'
+
+
+iosrtr_acl_dropped_packet_log:
+- {name: INGRESS_FILTER, acl_type: extended, seq: 100, grant: deny, protocol: ip, source_any: true, destination_any: true, log_set: true}
+
+
 
 
 
@@ -319,9 +323,6 @@ iosrtr_bgp_staticroute_redistributed: false
 # is part of. Note: The current module used here does not allow for a replacement of the BGP number at the moment.  This
 # should be run on a new config or assign it to match your existing BGP AS you have assigned to check compliance.    
 iosrtr_bgp_as_router_number: 1123
-
-
-# Tests
 
 
 
@@ -384,8 +385,8 @@ iosrtr_bgp_neighbor_address: "70.70.70.70"
 # the task does not fail properly.  PLEASE DOUBLE CHECK YOUR PREFIX'S WHEN ENTERING THEM.  
 # { seq: mandatory, action: mandatory, prefix: mandatory, ge: can be omitted, le: can be omitted }
 iosrtr_prefix_limit_data:
-    - { seq: 5, action: permit, prefix: 13.0.0.0/8, ge: 10, le: 24 }
-    - { seq: 10, action: deny, prefix: 12.0.0.0/8, le: 32 }
+    - { seq: 10, action: permit, prefix: 13.0.0.0/8, ge: 10, le: 24 }
+    - { seq: 20, action: deny, prefix: 12.0.0.0/8, le: 32 }
 
 iosrtr_ebgp_neighbors:
     - '1.1.1.1'
@@ -642,33 +643,33 @@ iosrtr_inbound_msdp_sa_filter_acl:
 # deny ip any host 224.0.1.35 ! SVRLOC-DA
 # deny ip any host 224.0.1.60 ! hp-device-disc
     - {seq: 10, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.3}
-    - {seq: 15, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.24}
-    - {seq: 20, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.22}
-    - {seq: 25, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.2}
-    - {seq: 30, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.35}
-    - {seq: 35, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.60}
+    - {seq: 20, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.24}
+    - {seq: 30, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.22}
+    - {seq: 40, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.2}
+    - {seq: 50, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.35}
+    - {seq: 60, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.60}
 # Auto-RP Groups
 # deny ip any host 224.0.1.39 ! Auto-RP
 # deny ip any host 224.0.1.40 ! Auto-RP
-    - {seq: 40, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.39}
-    - {seq: 45, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.40}
+    - {seq: 70, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.39}
+    - {seq: 80, grant: deny, protocol: ip, source_any: true, destination_host: 224.0.1.40}
 # Default SSM-Range
 # deny ip any 232.0.0.0 0.255.255.255 ! SSM range
-    - {seq: 50, grant: deny, protocol: ip, source_any: true, destination_address: 232.0.0.0, destination_wildcard_bits: 0.255.255.255}
+    - {seq: 90, grant: deny, protocol: ip, source_any: true, destination_address: 232.0.0.0, destination_wildcard_bits: 0.255.255.255}
 # Admin Scoped Range
 # deny ip any 239.0.0.0 0.255.255.255 ! Admin scoped range
-    - {seq: 55, grant: deny, protocol: ip, source_any: true, destination_address: 239.0.0.0, destination_wildcard_bits: 0.255.255.255}
+    - {seq: 100, grant: deny, protocol: ip, source_any: true, destination_address: 239.0.0.0, destination_wildcard_bits: 0.255.255.255}
 # RFC 1918 Address Range
 # deny ip 10.0.0.0 0.255.255.255 any ! RFC 1918 address range
 # deny ip 127.0.0.0 0.255.255.255 any ! RFC 1918 address range
 # deny ip 172.16.0.0 0.15.255.255 any ! RFC 1918 address range
 # deny ip 192.168.0.0 0.0.255.255 any ! RFC 1918 address range
-    - {seq: 60, grant: deny, protocol: ip, source_address: 10.0.0.0, source_wildcard_bits: 0.255.255.255, destination_any: true}
-    - {seq: 65, grant: deny, protocol: ip, source_address: 127.0.0.0, source_wildcard_bits: 0.255.255.255, destination_any: true}
-    - {seq: 70, grant: deny, protocol: ip, source_address: 172.16.0.0, source_wildcard_bits: 0.15.255.255, destination_any: true}
-    - {seq: 75, grant: deny, protocol: ip, source_address: 192.168.0.0, source_wildcard_bits: 0.0.255.255, destination_any: true}
+    - {seq: 110, grant: deny, protocol: ip, source_address: 10.0.0.0, source_wildcard_bits: 0.255.255.255, destination_any: true}
+    - {seq: 120, grant: deny, protocol: ip, source_address: 127.0.0.0, source_wildcard_bits: 0.255.255.255, destination_any: true}
+    - {seq: 130, grant: deny, protocol: ip, source_address: 172.16.0.0, source_wildcard_bits: 0.15.255.255, destination_any: true}
+    - {seq: 140, grant: deny, protocol: ip, source_address: 192.168.0.0, source_wildcard_bits: 0.0.255.255, destination_any: true}
 # Permit Ip Any Any
-    - {seq: 80, grant: permit, protocol: ip, source_any: true, destination_any: true}
+    - {seq: 150, grant: permit, protocol: ip, source_any: true, destination_any: true}
 # iosrtr_inbound_msdp_peer_source_active_filter_peer_address is the addresss of the inbound MSDP peer the source-active filter is bound to.  You may 
 # add additional address below in list form to attach it to more then one peer.  
 iosrtr_inbound_msdp_peer_source_active_filter_peer_address: 
