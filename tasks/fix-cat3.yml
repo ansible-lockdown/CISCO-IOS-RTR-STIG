@@ -66,7 +66,7 @@
                   any: '{{ item.destination_any }}'
                 log:
                   set: '{{ item.log_set }}'
-      state: deleted
+      state: merged
   with_items: " {{ iosrtr_acl_dropped_packet_log }}"
   when:
       - cisc_rt_000200
@@ -114,13 +114,12 @@
               - name: ISP_PREFIX
                 description: 
                 entries:
-                  - action: permit
-                    sequence: "{{ item.0 }}"
-                    prefix: "{{ item.1 }}"
+                  - action: '{{ item.grant }}'
+                    sequence: "{{ item.seq }}"
+                    prefix: "{{ item.prefix }}"
         state: merged
-      with_together:
-        - "{{ iosrtr_static_route_sequence_number }}"
-        - "{{ iosrtr_static_routes_ip_to_alternate_gateway }}"
+      with_items:
+        - "{{ iosrtr_static_route_with_alternate_gateway_as_next_hop }}"
       when: 
         - (iosrtr_ospf_staticroute_redistributed) or 
           (iosrtr_eigrp_staticroute_redistributed) or 
@@ -217,8 +216,9 @@
 
       - name: "LOW | CISC-RT-000360 | PATCH | The Cisco perimeter router must be configured to have Link Layer Discovery Protocol (LLDP) disabled on all external interfaces. | Disable LLDP On External Interfaces If Global Enabled."
         ios_config:
-          lines:
+          parents:
             - interface {{ item }}
+          lines:
             - no lldp transmit
         with_items: "{{ iosrtr_lldp_external_interfaces }}"
         when: "'lldp run' in cisc_rt_000360_lldp_status.stdout"
@@ -243,8 +243,9 @@
 
       - name: "LOW | CISC-RT-000370 | PATCH | The Cisco perimeter router must be configured to have Cisco Discovery Protocol (CDP) disabled on all external interfaces. | Disable CDP On External Interfaces If Global Enabled."
         ios_config:
-          lines:
+          parents:
             - interface {{ item }}
+          lines:
             - no cdp enable
         with_items: "{{ iosrtr_cdp_external_interfaces }}"
         when: "'no cdp run' not in cisc_rt_000360_cdp_status.stdout"
@@ -261,15 +262,19 @@
 
 - name: "LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute."
   block:
-      - name: LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute. | Remove Existing AS Setting."
-        ios_bgp_global:
-          state: purged
+      - name: "LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute. | Search For NO BGP Enforce-first-as."
+        ios_command:
+          commands:
+            - show run | include no bgp enforce-first-as
+        register: cisc_rt_000540_no_bgp_enforce_first_as
 
-      - name: LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute. | Set New AS Settings."
+      - name: "LOW | CISC-RT-000540 | PATCH | The Cisco BGP router must be configured to reject route advertisements from BGP peers that do not list their autonomous system (AS) number as the first AS in the AS_PATH attribute. | Remove no bgp enforce-first-as If Found."
         ios_config:
-          commands: 
+          parents:
             - router bgp {{ iosrtr_bgp_autonomous_system_number }}
+          commands: 
             - bgp enforce-first-as
+        when: "'' not in cisc_rt_000540_no_bgp_enforce_first_as.stdout"    
   when:
       - cisc_rt_000540
   tags:

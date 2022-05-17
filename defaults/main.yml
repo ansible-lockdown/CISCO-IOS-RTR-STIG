@@ -108,12 +108,12 @@ cisc_rt_000398: false
 cisc_rt_000060: false
 cisc_rt_000070: false
 cisc_rt_000160: false
-cisc_rt_000200: true
+cisc_rt_000200: false
 cisc_rt_000230: false
 cisc_rt_000300: false
 cisc_rt_000360: false
 cisc_rt_000370: false
-cisc_rt_000540: false
+cisc_rt_000540: true
 cisc_rt_000550: false
 cisc_rt_000570: false
 cisc_rt_000580: false
@@ -132,7 +132,7 @@ cisc_rt_000930: false
 cisc_rt_000940: false
 cisc_rt_000950: false
 cisc_rt_000470: true
-cisc_rt_000236: false
+cisc_rt_000236: true
 cisc_rt_acl: true
 cisc_rt_bgp: false
 cisc_rt_route_maps: false
@@ -258,13 +258,15 @@ iosrtr_non_essential_serv:
 
 
 # CISC-RT-000200
-
-
+# iosrtr_acl_dropped_packet_log is the configuration to fix all Access Control Lists(ACLs) used to filter traffic and verify 
+# that packets being dropped are logged as shown in the configuration below.  I have made the STIG example a sequence 300
+# to allow for additional lines for configuration.  This merges the line to the active ACL that is currently in place.  
+# - {name: , acl_type: , seq: , grant: , protocol: , source_any: , destination_any: , log_set: }
+# The configuration below yields the following example on the router.
+# ip access-list extended INGRESS_FILTER
+# deny ip any any log
 iosrtr_acl_dropped_packet_log:
-- {name: INGRESS_FILTER, acl_type: extended, seq: 100, grant: deny, protocol: ip, source_any: true, destination_any: true, log_set: true}
-
-
-
+- {name: INGRESS_FILTER, acl_type: extended, seq: 300, grant: deny, protocol: ip, source_any: true, destination_any: true, log_set: true}
 
 
 # CISC-RT-000236
@@ -280,15 +282,10 @@ iosrtr_ipv6_hop_limit: "129"
 
 
 # CISC-RT-000300
-# Below is where you will add the static routes with the alternate gateway as the next-hop address. The 
-# iosrtr_static_route_sequence_number can be done in multiples of 5 and the iosrtr_static_routes_ip_to_alternate_gateway
-# is the ip address of the next hop gateway that you will add in list form beloe to add to the router.  
-iosrtr_static_route_sequence_number:
-    - '5'
-    - '10'
-iosrtr_static_routes_ip_to_alternate_gateway:
-    - '11.0.0.0/8'
-    - '10.0.0.0/8'
+# Below is where you will add the static routes with the alternate gateway as the next-hop address.  
+iosrtr_static_route_with_alternate_gateway_as_next_hop:
+    - {seq: 10, grant: permit, prefix: 1.1.1.0/24}
+
 # Review static routes and if the static routes to the alternate gateway are 
 # redistributed into the following networks you networks 
 # BGP
@@ -304,21 +301,19 @@ iosrtr_ospf_staticroute_redistributed: true
 # for compliance if you know they are distributed into the netowrks listed above.  
 iosrtr_ospf_process_number: 
     - '1'
-    - '2'
 # iosrtr_eigrp_staticroute_redistributed is the toggle for a EIGRP protocol if the static routes connect to one of the three 
 # listed above you must toggle it to true.
-iosrtr_eigrp_staticroute_redistributed: false
+iosrtr_eigrp_staticroute_redistributed: true
 # iosrtr_eigrp_as_number AS (Autonomous System) number that you are assiging to the router or the group the router 
 # is part of
 iosrtr_eigrp_as_number: 
     - '1'
-    - '2' 
 # iosrtr_rip_staticroute_redistributed is the toggle for a RIP protocol if the static routes connect to one of the three 
 # listed above you must toggle it to true.
 iosrtr_rip_staticroute_redistributed: false
 # iosrtr_bgp_staticroute_redistributed is the toggle for a BGP protocol if the static routes connect to one of the three 
 # listed above you must toggle it to true.
-iosrtr_bgp_staticroute_redistributed: false
+iosrtr_bgp_staticroute_redistributed: true
 # iosrtr_bgp_router_number is the AS (Autonomous System) number that you are assiging to the router or the group the router 
 # is part of. Note: The current module used here does not allow for a replacement of the BGP number at the moment.  This
 # should be run on a new config or assign it to match your existing BGP AS you have assigned to check compliance.    
@@ -345,8 +340,7 @@ iosrtr_bgp_as_router_number: 1123
 # disabled if the end user wants to have lldp enabled globally.  If not and lldp is disabled globally
 # then no interfaces will be modified.
 iosrtr_lldp_external_interfaces: 
-    - 'GigabitEthernet 0/3'
-    - 'GigabitEthernet 0/4'
+    - 'FastEthernet2/0'
 
 
 # CISC-RT-000370
@@ -354,16 +348,14 @@ iosrtr_lldp_external_interfaces:
 # disabled if the end user wants to have cdp enabled globally.  If not and cdp is disabled globally
 # then no interfaces will be modified.
 iosrtr_cdp_external_interfaces: 
-    - 'GigabitEthernet 0/3'
-    - 'GigabitEthernet 0/4'
+    - 'FastEthernet2/0'
 
 
 # CISC-RT-000540
 # iosrtr_bgp_autonomous_system_number is the variable that will be set that is associated
 # with with your devices AS (Autonomous System) number that BGP peers will receive in 
 # the router advertisements.  
-###### THIS REMOVES CURRENT AS AND ALL SETTINGS WILL NEED TO COME BACK TO THIS TO
-###### VERIFY MERGE OPTION WORKS LATER.
+iosrtr_bgp_autonomous_system_number: 1123
 
 
 # CISC_RT_000550
