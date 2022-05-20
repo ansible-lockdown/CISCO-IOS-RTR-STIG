@@ -113,8 +113,8 @@ cisc_rt_000230: false
 cisc_rt_000300: false
 cisc_rt_000360: false
 cisc_rt_000370: false
-cisc_rt_000540: true
-cisc_rt_000550: false
+cisc_rt_000540: false
+cisc_rt_000550: true
 cisc_rt_000570: false
 cisc_rt_000580: false
 cisc_rt_000590: false
@@ -131,8 +131,8 @@ cisc_rt_000920: false
 cisc_rt_000930: false
 cisc_rt_000940: false
 cisc_rt_000950: false
-cisc_rt_000470: true
-cisc_rt_000236: true
+cisc_rt_000470: false
+cisc_rt_000236: false
 cisc_rt_acl: true
 cisc_rt_bgp: false
 cisc_rt_route_maps: false
@@ -200,7 +200,6 @@ isortr_loopback_0_ip_address:
 
 
 
-# CISC-RT-000540
 # CISC-RT-000580
 iosrtr_local_bgp_autonomous_system_number: "1123"
 
@@ -359,18 +358,13 @@ iosrtr_bgp_autonomous_system_number: 1123
 
 
 # CISC_RT_000550
-###### NEED TO FINISH ######
-###### NEED TO FINISH ######
-###### NEED TO FINISH ######
-###### NEED TO FINISH ######
-###### NEED TO FINISH ######
-###### NEED TO FINISH ######
+# https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/13754-26.pdf
+iosrtr_receive_only_routes_originated_from_as: 1123
 # iosrtr_bgp_neighbor_address is used in the control to reject route advertisements from CE ( Customer Edge Routers )
 # routers with an originating AS in the AS_PATH attribute that does not belong to that customer. All PE ( Provider Edge )
 # routers miust be configed to reject routes with an AS other then that belonging to customer.  
-iosrtr_bgp_neighbor_address: "70.70.70.70"
-
-
+iosrtr_bgp_neighbor_address: 
+  - 1.1.1.1
 
 # CISC_RT_000570
 # NOTE: Currently there is a known issue with ansible where if the wrong prefix and subnet are entered
