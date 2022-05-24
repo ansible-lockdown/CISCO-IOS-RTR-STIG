@@ -117,8 +117,31 @@
       - V-216561
 
 - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception."
-  debug:
-    msg: "The Play has run because you are not on a DODIN Network"
+  block:
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Search Inbound ACL To Verify That It Is Configured To Deny All Other Traffic That Is Not Explicity Allowed."
+      ios_command:
+        commands:
+          - "show run | section ip access-list extended {{ iosrtr_external_acl_name_new }}"
+      register: iosrtr_deny_all_other_traffic
+    
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Correct The ACL By Adding Proper Configuration To Deny All Other Traffic That Is Not Explicity Allowed."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_external_acl_name_new }}"
+                  acl_type: "{{ iosrtr_external_acl_type }}"
+                  aces:
+                  - grant: deny
+                    sequence: 200
+                    log_input: 
+                      set: true
+                    protocol: ip 
+                    source: 
+                      any: true
+                    destination:
+                      any: true
+      when: "'deny   ip any any log-input' not in iosrtr_deny_all_other_traffic"
   when:
       - cisc_rt_000240
       - not cisc_rt_dodin_backbone
