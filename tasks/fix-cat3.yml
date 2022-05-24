@@ -292,7 +292,7 @@
         commands:
           - ip as-path access-list 10 permit ^{{iosrtr_receive_only_routes_originated_from_as}}$
           - ip as-path access-list 10 deny .*
-
+  
     - name: "LOW | CISC-RT-000550 | PATCH | The Cisco BGP router must be configured to reject route advertisements from CE routers with an originating AS in the AS_PATH attribute that does not belong to that customer. | Apply Access List Inbound."
       ios_config:
         parents:

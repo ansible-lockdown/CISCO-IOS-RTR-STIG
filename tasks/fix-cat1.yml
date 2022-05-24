@@ -1,8 +1,111 @@
 ---
-
 - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself."
-  debug:
-    msg: "test"
+  block:
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove Old External Access List."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_external_acl_name_old }}"
+          state: deleted
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Configure the ACL for any external interfaces."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_external_acl_name_new }}"
+                  acl_type: "{{ iosrtr_external_acl_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    log_input: 
+                      set: '{{ item.log_input | default(omit) }}'
+                    protocol: '{{ item.protocol | default(omit) }}'
+                    protocol_options: 
+                      tcp:
+                        established: '{{ item.protocol_options_tcp_established | default(omit) }}'
+                      icmp:
+                        echo: '{{ item.protocol_options_icmp_echo | default(omit) }}'
+                        echo_reply: '{{ item.protocol_options_icmp_echo_reply | default(omit) }}'
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.source_port_protocol_eq | default(omit) }}' 
+                    destination:
+                      any: '{{ item.destination_any | default(omit) }}'
+                      host: '{{ item.destination_host | default(omit) }}'
+                      address: '{{ item.destination_address | default(omit) }}'
+                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
+      with_items: 
+          - "{{ iosrtr_external_acl }}"
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove Old Internal Access List"
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_internal_acl_name_old }}"
+          state: deleted
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Configure the ACL for any internal interfaces."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_internal_acl_name_new }}"
+                  acl_type: "{{ iosrtr_internal_acl_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    log_input: 
+                      set: '{{ item.log_input | default(omit) }}'
+                    protocol: '{{ item.protocol | default(omit) }}'
+                    protocol_options: 
+                      tcp:
+                        established: '{{ item.protocol_options_tcp_established | default(omit) }}'
+                      icmp:
+                        echo: '{{ item.protocol_options_icmp_echo | default(omit) }}'
+                        echo_reply: '{{ item.protocol_options_icmp_echo_reply | default(omit) }}'
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.source_port_protocol_eq | default(omit) }}' 
+                    destination:
+                      any: '{{ item.destination_any | default(omit) }}'
+                      host: '{{ item.destination_host | default(omit) }}'
+                      address: '{{ item.destination_address | default(omit) }}'
+                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
+      with_items: 
+          - "{{ iosrtr_internal_acl }}"
+
+    # - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply EXTERNAL_ACL to proper interfaces."
+    #   ios_config:
+    #     parents:
+    #       - "interface {{ item }}"
+    #     lines:
+    #       - "ip access-group {{ iosrtr_external_acl_name_new }} in"
+    #   with_items:
+    #     - "{{ iosrtr_external_acl_interfaces }}"
+
+    # - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply INTERNAL_ACL to proper interfaces."
+    #   ios_config:
+    #     parents:
+    #       - "interface {{ item }}"
+    #     lines:
+    #       - "ip access-group {{ iosrtr_internal_acl_name_new }} in"
+    #   with_items:
+    #     - "{{ iosrtr_internal_acl_interfaces }}"
   when:
       - cisc_rt_000130
   tags:
@@ -120,3 +223,39 @@
       - SRG-NET-000205-RTR-000014
       - SV-216989r531085_rule
       - V-216989
+
+
+
+
+
+
+
+
+
+
+
+
+
+- name: Gather Acl Facts
+  block:
+    - name: Use the ACLs resource module to gather the current config
+      ios_acls:
+
+        state: gathered
+      register: acls 
+
+    - name: Print ACLs To Screen
+      debug:
+        msg: "{{ acls }}"
+
+    - name: Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name:  Write Configuration to File
+      copy:
+        content: "{{ acls | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
+  when:
+      - cisc_rt_acl
