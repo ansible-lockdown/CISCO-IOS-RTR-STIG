@@ -89,23 +89,23 @@
       with_items: 
           - "{{ iosrtr_internal_acl }}"
 
-    # - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply EXTERNAL_ACL to proper interfaces."
-    #   ios_config:
-    #     parents:
-    #       - "interface {{ item }}"
-    #     lines:
-    #       - "ip access-group {{ iosrtr_external_acl_name_new }} in"
-    #   with_items:
-    #     - "{{ iosrtr_external_acl_interfaces }}"
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply EXTERNAL_ACL to proper interfaces."
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
+          - "ip access-group {{ iosrtr_external_acl_name_new }} in"
+      with_items:
+        - "{{ iosrtr_external_acl_interfaces }}"
 
-    # - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply INTERNAL_ACL to proper interfaces."
-    #   ios_config:
-    #     parents:
-    #       - "interface {{ item }}"
-    #     lines:
-    #       - "ip access-group {{ iosrtr_internal_acl_name_new }} in"
-    #   with_items:
-    #     - "{{ iosrtr_internal_acl_interfaces }}"
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply INTERNAL_ACL to proper interfaces."
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
+          - "ip access-group {{ iosrtr_internal_acl_name_new }} in"
+      with_items:
+        - "{{ iosrtr_internal_acl_interfaces }}"
   when:
       - cisc_rt_000130
   tags:
