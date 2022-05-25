@@ -154,8 +154,60 @@
       - V-216572
 
 - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space."
-  debug:
-    msg: "test"
+  block:
+    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Rmmove Old FILTER_ISP Access Control Lost."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_filter_isp_name_old }}"
+          state: deleted
+
+    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Configure The New Ingress ACL For FILTER_ISP."
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_filter_isp_acl_name_new }}"
+                  acl_type: "{{ iosrtr_filter_isp_acl_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    log_input: 
+                      set: '{{ item.log_input | default(omit) }}'
+                    protocol: '{{ item.protocol | default(omit) }}'
+                    protocol_options: 
+                      tcp:
+                        established: '{{ item.protocol_options_tcp_established | default(omit) }}'
+                      icmp:
+                        echo: '{{ item.protocol_options_icmp_echo | default(omit) }}'
+                        echo_reply: '{{ item.protocol_options_icmp_echo_reply | default(omit) }}'
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.source_port_protocol_eq | default(omit) }}' 
+                    destination:
+                      any: '{{ item.destination_any | default(omit) }}'
+                      host: '{{ item.destination_host | default(omit) }}'
+                      address: '{{ item.destination_address | default(omit) }}'
+                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
+      with_items: 
+          - "{{ iosrtr_filter_isp_acl }}"
+
+    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Attach FILTER_ISP to Inbound Interface and Add Description."
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
+          - description {{ iosrtr_filter_isp_interface_description }}
+          - "ip access-group {{ iosrtr_filter_isp_acl_name_new }} in"
+      with_items:
+        - "{{ iosrtr_filter_isp_acl_interfaces }}"
   when:
       - cisc_rt_000280
       - not cisc_rt_dodin_backbone

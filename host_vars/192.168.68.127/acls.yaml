@@ -4,25 +4,27 @@ gathered:
 -   acls:
     -   aces:
         -   destination:
-                host: 1.11.1.2
+                any: true
             grant: permit
             protocol: tcp
+            protocol_options:
+                tcp:
+                    established: true
             sequence: 10
             source:
-                host: 1.11.1.1
-                port_protocol:
-                    eq: bgp
+                any: true
         -   destination:
-                host: 1.11.1.2
-                port_protocol:
-                    eq: bgp
+                host: 1.12.1.17
             grant: permit
-            protocol: tcp
+            protocol: icmp
+            protocol_options:
+                icmp:
+                    echo: true
             sequence: 20
             source:
-                host: 1.11.1.1
+                host: 1.12.1.16
         -   destination:
-                host: 1.11.1.2
+                host: 1.12.1.17
             grant: permit
             protocol: icmp
             protocol_options:
@@ -30,103 +32,48 @@ gathered:
                     echo: true
             sequence: 30
             source:
-                host: 1.11.1.1
+                host: 1.12.1.16
         -   destination:
-                host: 1.11.1.2
+                host: 1.12.1.22
+                port_protocol:
+                    eq: www
             grant: permit
-            protocol: icmp
-            protocol_options:
-                icmp:
-                    echo: true
+            protocol: tcp
             sequence: 40
             source:
-                host: 1.11.1.1
+                any: true
         -   destination:
-                host: 1.11.1.2
-            grant: deny
-            log_input:
-                set: true
-            protocol: ip
+                host: 1.12.1.23
+                port_protocol:
+                    eq: www
+            grant: permit
+            protocol: tcp
             sequence: 50
             source:
                 any: true
         -   destination:
-                any: true
-            grant: deny
-            log_input:
-                set: true
-            protocol: ip
-            sequence: 100
-            source:
-                any: true
-        acl_type: extended
-        name: EXTERNAL_ACL
-    -   aces:
-        -   destination:
-                host: 10.1.12.2
+                host: 1.12.1.24
             grant: permit
-            protocol: ospf
-            sequence: 10
-            source:
-                host: 10.1.12.1
-        -   destination:
-                host: 10.1.12.2
-                port_protocol:
-                    eq: '22'
-            grant: permit
-            protocol: tcp
-            sequence: 20
-            source:
-                address: 10.2.1.0
-                wildcard_bits: 0.0.0.255
-        -   destination:
-                host: 10.1.12.2
-                port_protocol:
-                    eq: tacacs
-            grant: permit
-            protocol: tcp
-            sequence: 30
-            source:
-                address: 10.2.1.0
-                wildcard_bits: 0.0.0.255
-        -   destination:
-                host: 10.1.12.2
-                port_protocol:
-                    eq: snmp
-            grant: permit
-            protocol: udp
-            sequence: 40
-            source:
-                address: 10.2.1.0
-                wildcard_bits: 0.0.0.255
-        -   destination:
-                host: 10.1.12.2
-                port_protocol:
-                    eq: ntp
-            grant: permit
-            protocol: udp
-            sequence: 50
-            source:
-                address: 10.2.1.0
-                wildcard_bits: 0.0.0.255
-        -   destination:
-                host: 10.1.12.2
-            grant: deny
-            log_input:
-                set: true
-            protocol: ip
+            protocol: esp
             sequence: 60
             source:
                 any: true
         -   destination:
-                any: true
+                host: 1.12.1.24
             grant: permit
+            protocol: ahp
+            sequence: 70
+            source:
+                any: true
+        -   destination:
+                any: true
+            grant: deny
             log_input:
                 set: true
             protocol: ip
-            sequence: 100
+            sequence: 200
             source:
                 any: true
         acl_type: extended
-        name: INTERNAL_ACL
+        name: FILTER_ISP
     afi: ipv4

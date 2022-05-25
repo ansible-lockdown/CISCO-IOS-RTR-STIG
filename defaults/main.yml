@@ -31,8 +31,8 @@ cisc_rt_dodin_backbone: false
 
 # CAT 1 rules
 cisc_rt_000130: false
-cisc_rt_000240: true
-cisc_rt_000280: false
+cisc_rt_000240: false
+cisc_rt_000280: true
 cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
@@ -133,7 +133,7 @@ cisc_rt_000940: false
 cisc_rt_000950: false
 cisc_rt_000470: false
 cisc_rt_000236: false
-cisc_rt_acl: false
+cisc_rt_acl: true
 cisc_rt_bgp: false
 cisc_rt_route_maps: false
 cisc_rt_prefix_lists: false
@@ -224,7 +224,7 @@ iosrtr_external_acl_name_old: "EXTERNAL_ACL"
 # Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
 # from specific sources destined to itself.
 iosrtr_external_acl_name_new: "EXTERNAL_ACL"
-# iosrtr_external_acl_interfaces are the interfaces on the device that will haev the access control list assigned to it.  
+# iosrtr_external_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_external_acl_interfaces:
     - "FastEthernet2/0"
 # iosrtr_external_acl_type is for a standard or extended access-list.  In this case it should be set for extended. 
@@ -246,7 +246,7 @@ iosrtr_external_acl:
     - {seq: 30, grant: permit, protocol: icmp, source_host: 1.11.1.1, destination_host: 1.11.1.2, protocol_options_icmp_echo: true}
     - {seq: 40, grant: permit, protocol: icmp, source_host: 1.11.1.1, destination_host: 1.11.1.2,  protocol_options_icmp_echo_reply: true}
     - {seq: 50, grant: deny, protocol: ip , source_any: true, destination_host: 1.11.1.2, log_input: true}
-    - {seq: 100, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
+    - {seq: 200, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
 
 # iosrtr_internal_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
 # If you did not have a existing access control list defined in the router leave as is.  
@@ -255,7 +255,7 @@ iosrtr_internal_acl_name_old: "INTERNAL_ACL"
 # Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
 # from specific sources destined to itself.
 iosrtr_internal_acl_name_new: "INTERNAL_ACL"
-# iosrtr_internal_acl_interfaces are the interfaces on the device that will haev the access control list assigned to it.  
+# iosrtr_internal_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_internal_acl_interfaces:
     - "FastEthernet0/0"
     - "FastEthernet0/1"
@@ -280,10 +280,52 @@ iosrtr_internal_acl:
     - {seq: 40, grant: permit, protocol: udp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: snmp}
     - {seq: 50, grant: permit, protocol: udp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: ntp}
     - {seq: 60, grant: deny, protocol: ip, source_any: true, destination_host: 10.1.12.2, log_input: true}
-    - {seq: 100, grant: permit, protocol: ip, source_any: true, destination_any: true, log_input: true}
+    - {seq: 200, grant: permit, protocol: ip, source_any: true, destination_any: true, log_input: true}
 
 
-
+# CISC-RT-000280
+# iosrtr_filter_isp_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  Review the 
+# Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
+# from specific sources destined to itself.  It is used to protect an enclave connected to an alternate gateway by using an 
+# inbound filter that only permits packets with destination addresses within the sites address space.
+iosrtr_filter_isp_name_old: "FILTER_ISP"
+# iosrtr_external_acl_name_new is the name of access control list that is configured to restrict traffic destined to iteself.  Review the 
+# Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
+# from specific sources destined to itself.  It is used to protect an enclave connected to an alternate gateway by using an 
+# inbound filter that only permits packets with destination addresses within the sites address space.
+iosrtr_filter_isp_acl_name_new: "FILTER_ISP"
+# iosrtr_filter_isp_description_name is the interface description that lets you know what it is used for.  
+iosrtr_filter_isp_description_name: "Link to ISP"
+# iosrtr_filter_isp_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
+iosrtr_filter_isp_acl_interfaces:
+    - "Serial1/0"
+# iosrtr_filter_isp_interface_description is variable to assign a description to the interface for this acl filter. 
+iosrtr_filter_isp_interface_description: "Link to ISP"
+# iosrtr_filter_isp_acl_type is for a standard or extended access-list.  In this case it should be set for extended. 
+iosrtr_filter_isp_acl_type: "extended"
+# iosrtr_filter_isp_acl is the Access Control Lists (ACLs) used to Configure the ingress ACL of the perimeter router connected to an alternate gateway to only permit packets with destination addresses of the 
+# site's NIPRNet address space or a destination address belonging to the address block assigned by the alternate gateway network service provider as shown in the example below.
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
+#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
+# The configuration below yields the following example on the router.
+#ip access-list extended FILTER_ISP
+# permit tcp any any established
+# permit icmp host 1.12.1.16 host 1.12.1.17 echo
+# permit icmp host 1.12.1.16 host 1.12.1.17 echo-reply
+# permit tcp any host 1.12.1.22 eq www
+# permit tcp any host 1.12.1.23 eq www
+# permit esp any host 1.12.1.24
+# permit ahp any host 1.12.1.24
+# deny   ip any any log-input
+iosrtr_filter_isp_acl:
+    - {seq: 10, grant: permit, protocol: tcp, source_any: true, destination_any: true, protocol_options_tcp_established: true}
+    - {seq: 20, grant: permit, protocol: icmp, source_host: 1.12.1.16, destination_host: 1.12.1.17, protocol_options_icmp_echo: true}
+    - {seq: 30, grant: permit, protocol: icmp, source_host: 1.12.1.16, destination_host: 1.12.1.17, protocol_options_icmp_echo_reply: true}
+    - {seq: 40, grant: permit, protocol: tcp, source_any: true, destination_host: 1.12.1.22, destination_port_protocol_eq: www}
+    - {seq: 50, grant: permit, protocol: tcp, source_any: true, destination_host: 1.12.1.23, destination_port_protocol_eq: www}
+    - {seq: 60, grant: permit, protocol: 50, source_any: true, destination_host: 1.12.1.24}
+    - {seq: 70, grant: permit, protocol: 51, source_any: true, destination_host: 1.12.1.24}
+    - {seq: 200, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
 
 
 
