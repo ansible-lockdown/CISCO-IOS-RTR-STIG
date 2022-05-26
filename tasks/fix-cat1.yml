@@ -220,8 +220,39 @@
       - V-216576
 
 - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider."
-  debug:
-    msg: "test"  
+  block:
+    - name: Verify that the router is not BGP peering with this router.
+      ios_command:
+          commands:
+            - "show run | section include bgp"
+      register: iosrtr_bgp_peering_with_alterrnate_gateway_service_provider
+
+    - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Set Fact For Neighbor Ip Addresses."
+      set_fact:
+          list: "{{ iosrtr_bgp_peering_with_alterrnate_gateway_service_provider.stdout_lines | regex_findall('((?:[0-9]{1,3}.){3}[0-9]{1,3})') }}"
+
+    - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Add Static Route If It Is BGP Peering With Provider."
+      ios_static_routes:
+          config:
+          - address_families:
+            - afi: ipv4
+              routes:
+                - dest: 0.0.0.0/0
+                  next_hops:
+                    - forward_router_address: "{{ item }}"
+      with_items:
+        - "{{ iosrtr_isp_router_ip_address }}"
+      when: item in list
+      
+    - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Remove any BGP Peering neighbors from configuration."
+      ios_config:
+          parents:
+            - "router bgp {{ iosrtr_local_bgp_autonomous_system_number }}"
+          lines:
+            - "no neighbor {{ item }}"
+      with_items:
+        - "{{ iosrtr_isp_router_ip_address }}"
+      when: item in list
   when:
       - cisc_rt_000290
       - not cisc_rt_dodin_backbone
@@ -307,6 +338,31 @@
 
 
 
+- name: Gather static routes
+  block:
+    - name: Use the Prefix Lists resource module to gather the current config
+      ios_static_routes:
+        config:
+        state: gathered
+      register: ios_static_routes
+
+    - name: Print Static Routes To Screen
+      debug:
+        msg: "{{ ios_static_routes }}"
+
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name: Write Static Routes Configuration to File
+      copy:
+        content: "{{ ios_static_routes | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/static_routes.yaml"
+  when:
+      - cisc_rt_static_routes
+
+
 
 
 
@@ -315,7 +371,6 @@
   block:
     - name: Use the ACLs resource module to gather the current config
       ios_acls:
-
         state: gathered
       register: acls 
 
@@ -323,14 +378,101 @@
       debug:
         msg: "{{ acls }}"
 
-    - name: Inventory Directory
+    - name: Create Inventory Directory
       file:
         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
         state: directory
 
-    - name:  Write Configuration to File
+    - name: Write ACL Configuration to File
       copy:
         content: "{{ acls | to_nice_yaml }}"
         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
   when:
       - cisc_rt_acl
+
+
+- name: Gather BGP Facts
+  block:
+    - name: Use the bgps resource module to gather the current config
+      ios_bgp_global:
+        config:
+        state: gathered
+      register: bgps
+
+    - name: Print bgps To Screen
+      debug:
+        msg: "{{ bgps }}"
+
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name: Write bgp Configuration to File
+      copy:
+        content: "{{ bgps | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/bgp.yaml"
+  when:
+      - cisc_rt_bgp
+
+
+- name: Gather Route Maps Facts
+  block:
+    - name: Use the Route Maps resource module to gather the current config
+      ios_route_maps:
+        config:
+        state: gathered
+      register: route_maps
+
+    - name: Print Route Maps To Screen
+      debug:
+        msg: "{{ route_maps }}"
+
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name: Write Route Maps Configuration to File
+      copy:
+        content: "{{ route_maps | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/route_maps.yaml"
+  when:
+      - cisc_rt_route_maps
+
+
+
+- name: Gather Prefix Lists Facts
+  block:
+    - name: Use the Prefix Lists resource module to gather the current config
+      ios_prefix_lists:
+        config:
+        state: gathered
+  when:
+      - cisc_rt_prefix_lists
+
+- name: Gather ospf roesources Facts
+  block:
+    - name: Use the ospf interfaces resource module to gather the current config
+      ios_ospfv2:
+        config:
+        state: gathered
+      register: ios_ospfv2
+
+    - name: Print ospf interfaces To Screen
+      debug:
+        msg: "{{ ios_ospfv2 }}"
+
+    - name: Create Inventory Directory
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        state: directory
+
+    - name: Write ospf_resources Configuration to File
+      copy:
+        content: "{{ ios_ospfv2 | to_nice_yaml }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/ios_ospf_interfaces.yaml"
+  when:
+      - cisc_rt_ospf_maps
+
+

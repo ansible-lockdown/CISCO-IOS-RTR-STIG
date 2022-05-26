@@ -1,79 +1,10 @@
 changed: false
 failed: false
 gathered:
--   acls:
-    -   aces:
-        -   destination:
-                any: true
-            grant: permit
-            protocol: tcp
-            protocol_options:
-                tcp:
-                    established: true
-            sequence: 10
-            source:
-                any: true
-        -   destination:
-                host: 1.12.1.17
-            grant: permit
-            protocol: icmp
-            protocol_options:
-                icmp:
-                    echo: true
-            sequence: 20
-            source:
-                host: 1.12.1.16
-        -   destination:
-                host: 1.12.1.17
-            grant: permit
-            protocol: icmp
-            protocol_options:
-                icmp:
-                    echo: true
-            sequence: 30
-            source:
-                host: 1.12.1.16
-        -   destination:
-                host: 1.12.1.22
-                port_protocol:
-                    eq: www
-            grant: permit
-            protocol: tcp
-            sequence: 40
-            source:
-                any: true
-        -   destination:
-                host: 1.12.1.23
-                port_protocol:
-                    eq: www
-            grant: permit
-            protocol: tcp
-            sequence: 50
-            source:
-                any: true
-        -   destination:
-                host: 1.12.1.24
-            grant: permit
-            protocol: esp
-            sequence: 60
-            source:
-                any: true
-        -   destination:
-                host: 1.12.1.24
-            grant: permit
-            protocol: ahp
-            sequence: 70
-            source:
-                any: true
-        -   destination:
-                any: true
-            grant: deny
-            log_input:
-                set: true
-            protocol: ip
-            sequence: 200
-            source:
-                any: true
-        acl_type: extended
-        name: FILTER_ISP
-    afi: ipv4
+-   address_families:
+    -   afi: ipv4
+        routes:
+        -   dest: 0.0.0.0/0
+            next_hops:
+            -   forward_router_address: 1.22.1.14
+            -   forward_router_address: 192.168.68.1

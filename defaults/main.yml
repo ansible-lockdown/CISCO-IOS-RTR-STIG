@@ -32,8 +32,8 @@ cisc_rt_dodin_backbone: false
 # CAT 1 rules
 cisc_rt_000130: false
 cisc_rt_000240: false
-cisc_rt_000280: true
-cisc_rt_000290: false
+cisc_rt_000280: false
+cisc_rt_000290: true
 cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
@@ -133,11 +133,14 @@ cisc_rt_000940: false
 cisc_rt_000950: false
 cisc_rt_000470: false
 cisc_rt_000236: false
-cisc_rt_acl: true
+cisc_rt_acl: false
 cisc_rt_bgp: false
 cisc_rt_route_maps: false
 cisc_rt_prefix_lists: false
 cisc_rt_ospf_maps: false
+cisc_rt_static_routes: false
+
+
 
 
 
@@ -328,7 +331,11 @@ iosrtr_filter_isp_acl:
     - {seq: 200, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
 
 
-
+# CISC-RT-000290
+# iosrtr_isp_router_ip_address is the ip address of the service provider router.  This is used to check for BGP peering with the service provder. 
+# The line below is the current variables that are configured to be used on the STIG example. 
+iosrtr_isp_router_ip_address: 
+  - "1.22.1.16"
 
 
 
