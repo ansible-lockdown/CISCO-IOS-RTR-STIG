@@ -33,8 +33,8 @@ cisc_rt_dodin_backbone: false
 cisc_rt_000130: false
 cisc_rt_000240: false
 cisc_rt_000280: false
-cisc_rt_000290: true
-cisc_rt_000630: false
+cisc_rt_000290: false
+cisc_rt_000630: true
 cisc_rt_000640: false
 cisc_rt_000670: false
 cisc_rt_000730: false
@@ -139,6 +139,7 @@ cisc_rt_route_maps: false
 cisc_rt_prefix_lists: false
 cisc_rt_ospf_maps: false
 cisc_rt_static_routes: false
+
 
 
 
@@ -336,6 +337,20 @@ iosrtr_filter_isp_acl:
 # The line below is the current variables that are configured to be used on the STIG example. 
 iosrtr_isp_router_ip_address: 
   - "1.22.1.16"
+
+# CISC-RT-000630
+# CISC-RT-000640
+iosrtr_mpls_l3vpn_active: true
+
+# - { vrf_route_name: , vrf_description: , route_distinguisher: , route_target_export: , route_target_import: , interface: , ip_address: , ip_subnet: }
+iosrtr_ce_facing_vrf_interfaces:
+    - { vrf_route_name: test2, vrf_description: "Test2 Description", route_distinguisher: "400:1", route_target_export: "400:1", route_target_import: "400:1", interface: "Serial1/2", ip_address: 10.5.5.6, ip_subnet: 255.255.255.0 }
+    - { vrf_route_name: test4, vrf_description: "Test3 Description Adjust", route_distinguisher: "555:1", route_target_export: "555:1", route_target_import: "555:1", interface: "Serial1/3", ip_address: 10.4.4.5, ip_subnet: 255.255.255.0 }
+    - { vrf_route_name: CISCO, vrf_description: "CISCO VRF", route_distinguisher: "65000:1", route_target_export: "65000:1", route_target_import: "65000:1", interface: "FastEthernet0/0", ip_address: 10.2.1.1, ip_subnet: 255.255.255.0 }
+    - { vrf_route_name: REDHAT, vrf_description: "REDHAT VRF", route_distinguisher: "65000:2", route_target_export: "65000:2", route_target_import: "65000:2", interface: "FastEthernet0/1", ip_address: 10.2.2.1, ip_subnet: 255.255.255.0 }
+
+
+
 
 
 

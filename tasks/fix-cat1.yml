@@ -264,31 +264,94 @@
       - SV-216577r531085_rule
       - V-216577
 
-- name: "HIGH | CISC-RT-000630 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs."
-  debug:
-    msg: "test" 
+- name: | 
+        "HIGH | CISC-RT-000630 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs."
+        "HIGH | CISC-RT-000640 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance with the appropriate Route Target (RT)."
+  block:
+    - name: "Check For Active VRF's For Stig"
+      ios_command:
+        commands: 
+          - show run | include ip vrf
+      register: cisc_rt_000630_ip_vrf_active
+      # with_items: 
+      #   - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
+    - name: set fact
+      set_fact:
+        list_prune: "{{ cisc_rt_000630_ip_vrf_active.stdout_lines | regex_replace('ip vrf forwarding ', '') | regex_replace('ip vrf ', '')  }}"
+    
+    - name: Print Fact
+      debug:
+        msg: "{{ list_prune }}"
+    
+    - name: "Clear Exiting VRF From iosrtr_ce_facing_vrf_interfaces"
+      ios_vrf_lite:
+        name: "{{ list_prune }}"
+        state: absent
+      when: list_prune.stdout_lines not in item.vrf_route_name
+      with_items:
+        - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
+      
+    - name: Wait For delete
+      wait_for_connection:
+        delay: 10
+
+    # - name: "Create VRF Entries"
+    #   ios_vrf_lite:
+    #     name: "{{ item.vrf_route_name | default(omit) }}"
+    #     rd: "{{ item.route_distinguisher | default(omit) }}"
+    #     route_export:
+    #     - "{{ item.route_target_export | default(omit) }}"
+    #     route_import:
+    #     - "{{ item.route_target_import | default(omit) }}"
+    #   with_items:
+    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
+    # - name: Check To See if description matches
+    #   ios_command:
+    #     commands: 
+    #       - show run | include description
+    #   register: cisc_rt_000630_vrf_description_check
+
+    # - name: Add Description
+    #   ios_config:
+    #     parents: ip vrf {{ item.vrf_route_name }}
+    #     commands: description {{ item.vrf_description }}
+    #   when: item.vrf_description not in cisc_rt_000630_vrf_description_check
+    #   with_items:
+    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
+    # - name: Apply VRF To Interfaces
+    #   ios_config:
+    #     parents: interface {{ item.interface }}
+    #     lines: 
+    #       - ip vrf forwarding {{ item.vrf_route_name }}
+    #   with_items: 
+    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+    
+    # - name: Apply IP Address Back On Interface
+    #   ios_config:
+    #     parents: interface {{ item.interface }}
+    #     lines: 
+    #       - ip address {{ item.ip_address }} {{ item.ip_subnet }}
+    #   with_items: 
+    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
   when:
-      - cisc_rt_000630
+      - cisc_rt_000630 or cisc_rt_000640
   tags:
       - CISC-RT-000630
-      - CAT1
-      - CCI-000366
-      - SRG-NET-000512-RTR-000005
-      - SV-216611r531085_rule
-      - V-216611
-
-- name: "HIGH | CISC-RT-000640 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance with the appropriate Route Target (RT)."
-  debug:
-    msg: "test"  
-  when:
-      - cisc_rt_000640
-  tags:
       - CISC-RT-000640
       - CAT1
       - CCI-000366
+      - SRG-NET-000512-RTR-000005
       - SRG-NET-000512-RTR-000006
+      - SV-216611r531085_rule
       - SV-216612r531085_rule
+      - V-216611
       - V-216612
+
+      
 
 - name: "HIGH | CISC-RT-000670 | PATCH | The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit."
   debug:
@@ -338,141 +401,141 @@
 
 
 
-- name: Gather static routes
-  block:
-    - name: Use the Prefix Lists resource module to gather the current config
-      ios_static_routes:
-        config:
-        state: gathered
-      register: ios_static_routes
+# - name: Gather static routes
+#   block:
+#     - name: Use the Prefix Lists resource module to gather the current config
+#       ios_static_routes:
+#         config:
+#         state: gathered
+#       register: ios_static_routes
 
-    - name: Print Static Routes To Screen
-      debug:
-        msg: "{{ ios_static_routes }}"
+#     - name: Print Static Routes To Screen
+#       debug:
+#         msg: "{{ ios_static_routes }}"
 
-    - name: Create Inventory Directory
-      file:
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
-        state: directory
+#     - name: Create Inventory Directory
+#       file:
+#         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+#         state: directory
 
-    - name: Write Static Routes Configuration to File
-      copy:
-        content: "{{ ios_static_routes | to_nice_yaml }}"
-        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/static_routes.yaml"
-  when:
-      - cisc_rt_static_routes
-
-
+#     - name: Write Static Routes Configuration to File
+#       copy:
+#         content: "{{ ios_static_routes | to_nice_yaml }}"
+#         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/static_routes.yaml"
+#   when:
+#       - cisc_rt_static_routes
 
 
 
 
-- name: Gather Acl Facts
-  block:
-    - name: Use the ACLs resource module to gather the current config
-      ios_acls:
-        state: gathered
-      register: acls 
-
-    - name: Print ACLs To Screen
-      debug:
-        msg: "{{ acls }}"
-
-    - name: Create Inventory Directory
-      file:
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
-        state: directory
-
-    - name: Write ACL Configuration to File
-      copy:
-        content: "{{ acls | to_nice_yaml }}"
-        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
-  when:
-      - cisc_rt_acl
 
 
-- name: Gather BGP Facts
-  block:
-    - name: Use the bgps resource module to gather the current config
-      ios_bgp_global:
-        config:
-        state: gathered
-      register: bgps
+# - name: Gather Acl Facts
+#   block:
+#     - name: Use the ACLs resource module to gather the current config
+#       ios_acls:
+#         state: gathered
+#       register: acls 
 
-    - name: Print bgps To Screen
-      debug:
-        msg: "{{ bgps }}"
+#     - name: Print ACLs To Screen
+#       debug:
+#         msg: "{{ acls }}"
 
-    - name: Create Inventory Directory
-      file:
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
-        state: directory
+#     - name: Create Inventory Directory
+#       file:
+#         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+#         state: directory
 
-    - name: Write bgp Configuration to File
-      copy:
-        content: "{{ bgps | to_nice_yaml }}"
-        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/bgp.yaml"
-  when:
-      - cisc_rt_bgp
-
-
-- name: Gather Route Maps Facts
-  block:
-    - name: Use the Route Maps resource module to gather the current config
-      ios_route_maps:
-        config:
-        state: gathered
-      register: route_maps
-
-    - name: Print Route Maps To Screen
-      debug:
-        msg: "{{ route_maps }}"
-
-    - name: Create Inventory Directory
-      file:
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
-        state: directory
-
-    - name: Write Route Maps Configuration to File
-      copy:
-        content: "{{ route_maps | to_nice_yaml }}"
-        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/route_maps.yaml"
-  when:
-      - cisc_rt_route_maps
+#     - name: Write ACL Configuration to File
+#       copy:
+#         content: "{{ acls | to_nice_yaml }}"
+#         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/acls.yaml"
+#   when:
+#       - cisc_rt_acl
 
 
+# - name: Gather BGP Facts
+#   block:
+#     - name: Use the bgps resource module to gather the current config
+#       ios_bgp_global:
+#         config:
+#         state: gathered
+#       register: bgps
 
-- name: Gather Prefix Lists Facts
-  block:
-    - name: Use the Prefix Lists resource module to gather the current config
-      ios_prefix_lists:
-        config:
-        state: gathered
-  when:
-      - cisc_rt_prefix_lists
+#     - name: Print bgps To Screen
+#       debug:
+#         msg: "{{ bgps }}"
 
-- name: Gather ospf roesources Facts
-  block:
-    - name: Use the ospf interfaces resource module to gather the current config
-      ios_ospfv2:
-        config:
-        state: gathered
-      register: ios_ospfv2
+#     - name: Create Inventory Directory
+#       file:
+#         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+#         state: directory
 
-    - name: Print ospf interfaces To Screen
-      debug:
-        msg: "{{ ios_ospfv2 }}"
+#     - name: Write bgp Configuration to File
+#       copy:
+#         content: "{{ bgps | to_nice_yaml }}"
+#         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/bgp.yaml"
+#   when:
+#       - cisc_rt_bgp
 
-    - name: Create Inventory Directory
-      file:
-        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
-        state: directory
 
-    - name: Write ospf_resources Configuration to File
-      copy:
-        content: "{{ ios_ospfv2 | to_nice_yaml }}"
-        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/ios_ospf_interfaces.yaml"
-  when:
-      - cisc_rt_ospf_maps
+# - name: Gather Route Maps Facts
+#   block:
+#     - name: Use the Route Maps resource module to gather the current config
+#       ios_route_maps:
+#         config:
+#         state: gathered
+#       register: route_maps
+
+#     - name: Print Route Maps To Screen
+#       debug:
+#         msg: "{{ route_maps }}"
+
+#     - name: Create Inventory Directory
+#       file:
+#         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+#         state: directory
+
+#     - name: Write Route Maps Configuration to File
+#       copy:
+#         content: "{{ route_maps | to_nice_yaml }}"
+#         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/route_maps.yaml"
+#   when:
+#       - cisc_rt_route_maps
+
+
+
+# - name: Gather Prefix Lists Facts
+#   block:
+#     - name: Use the Prefix Lists resource module to gather the current config
+#       ios_prefix_lists:
+#         config:
+#         state: gathered
+#   when:
+#       - cisc_rt_prefix_lists
+
+# - name: Gather ospf roesources Facts
+#   block:
+#     - name: Use the ospf interfaces resource module to gather the current config
+#       ios_ospfv2:
+#         config:
+#         state: gathered
+#       register: ios_ospfv2
+
+#     - name: Print ospf interfaces To Screen
+#       debug:
+#         msg: "{{ ios_ospfv2 }}"
+
+#     - name: Create Inventory Directory
+#       file:
+#         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+#         state: directory
+
+#     - name: Write ospf_resources Configuration to File
+#       copy:
+#         content: "{{ ios_ospfv2 | to_nice_yaml }}"
+#         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/ios_ospf_interfaces.yaml"
+#   when:
+#       - cisc_rt_ospf_maps
 
 
