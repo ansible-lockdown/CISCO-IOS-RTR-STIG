@@ -292,7 +292,7 @@
       with_items:
         - "{{ iosrtr_ce_facing_vrf_interfaces }}"
 
-      
+    
     - name: Wait For delete
       wait_for_connection:
         delay: 10
@@ -351,11 +351,16 @@
       - V-216611
       - V-216612
 
-      
 
 - name: "HIGH | CISC-RT-000670 | PATCH | The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit."
-  debug:
-    msg: "test"  
+  ios_config:
+    parents:
+      - interface {{  }}
+    lines:
+      - xconnect {{ ip_address }} {{ vcid }} encapsulation mpls
+  with_items:
+    - "{{ ios_rtr_vcid_ce_facing }}"
+
   when:
       - cisc_rt_000670
   tags:
