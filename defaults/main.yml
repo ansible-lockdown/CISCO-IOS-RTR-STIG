@@ -358,7 +358,21 @@ ios_rtr_vcid_ce_facing:
     - { vcid: 2212, ip_address: 10.2.2.4, interface: FastEthernet0/1 }
 
 
+# CISC-RT-000730
 
+iosrtr_block_to_core_acl_name_old: "BLOCK_TO_CORE"
+
+iosrtr_block_to_core_name_new: "BLOCK_TO_CORE"
+
+iosrtr_external_facing_interfaces: 
+    - { FastEthernet0/0 }
+    - { FastEthernet0/1 }
+
+#iosrtr_internal_acl_type: "extended"
+
+#iosrtr_internal_acl:
+#    - {seq: 10, grant: permit, protocol: ospf, source_host: 10.1.12.1, destination_host: 10.1.12.2}
+#    - {seq: 20, grant: permit, protocol: tcp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: 22}
 
 
 

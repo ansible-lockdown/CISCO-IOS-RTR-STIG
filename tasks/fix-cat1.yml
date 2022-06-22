@@ -355,12 +355,11 @@
 - name: "HIGH | CISC-RT-000670 | PATCH | The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit."
   ios_config:
     parents:
-      - interface {{  }}
+      - interface {{ item.interface }}
     lines:
-      - xconnect {{ ip_address }} {{ vcid }} encapsulation mpls
+      - xconnect {{ item.ip_address }} {{ item.vcid }} encapsulation mpls
   with_items:
     - "{{ ios_rtr_vcid_ce_facing }}"
-
   when:
       - cisc_rt_000670
   tags:
@@ -372,8 +371,52 @@
       - V-216615
 
 - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure."
-  debug:
-    msg: "test"  
+  block:
+    - name: Remove Old ACL
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_block_to_core_acl_name_old }}"
+          state: deleted
+
+     
+    - name: Create New ACL 
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_block_to_core_name_new }}"
+                  acl_type: "{{ iiosrtr_block_to_core_acl_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    log_input: 
+                      set: '{{ item.log_input | default(omit) }}'
+                    protocol: '{{ item.protocol | default(omit) }}'
+                    protocol_options: 
+                      tcp:
+                        established: '{{ item.protocol_options_tcp_established | default(omit) }}'
+                      icmp:
+                        echo: '{{ item.protocol_options_icmp_echo | default(omit) }}'
+                        echo_reply: '{{ item.protocol_options_icmp_echo_reply | default(omit) }}'
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.source_port_protocol_eq | default(omit) }}' 
+                    destination:
+                      any: '{{ item.destination_any | default(omit) }}'
+                      host: '{{ item.destination_host | default(omit) }}'
+                      address: '{{ item.destination_address | default(omit) }}'
+                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
+      with_items: 
+          - "{{ iosrtr_external_acl }}"
+
   when:
       - cisc_rt_000730
   tags:
