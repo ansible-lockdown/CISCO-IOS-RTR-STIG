@@ -353,12 +353,12 @@ iosrtr_ce_facing_vrf_interfaces:
 
 
 # CISC-RT-000670
+# ios_rtr_vcid_ce_facing is the configuration to guarantee that all frames are forwarded onto the correct pseudowire and to the correct customer and attachment circuits, it is imperative that 
+# the correct VC ID is configured for each attachment circuit.
 # - { vcd: , ip_address , interface }
 ios_rtr_vcid_ce_facing:
     - {vcid: 2211, ip_address: 10.2.1.4, interface: FastEthernet0/0}
     - {vcid: 2212, ip_address: 10.2.2.4, interface: FastEthernet0/1}
-
-
 
 # CISC-RT-000730
 # ***********************************************
