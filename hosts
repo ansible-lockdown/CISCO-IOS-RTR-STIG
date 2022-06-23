@@ -10,7 +10,7 @@
 
 #[Frontier RTP Co Workspace]
 #172.16.184.94
-172.16.16.51
+#172.16.16.51
 
 #[Home Ip Address]
 #192.168.68.127
@@ -21,6 +21,9 @@
 
 #[Grey Squirral IP]
 #192.168.1.61
+
+#Virtual Ports
+#172.16.116.128
 
 
 

@@ -380,14 +380,13 @@
                   - name: "{{ iosrtr_block_to_core_acl_name_old }}"
           state: deleted
 
-     
     - name: Create New ACL 
       ios_acls:
           config:
               - afi: ipv4
                 acls:
                 - name: "{{ iosrtr_block_to_core_name_new }}"
-                  acl_type: "{{ iiosrtr_block_to_core_acl_type }}"
+                  acl_type: "{{ iosrtr_block_to_core_acl_type }}"
                   aces:
                   - grant: '{{ item.grant | default(omit) }}'
                     sequence: '{{ item.seq | default(omit) }}'
@@ -415,8 +414,16 @@
                       port_protocol:
                         eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
       with_items: 
-          - "{{ iosrtr_external_acl }}"
+          - "{{ iosrtr_block_to_core_acl }}"
 
+    - name: "Attach to CE Or External Interfaces"
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
+          - "ip access-group {{ iosrtr_block_to_core_name_new }} in"
+      with_items:
+        - "{{ iosrtr_external_facing_interfaces }}"
   when:
       - cisc_rt_000730
   tags:
@@ -428,8 +435,83 @@
       - V-216616
 
 - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure."
-  debug:
-    msg: "test"  
+  block: 
+    - name: Remove Old EGRESS FILTER
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_egress_acl_filter_old }}"
+          state: deleted
+      when:
+        - iosrtr_egress_acl_filter or iosrtr_unicast_reverse_path_forwarding
+
+    - name: Create new EGRESS_FILTER
+      ios_acls:
+          config:
+              - afi: ipv4
+                acls:
+                - name: "{{ iosrtr_egrees_acl_filter_new }}"
+                  acl_type: "{{ iosrtr_egress_acl_filter_type }}"
+                  aces:
+                  - grant: '{{ item.grant | default(omit) }}'
+                    sequence: '{{ item.seq | default(omit) }}'
+                    log_input: 
+                      set: '{{ item.log_input | default(omit) }}'
+                    protocol: '{{ item.protocol | default(omit) }}'
+                    protocol_options: 
+                      tcp:
+                        established: '{{ item.protocol_options_tcp_established | default(omit) }}'
+                      icmp:
+                        echo: '{{ item.protocol_options_icmp_echo | default(omit) }}'
+                        echo_reply: '{{ item.protocol_options_icmp_echo_reply | default(omit) }}'
+                    source: 
+                      any: '{{ item.source_any | default(omit) }}'
+                      host: '{{ item.source_host | default(omit) }}'
+                      address: '{{ item.source_address | default(omit) }}'
+                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.source_port_protocol_eq | default(omit) }}' 
+                    destination:
+                      any: '{{ item.destination_any | default(omit) }}'
+                      host: '{{ item.destination_host | default(omit) }}'
+                      address: '{{ item.destination_address | default(omit) }}'
+                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
+                      port_protocol:
+                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}'
+      with_items: 
+          - "{{ iosrtr_egress_filter_acl }}"
+      when: 
+        - iosrtr_egress_acl_filter
+
+
+    - name: Apply To Interface
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+      with_items:
+        - "{{ iosrtr_external_facing_interfaces }}"
+      when:
+        - iosrtr_egress_acl_filter
+
+
+    - name: Apply uRPF To Interfaces
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
+          - "Description {{ iosrtr_internal_interface_description }}"
+          - "ip access-group {{ iosrtr_block_to_core_name_new }} in"
+      with_items:
+        - "{{ iosrtr_external_facing_interfaces }}"
+      when: 
+        - iosrtr_unicast_reverse_path_forwarding
+
+
+
+
+
+
   when:
       - cisc_rt_000310
       - not cisc_rt_dodin_backbone

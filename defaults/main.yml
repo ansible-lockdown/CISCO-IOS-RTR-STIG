@@ -34,9 +34,9 @@ cisc_rt_000130: false
 cisc_rt_000240: false
 cisc_rt_000280: false
 cisc_rt_000290: false
-cisc_rt_000630: true
+cisc_rt_000630: false
 cisc_rt_000640: false
-cisc_rt_000670: false
+cisc_rt_000670: true
 cisc_rt_000730: false
 cisc_rt_000310: false
 
@@ -292,13 +292,14 @@ iosrtr_internal_acl:
 # Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
 # from specific sources destined to itself.  It is used to protect an enclave connected to an alternate gateway by using an 
 # inbound filter that only permits packets with destination addresses within the sites address space.
+# If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_filter_isp_name_old: "FILTER_ISP"
 # iosrtr_external_acl_name_new is the name of access control list that is configured to restrict traffic destined to iteself.  Review the 
 # Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
 # from specific sources destined to itself.  It is used to protect an enclave connected to an alternate gateway by using an 
 # inbound filter that only permits packets with destination addresses within the sites address space.
 iosrtr_filter_isp_acl_name_new: "FILTER_ISP"
-# iosrtr_filter_isp_description_name is the interface description that lets you know what it is used for.  
+# iosrtr_filter_isp_description_name is the acl description that lets you know what it is used for.  
 iosrtr_filter_isp_description_name: "Link to ISP"
 # iosrtr_filter_isp_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_filter_isp_acl_interfaces:
@@ -344,43 +345,97 @@ iosrtr_mpls_l3vpn_active: true
 
 # - { vrf_route_name: , vrf_description: , route_distinguisher: , route_target_export: , route_target_import: , interface: , ip_address: , ip_subnet: }
 iosrtr_ce_facing_vrf_interfaces:
-    - { vrf_route_name: test2, vrf_description: "Test2 Description", route_distinguisher: "400:1", route_target_export: "400:1", route_target_import: "400:1", interface: "Serial1/2", ip_address: 10.5.5.6, ip_subnet: 255.255.255.0 }
-    - { vrf_route_name: test4, vrf_description: "Test3 Description Adjust", route_distinguisher: "555:1", route_target_export: "555:1", route_target_import: "555:1", interface: "Serial1/3", ip_address: 10.4.4.5, ip_subnet: 255.255.255.0 }
-    - { vrf_route_name: CISCO, vrf_description: "CISCO VRF", route_distinguisher: "65000:1", route_target_export: "65000:1", route_target_import: "65000:1", interface: "FastEthernet0/0", ip_address: 10.2.1.1, ip_subnet: 255.255.255.0 }
-    - { vrf_route_name: REDHAT, vrf_description: "REDHAT VRF", route_distinguisher: "65000:2", route_target_export: "65000:2", route_target_import: "65000:2", interface: "FastEthernet0/1", ip_address: 10.2.2.1, ip_subnet: 255.255.255.0 }
+    - {vrf_route_name: test2, vrf_description: "Test2 Description", route_distinguisher: "400:1", route_target_export: "400:1", route_target_import: "400:1", interface: "Serial1/2", ip_address: 10.5.5.6, ip_subnet: 255.255.255.0}
+    - {vrf_route_name: test4, vrf_description: "Test3 Description Adjust", route_distinguisher: "555:1", route_target_export: "555:1", route_target_import: "555:1", interface: "Serial1/3", ip_address: 10.4.4.5, ip_subnet: 255.255.255.0}
+    - {vrf_route_name: CISCO, vrf_description: "CISCO VRF", route_distinguisher: "65000:1", route_target_export: "65000:1", route_target_import: "65000:1", interface: "FastEthernet0/0", ip_address: 10.2.1.1, ip_subnet: 255.255.255.0}
+    - {vrf_route_name: REDHAT, vrf_description: "REDHAT VRF", route_distinguisher: "65000:2", route_target_export: "65000:2", route_target_import: "65000:2", interface: "FastEthernet0/1", ip_address: 10.2.2.1, ip_subnet: 255.255.255.0}
 
 
 
 # CISC-RT-000670
 # - { vcd: , ip_address , interface }
 ios_rtr_vcid_ce_facing:
-    - { vcid: 2211, ip_address: 10.2.1.4, interface: FastEthernet0/0 }
-    - { vcid: 2212, ip_address: 10.2.2.4, interface: FastEthernet0/1 }
+    - {vcid: 2211, ip_address: 10.2.1.4, interface: FastEthernet0/0}
+    - {vcid: 2212, ip_address: 10.2.2.4, interface: FastEthernet0/1}
+
 
 
 # CISC-RT-000730
+# ***********************************************
+# ***********************************************
+# ***** ADD ACL DESCRIPTION CHECK IOS_ACL *******
+# ***********************************************
+# ***********************************************
 
+# iosrtr_block_to_core_acl_name_old is the name of the old access control list that is configured in the Cisco PE router, that must be configured to block any traffic that is destined 
+# to IP core infrastructure. 
+# If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_block_to_core_acl_name_old: "BLOCK_TO_CORE"
-
+# iosrtr_block_to_core_name_new is the name of the new access control list that is configured in the Cisco PE router, that must be configured to block any traffic that is destined 
+# to IP core infrastructure. 
 iosrtr_block_to_core_name_new: "BLOCK_TO_CORE"
-
+# iosrtr_block_to_core_description_name is the acl description that lets you know what it is used for.  
+iosrtr_block_to_core_acl_description: "Block Any Traffic Destined To IP Core Address Space."
+# iosrtr_external_facing_interfaces are the interfaces that External Or CE Facing interfaces for the ACL.
 iosrtr_external_facing_interfaces: 
-    - { FastEthernet0/0 }
-    - { FastEthernet0/1 }
+    - {FastEthernet0/0}
+    - {FastEthernet0/1} 
+# iosrtr_block_to_core_acl_type is for a standard or extended access-list.  In this case it should be set for extended. 
+iosrtr_block_to_core_acl_type: "extended"
 
-#iosrtr_internal_acl_type: "extended"
-
-#iosrtr_internal_acl:
-#    - {seq: 10, grant: permit, protocol: ospf, source_host: 10.1.12.1, destination_host: 10.1.12.2}
-#    - {seq: 20, grant: permit, protocol: tcp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: 22}
-
-
-
+iosrtr_block_to_core_acl:
+#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
+   - {seq: 10, grant: deny, protocol: ip, source_any: true, destination_host: 10.0.8.2, destination_wildcard_bits: 0.0.0.3, log_input: true}
+   - {seq: 20, grant: permit, protocol: ip, source_any: true, destination_any: true}
 
 
 
-
-
+# CISC-RT-000310
+# iosrtr_egress_acl_filter is the setting to adjust to true if you would like to use the ACL filter for control
+# 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
+# internal interfaces to restrict the router from accepting any outbound IP packet that contains an
+# illegitimate address in the source field. 
+iosrtr_egress_acl_filter: false
+# iosrtr_unicast_reverse_path_forwarding is the setting to adjustto true if you would like to use uRPF for control
+# 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
+# internal interfaces to restrict the router from accepting any outbound IP packet that contains an
+# illegitimate address in the source field. 
+iosrtr_unicast_reverse_path_forwarding: true
+# iosrtr_egress_acl_filter_old is used to remove the old access control list for egress filter if one is used.
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_egress_acl_filter_old: "EGRESS_FILTER"
+# iosrtr_egrees_acl_filter_new is used to add a new access control list for egress filter if one is used.
+iosrtr_egrees_acl_filter_new: "EGRESS_FILTER"
+# iosrtr_internal_interfaces is the list of  all internal interfaces to restrict the router from accepting 
+# outbound IP packets that contain an illegitimate address in the source address field.
+iosrtr_internal_interfaces:
+    - {Serial1/1}
+# iosrtr_egress_acl_filter_type is for a standard or extended access-list.  In this case it should be set for extended. 
+iosrtr_egress_acl_filter_type: "extended"
+# iosrtr_internal_interface_description is the interface description noting the conneciton details. 
+iosrtr_internal_interface_description: "downstream link to LAN"
+# iosrtr_egress_filter_acl is A egress ACL to restrict the router from accepting outbound IP packets that 
+# contain an illegitimate address in the source address field has not been configured on all internal 
+# interfaces in an enclave.
+# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
+#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
+# The configuration below yields the following example on the router.
+# ip access-list extended EGRESS_FILTER
+# permit udp 10.1.15.0 0.0.0.255 any eq domain
+# permit tcp 10.1.15.0 0.0.0.255 any eq ftp
+# permit tcp 10.1.15.0 0.0.0.255 any eq ftp-data
+# permit tcp 10.1.15.0 0.0.0.255 any eq www
+# permit icmp 10.1.15.0 0.0.0.255 any
+# permit icmp 10.1.15.0 0.0.0.255 any echo
+# deny ip any any
+iosrtr_egress_filter_acl:
+- {seq: 10, grant: permit, protocol: udp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: domain}
+- {seq: 20, grant: permit, protocol: tcp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: ftp}
+- {seq: 30, grant: permit, protocol: tcp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: ftp-data}
+- {seq: 40, grant: permit, protocol: tcp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: www}
+- {seq: 50, grant: permit, protocol: icmp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true}
+- {seq: 60, grant: permit, protocol: icmp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, protocol_options_icmp_echo: true}
+- {seq: 70, grant: deny, protocol: ip, source_any: true, destination_any: true}
 
 
 
