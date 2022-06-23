@@ -436,7 +436,7 @@
 
 - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure."
   block: 
-    - name: Remove Old EGRESS FILTER
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove Existing Egress ACL."
       ios_acls:
           config:
               - afi: ipv4
@@ -446,7 +446,7 @@
       when:
         - iosrtr_egress_acl_filter or iosrtr_unicast_reverse_path_forwarding
 
-    - name: Create new EGRESS_FILTER
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create New EGRESS_FILTER."
       ios_acls:
           config:
               - afi: ipv4
@@ -484,34 +484,26 @@
       when: 
         - iosrtr_egress_acl_filter
 
-
-    - name: Apply To Interface
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Apply The EGRESS_FILTER To Interface."
       ios_config:
         parents:
           - "interface {{ item }}"
       with_items:
-        - "{{ iosrtr_external_facing_interfaces }}"
+        - "{{ iosrtr_egress_internal_interfaces }}"
       when:
         - iosrtr_egress_acl_filter
 
-
-    - name: Apply uRPF To Interfaces
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Apply uRPF To Interface And Description."
       ios_config:
         parents:
           - "interface {{ item }}"
         lines:
           - "Description {{ iosrtr_internal_interface_description }}"
-          - "ip access-group {{ iosrtr_block_to_core_name_new }} in"
+          - "ip verify unicast source reachable-via rx"
       with_items:
-        - "{{ iosrtr_external_facing_interfaces }}"
+        - "{{ iosrtr_egress_internal_interfaces }}"
       when: 
         - iosrtr_unicast_reverse_path_forwarding
-
-
-
-
-
-
   when:
       - cisc_rt_000310
       - not cisc_rt_dodin_backbone
