@@ -351,7 +351,6 @@
       - V-216611
       - V-216612
 
-
 - name: "HIGH | CISC-RT-000670 | PATCH | The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit."
   ios_config:
     parents:
