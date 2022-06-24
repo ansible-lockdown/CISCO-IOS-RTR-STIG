@@ -697,27 +697,29 @@
 
 - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled."
   block:
-    - name: Check For Ip cef / ipv6 cef
+    - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Check If Cisco Express Forwarding Enabled."
       ios_command:
         commands: 
           - "show run | section cef"
       register: cisc_rt_000235_ip_cef_check
 
-    - name: Turn On IP Cef If Not
+    - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV6 Unicast-Routing."
+      ios_config:
+        commands:
+          - "ipv6 unicast-routing"
+      when: "'ipv6 cef' not in cisc_rt_000235_ip_cef_check.stdout"
+
+    - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV4 Cisco Express Forwarding."
       ios_config:
         commands: 
           - "ip cef"
       when: "'ip cef' not in cisc_rt_000235_ip_cef_check.stdout"
   
-    - name: Turn on ipv6 cef 
+    - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV6 Cisco Express Forwarding."
       ios_config:
         commands:
           - "ipv6 cef"
       when: "'ipv6 cef' not in cisc_rt_000235_ip_cef_check.stdout"
-      
-
-
-
   when:
       - cisc_rt_000235
   tags:
