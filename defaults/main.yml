@@ -36,7 +36,7 @@ cisc_rt_000280: false
 cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
-cisc_rt_000670: true
+cisc_rt_000670: false
 cisc_rt_000730: false
 cisc_rt_000310: false
 
@@ -89,7 +89,7 @@ cisc_rt_000900: false
 cisc_rt_000910: false
 cisc_rt_000020: false
 cisc_rt_000030: false
-cisc_rt_000080: false
+cisc_rt_000080: true
 cisc_rt_000350: false
 cisc_rt_000480: false
 cisc_rt_000750: false
@@ -251,7 +251,6 @@ iosrtr_external_acl:
     - {seq: 40, grant: permit, protocol: icmp, source_host: 1.11.1.1, destination_host: 1.11.1.2,  protocol_options_icmp_echo_reply: true}
     - {seq: 50, grant: deny, protocol: ip , source_any: true, destination_host: 1.11.1.2, log_input: true}
     - {seq: 200, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
-
 # iosrtr_internal_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
 # If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_internal_acl_name_old: "INTERNAL_ACL"
@@ -332,7 +331,6 @@ iosrtr_filter_isp_acl:
     - {seq: 70, grant: permit, protocol: 51, source_any: true, destination_host: 1.12.1.24}
     - {seq: 200, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
 
-
 # CISC-RT-000290
 # iosrtr_isp_router_ip_address is the ip address of the service provider router.  This is used to check for BGP peering with the service provder. 
 # The line below is the current variables that are configured to be used on the STIG example. 
@@ -341,6 +339,11 @@ iosrtr_isp_router_ip_address:
 
 # CISC-RT-000630
 # CISC-RT-000640
+# ***********************************************
+# ***********************************************
+# ***** NEED TO FINISH VRF CHECK PRUNING * ******
+# ***********************************************
+# ***********************************************
 # ***** NOTE: Creating of new VRFs Are Being Done Using ios_vrf_lite which is included in library/ folder.  
 # ***** This was a custom module I had to create from IOS_VRF in the ansible modules.  They plan on releasing a 
 # ***** Module or possible update using the correct command lines that are able to configure the routers.  
@@ -461,12 +464,23 @@ iosrtr_egress_filter_acl:
 
 
 # Cat 2
-# CISC-RT-000392
+# ----------------------------------------------------
+# CISC-RT-000398
+iosrtr_filter_ipv6:
+  - {seq: , grant: , source_any: , destination_any: , }
+
+
+# CISC-RT-000080
+
+
+
+
+
+
 
 
 # Cat 3
-
-
+# ----------------------------------------------------
 #CISC-RT-000070
 # Not all Cisco Routers support these services please make sure you check your documentation.
 # Review the router configuration to verify that the switch does not have any unnecessary 
