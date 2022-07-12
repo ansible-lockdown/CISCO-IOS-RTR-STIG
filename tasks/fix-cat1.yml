@@ -487,22 +487,70 @@
       ios_config:
         parents:
           - "interface {{ item }}"
+        lines:
+          - "ip access-group {{ iosrtr_egrees_acl_filter_new }} in"
       with_items:
         - "{{ iosrtr_egress_internal_interfaces }}"
       when:
         - iosrtr_egress_acl_filter
 
-    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Apply uRPF To Interface And Description."
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove UPF from Interfaces Because ACL has Been Selected."
       ios_config:
         parents:
           - "interface {{ item }}"
         lines:
-          - "Description {{ iosrtr_internal_interface_description }}"
+          - "no ip verify unicast source reachable-via rx"
+      with_items:
+        - "{{ iosrtr_egress_internal_interfaces }}"
+      when:
+        - iosrtr_egress_acl_filter
+
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Apply uRPF To Interfaces."
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
           - "ip verify unicast source reachable-via rx"
       with_items:
         - "{{ iosrtr_egress_internal_interfaces }}"
       when: 
         - iosrtr_unicast_reverse_path_forwarding
+
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Gather Interface Facts."
+      ios_interfaces:
+        state: gathered
+      register: cisc_rt_000310_interfaceinfo
+
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Set Fact For Interfaces With Description."
+      set_fact:
+        cisc_rt_000310_interface_with_descriptions: "{{ item.name, item.description }}"
+      with_items: "{{ cisc_rt_000310_interfaceinfo.gathered }}"
+      when: 
+        - item.description is defined
+
+    - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Fix Descriptions For iosrtr_egress_internal_interfaces."
+      ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
+          - "description {{ iosrtr_internal_interface_description }}"
+      with_items: 
+        - "{{ iosrtr_egress_internal_interfaces }}"
+      when: 
+        - cisc_rt_000310_interface_with_descriptions != iosrtr_internal_interface_description
+
+    - name: Remove Description From Interface Not In iosrtr_egress_internal_interface
+      ios_config:
+        parents:
+          - "interface {{ item.name }}"
+        lines:
+          - "no description"
+      when: 
+        - item.name not in iosrtr_egress_internal_interfaces
+        - item.description is defined
+        - item.description == iosrtr_internal_interface_description
+      with_items: 
+        - "{{ cisc_rt_000310_interfaceinfo.gathered }}"
   when:
       - cisc_rt_000310
       - not cisc_rt_dodin_backbone

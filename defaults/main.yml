@@ -38,7 +38,7 @@ cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
 cisc_rt_000730: false
-cisc_rt_000310: false
+cisc_rt_000310: true
 
 # CAT 2 rules
 cisc_rt_000010: false
@@ -89,7 +89,7 @@ cisc_rt_000900: false
 cisc_rt_000910: false
 cisc_rt_000020: false
 cisc_rt_000030: false
-cisc_rt_000080: true
+cisc_rt_000080: false
 cisc_rt_000350: false
 cisc_rt_000480: false
 cisc_rt_000750: false
@@ -413,10 +413,10 @@ iosrtr_unicast_reverse_path_forwarding: true
 iosrtr_egress_acl_filter_old: "EGRESS_FILTER"
 # iosrtr_egrees_acl_filter_new is used to add a new access control list for egress filter if one is used.
 iosrtr_egrees_acl_filter_new: "EGRESS_FILTER"
-# iosrtr_internal_interfaces is the list of  all internal interfaces to restrict the router from accepting 
+# iosrtr_internal_interfaces is the list of all internal interfaces to restrict the router from accepting 
 # outbound IP packets that contain an illegitimate address in the source address field.
 iosrtr_egress_internal_interfaces:
-    - {Serial1/1}
+    - "Serial1/1"
 # iosrtr_egress_acl_filter_type is for a standard or extended access-list.  In this case it should be set for extended. 
 iosrtr_egress_acl_filter_type: "extended"
 # iosrtr_internal_interface_description is the interface description noting the conneciton details. 

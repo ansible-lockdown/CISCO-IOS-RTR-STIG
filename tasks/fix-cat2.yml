@@ -644,7 +644,7 @@
           - "show run | include call-home"
       register: ios_rtr_call_home_check
 
-    - name: Turn Off Call Home
+    # - name: Turn Off Call Home
   when:
       - cisc_rt_000080
   tags:
@@ -703,17 +703,17 @@
           - "show run | section cef"
       register: cisc_rt_000235_ip_cef_check
 
-    - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV6 Unicast-Routing."
-      ios_config:
-        commands:
-          - "ipv6 unicast-routing"
-      when: "'ipv6 cef' not in cisc_rt_000235_ip_cef_check.stdout"
-
     - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV4 Cisco Express Forwarding."
       ios_config:
         commands: 
           - "ip cef"
       when: "'ip cef' not in cisc_rt_000235_ip_cef_check.stdout"
+
+    - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV6 Unicast-Routing."
+      ios_config:
+        commands:
+          - "ipv6 unicast-routing"
+      when: "'ipv6 cef' not in cisc_rt_000235_ip_cef_check.stdout"
   
     - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV6 Cisco Express Forwarding."
       ios_config:
@@ -845,8 +845,8 @@
       - V-230155
 
 - name: "MEDIUM | CISC-RT-000398 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Hop-by-Hop or Destination Option extension header with an undefined option type."
-  block:
-    - name: 
+  debug:
+    msg: "test"
   when:
       - cisc_rt_000398
       - not cisc_rt_dodin_backbone
