@@ -25,6 +25,10 @@ change_requires_reboot: false
 ########### Control 400 Questionable for this review late ###########
 cisc_rt_dodin_backbone: false
 
+# ACL CONFIG HERE UPDATE
+
+iosrtr_000730_acl_update: false
+
 # These variables correspond with the STIG IDs defined in the STIG and allows you to enable/disable specific rules.
 # PLEASE NOTE: These work in coordination with the cat1, cat2, cat3 group variables. You must enable an entire group
 # in order for the variables below to take effect.
@@ -37,8 +41,9 @@ cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
-cisc_rt_000730: false
-cisc_rt_000310: true
+cisc_rt_000730: true
+
+cisc_rt_000310: false
 
 # CAT 2 rules
 cisc_rt_000010: false
@@ -365,37 +370,51 @@ ios_rtr_vcid_ce_facing:
     - {vcid: 2211, ip_address: 10.2.1.4, interface: FastEthernet0/0}
     - {vcid: 2212, ip_address: 10.2.2.4, interface: FastEthernet0/1}
 
+
+
+
+
 # CISC-RT-000730
-# ***********************************************
-# ***********************************************
-# ***** ADD ACL DESCRIPTION CHECK IOS_ACL *******
-# ***********************************************
-# ***********************************************
+
 # iosrtr_block_to_core_acl_name_old is the name of the old access control list that is configured in the Cisco PE router, that must be configured to block any traffic that is destined 
 # to IP core infrastructure. 
 # If you did not have a existing access control list defined in the router leave as is.  
-iosrtr_block_to_core_acl_name_old: "BLOCK_TO_CORE"
-# iosrtr_block_to_core_name_new is the name of the new access control list that is configured in the Cisco PE router, that must be configured to block any traffic that is destined 
-# to IP core infrastructure. 
-iosrtr_block_to_core_name_new: "BLOCK_TO_CORE"
-# iosrtr_block_to_core_description_name is the access control list description that lets you know what it is used for.  
-iosrtr_block_to_core_acl_description: "Block Any Traffic Destined To IP Core Address Space."
+iosrtr_block_to_core_acl_name_old: "none"
 # iosrtr_external_facing_interfaces are the interfaces that External Or CE Facing interfaces for the ACL.
 iosrtr_external_facing_interfaces: 
-    - {FastEthernet0/0}
-    - {FastEthernet0/1} 
-# iosrtr_block_to_core_acl_type is for a standard or extended access-list.  In this case it should be set for extended. 
-iosrtr_block_to_core_acl_type: "extended"
-# iosrtr_block_to_core_acl is a access control list that discards and logs packets destined to the IP core address space. 
-# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
-#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
-# The configuration below yields the following example on the router.
-# ip access-list extended BLOCK_TO_CORE
-# deny ip any 10.1.x.0 0.0.255.255 log-input
-# permit ip any any
-iosrtr_block_to_core_acl:
-   - {seq: 10, grant: deny, protocol: ip, source_any: true, destination_host: 10.0.8.2, destination_wildcard_bits: 0.0.0.3, log_input: true}
-   - {seq: 20, grant: permit, protocol: ip, source_any: true, destination_any: true}
+    - "FastEthernet0/0"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # CISC-RT-000310
 # iosrtr_egress_acl_filter is the setting to adjust to true if you would like to use the ACL filter for control
