@@ -1,4 +1,5 @@
 # Test To See If Text Causes Break
+# NOTE: NEW ACCESS LIST MUST MATCH LAYOUT FOR FIRST LINE
 Extended IP access list BLOCK_TO_CORE
     10 permit udp any any 
     20 deny ip any 10.0.8.0 0.0.0.3 log-input

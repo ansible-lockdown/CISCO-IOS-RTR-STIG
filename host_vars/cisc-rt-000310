@@ -1,9 +1,9 @@
 # Test To See If Text Causes Break
-ip access-list extended EGRESS_FILTER
-    permit udp 10.1.15.0 0.0.0.255 any eq domain
-    permit tcp 10.1.15.0 0.0.0.255 any eq ftp
-    permit tcp 10.1.15.0 0.0.0.255 any eq ftp-data
-    permit tcp 10.1.15.0 0.0.0.255 any eq www
-    permit icmp 10.1.15.0 0.0.0.255 any
-    permit icmp 10.1.15.0 0.0.0.255 any echo
-    deny ip any any
+Extended IP access list EGRESS_FILTER
+    10 permit udp 10.1.15.0 0.0.0.255 any eq domain
+    20 permit tcp 10.1.15.0 0.0.0.255 any eq ftp
+    30 permit tcp 10.1.15.0 0.0.0.255 any eq ftp-data
+    40 permit tcp 10.1.15.0 0.0.0.255 any eq www
+    50 permit icmp 10.1.15.0 0.0.0.255 any
+    60 permit icmp 10.1.15.0 0.0.0.255 any echo
+    70 deny ip any any
