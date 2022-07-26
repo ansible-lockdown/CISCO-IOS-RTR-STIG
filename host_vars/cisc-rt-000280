@@ -1,0 +1,28 @@
+#
+##### NOTE: In the STIG they reference the PROTOCOL_OPTIONS by number.  
+##### Make sure you use the protocol names found on the Ansible documentation
+##### found here.  https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_acls_module.html
+##### Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
+##### https://github.com/ansible-collections/cisco.ios/pull/626
+#
+# Example Given In STIG:
+# ip access-list extended FILTER_ISP
+# permit tcp any any established
+# permit icmp host x.12.1.16 host x.12.1.17 echo
+# permit icmp host x.12.1.16 host x.12.1.17 echo-reply
+# permit tcp any host x.12.1.22 eq www
+# permit tcp any host x.12.1.23 eq www
+# permit 50 any host x.12.1.24
+# permit 51 any host x.12.1.24
+# deny ip any any log-input
+#
+#
+Extended IP access list FILTER_ISP
+    10 permit tcp any any established
+    20 permit icmp host 1.12.1.16 host 1.12.1.17 echo
+    # 30 permit icmp host 2.12.1.16 host 2.12.1.17 echo_reply
+    40 permit tcp any host 1.12.1.22 eq www
+    50 permit tcp any host 1.12.1.23 eq www
+    60 permit esp any host 1.12.1.24
+    70 permit ahp any host 1.12.1.24
+    80 deny ip any any log-inputs

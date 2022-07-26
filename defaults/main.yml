@@ -32,13 +32,13 @@ cisc_rt_dodin_backbone: false
 # CAT 1 rules
 cisc_rt_000130: false
 cisc_rt_000240: false
-cisc_rt_000280: false
+cisc_rt_000280: true
 cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
 cisc_rt_000730: false
-cisc_rt_000310: true
+cisc_rt_000310: false
 
 # CAT 2 rules
 cisc_rt_000010: false
@@ -292,44 +292,12 @@ iosrtr_internal_acl:
 # from specific sources destined to itself.  It is used to protect an enclave connected to an alternate gateway by using an 
 # inbound filter that only permits packets with destination addresses within the sites address space.
 # If you did not have a existing access control list defined in the router leave as is.  
-iosrtr_filter_isp_name_old: "FILTER_ISP"
-# iosrtr_external_acl_name_new is the name of access control list that is configured to restrict traffic destined to iteself.  Review the 
-# Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
-# from specific sources destined to itself.  It is used to protect an enclave connected to an alternate gateway by using an 
-# inbound filter that only permits packets with destination addresses within the sites address space.
-iosrtr_filter_isp_acl_name_new: "FILTER_ISP"
-# iosrtr_filter_isp_description_name is the acl description that lets you know what it is used for.  
-iosrtr_filter_isp_description_name: "Link to ISP"
+iosrtr_filter_isp_name_old: "none"
 # iosrtr_filter_isp_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_filter_isp_acl_interfaces:
     - "Serial1/0"
 # iosrtr_filter_isp_interface_description is variable to assign a description to the interface for this acl filter. 
 iosrtr_filter_isp_interface_description: "Link to ISP"
-# iosrtr_filter_isp_acl_type is for a standard or extended access-list.  In this case it should be set for extended. 
-iosrtr_filter_isp_acl_type: "extended"
-# iosrtr_filter_isp_acl is the Access Control Lists (ACLs) used to Configure the ingress ACL of the perimeter router connected to an alternate gateway to only permit packets with destination addresses of the 
-# site's NIPRNet address space or a destination address belonging to the address block assigned by the alternate gateway network service provider as shown in the example below.
-# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
-#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
-# The configuration below yields the following example on the router.
-#ip access-list extended FILTER_ISP
-# permit tcp any any established
-# permit icmp host 1.12.1.16 host 1.12.1.17 echo
-# permit icmp host 1.12.1.16 host 1.12.1.17 echo-reply
-# permit tcp any host 1.12.1.22 eq www
-# permit tcp any host 1.12.1.23 eq www
-# permit esp any host 1.12.1.24
-# permit ahp any host 1.12.1.24
-# deny   ip any any log-input
-iosrtr_filter_isp_acl:
-    - {seq: 10, grant: permit, protocol: tcp, source_any: true, destination_any: true, protocol_options_tcp_established: true}
-    - {seq: 20, grant: permit, protocol: icmp, source_host: 1.12.1.16, destination_host: 1.12.1.17, protocol_options_icmp_echo: true}
-    - {seq: 30, grant: permit, protocol: icmp, source_host: 1.12.1.16, destination_host: 1.12.1.17, protocol_options_icmp_echo_reply: true}
-    - {seq: 40, grant: permit, protocol: tcp, source_any: true, destination_host: 1.12.1.22, destination_port_protocol_eq: www}
-    - {seq: 50, grant: permit, protocol: tcp, source_any: true, destination_host: 1.12.1.23, destination_port_protocol_eq: www}
-    - {seq: 60, grant: permit, protocol: 50, source_any: true, destination_host: 1.12.1.24}
-    - {seq: 70, grant: permit, protocol: 51, source_any: true, destination_host: 1.12.1.24}
-    - {seq: 200, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
 
 # CISC-RT-000290
 # iosrtr_isp_router_ip_address is the ip address of the service provider router.  This is used to check for BGP peering with the service provder. 
@@ -341,7 +309,7 @@ iosrtr_isp_router_ip_address:
 # CISC-RT-000640
 # ***********************************************
 # ***********************************************
-# ***** NEED TO FINISH VRF CHECK PRUNING * ******
+# ***** NEED TO FINISH VRF CHECK PRUNING ********
 # ***********************************************
 # ***********************************************
 # ***** NOTE: Creating of new VRFs Are Being Done Using ios_vrf_lite which is included in library/ folder.  
@@ -387,7 +355,7 @@ iosrtr_external_facing_interfaces:
 # 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
 # internal interfaces to restrict the router from accepting any outbound IP packet that contains an
 # illegitimate address in the source field. 
-iosrtr_egress_acl_filter: false
+iosrtr_egress_acl_filter: true
 # iosrtr_unicast_reverse_path_forwarding is the setting to adjustto true if you would like to use uRPF for control
 # 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
 # internal interfaces to restrict the router from accepting any outbound IP packet that contains an
@@ -402,97 +370,6 @@ iosrtr_egress_internal_interfaces:
     - "Serial1/1"
 # iosrtr_internal_interface_description is the interface description noting the conneciton details. 
 iosrtr_internal_interface_description: "downstream link to LAN"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # CISC-RT-000310
-# # iosrtr_egress_acl_filter is the setting to adjust to true if you would like to use the ACL filter for control
-# # 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
-# # internal interfaces to restrict the router from accepting any outbound IP packet that contains an
-# # illegitimate address in the source field. 
-# iosrtr_egress_acl_filter: false
-# # iosrtr_unicast_reverse_path_forwarding is the setting to adjustto true if you would like to use uRPF for control
-# # 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
-# # internal interfaces to restrict the router from accepting any outbound IP packet that contains an
-# # illegitimate address in the source field. 
-# iosrtr_unicast_reverse_path_forwarding: true
-# # iosrtr_egress_acl_filter_old is used to remove the old access control list for egress filter if one is used.
-# # If you did not have a existing access control list defined in the router leave as is.  
-# iosrtr_egress_acl_filter_old: "EGRESS_FILTER"
-# # iosrtr_egrees_acl_filter_new is used to add a new access control list for egress filter if one is used.
-# iosrtr_egrees_acl_filter_new: "EGRESS_FILTER"
-# # iosrtr_internal_interfaces is the list of all internal interfaces to restrict the router from accepting 
-# # outbound IP packets that contain an illegitimate address in the source address field.
-# iosrtr_egress_internal_interfaces:
-#     - "Serial1/1"
-# # iosrtr_egress_acl_filter_type is for a standard or extended access-list.  In this case it should be set for extended. 
-# iosrtr_egress_acl_filter_type: "extended"
-# # iosrtr_internal_interface_description is the interface description noting the conneciton details. 
-# iosrtr_internal_interface_description: "downstream link to LAN"
-# # iosrtr_egress_filter_acl is a egress ACL to restrict the router from accepting outbound IP packets that 
-# # contain an illegitimate address in the source address field has not been configured on all internal 
-# # interfaces in an enclave.
-# # Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
-# #  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
-# # The configuration below yields the following example on the router.
-# # ip access-list extended EGRESS_FILTER
-# # permit udp 10.1.15.0 0.0.0.255 any eq domain
-# # permit tcp 10.1.15.0 0.0.0.255 any eq ftp
-# # permit tcp 10.1.15.0 0.0.0.255 any eq ftp-data
-# # permit tcp 10.1.15.0 0.0.0.255 any eq www
-# # permit icmp 10.1.15.0 0.0.0.255 any
-# # permit icmp 10.1.15.0 0.0.0.255 any echo
-# # deny ip any any
-# iosrtr_egress_filter_acl:
-# - {seq: 10, grant: permit, protocol: udp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: domain}
-# - {seq: 20, grant: permit, protocol: tcp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: ftp}
-# - {seq: 30, grant: permit, protocol: tcp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: ftp-data}
-# - {seq: 40, grant: permit, protocol: tcp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, destination_port_protocol_eq: www}
-# - {seq: 50, grant: permit, protocol: icmp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true}
-# - {seq: 60, grant: permit, protocol: icmp, source_host: 10.1.15.0, source_wildcard_bits: 0.0.0.255, destination_any: true, protocol_options_icmp_echo: true}
-# - {seq: 70, grant: deny, protocol: ip, source_any: true, destination_any: true}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
