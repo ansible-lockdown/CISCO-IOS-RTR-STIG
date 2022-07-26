@@ -1,0 +1,30 @@
+# NOTES: 
+# New ACL Must Match Actual Example Given At The Bottom For The First Line
+# Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
+# https://github.com/ansible-collections/cisco.ios/pull/626
+#
+# Example Given In STIG:
+# ip access-list extended INTERNAL_ACL
+# permit icmp any any
+# permit ospf host 10.1.12.1 host 10.1.12.2
+# permit tcp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq 22
+# permit tcp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq tacacs
+# permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq snmp
+# permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq ntp
+# deny ip any host 10.1.12.2 log-input
+# permit …
+# …
+# …
+# …
+# deny ip any any log-input
+#
+#
+Extended IP access list INTERNAL_ACL
+    10 permit icmp any any
+    20 permit ospf host 10.1.12.1 host 10.1.12.2
+    30 permit tcp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq 22
+    40 permit tcp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq tacacs
+    50 permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq snmp
+    60 permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq ntp
+    70 deny ip any host 10.1.12.2 log-input
+    100 deny ip any any log-inputs

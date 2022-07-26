@@ -8,104 +8,159 @@
                 acls:
                   - name: "{{ iosrtr_external_acl_name_old }}"
           state: deleted
+      when: 
+        - "'none' not in iosrtr_external_acl_name_old"
 
-    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Configure the ACL for any external interfaces."
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Parse User Given ACL From host_vars For External ACL."
       ios_acls:
-          config:
-              - afi: ipv4
-                acls:
-                - name: "{{ iosrtr_external_acl_name_new }}"
-                  acl_type: "{{ iosrtr_external_acl_type }}"
-                  aces:
-                  - grant: '{{ item.grant | default(omit) }}'
-                    sequence: '{{ item.seq | default(omit) }}'
-                    log_input: 
-                      set: '{{ item.log_input | default(omit) }}'
-                    protocol: '{{ item.protocol | default(omit) }}'
-                    protocol_options: 
-                      tcp:
-                        established: '{{ item.protocol_options_tcp_established | default(omit) }}'
-                      icmp:
-                        echo: '{{ item.protocol_options_icmp_echo | default(omit) }}'
-                        echo_reply: '{{ item.protocol_options_icmp_echo_reply | default(omit) }}'
-                    source: 
-                      any: '{{ item.source_any | default(omit) }}'
-                      host: '{{ item.source_host | default(omit) }}'
-                      address: '{{ item.source_address | default(omit) }}'
-                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
-                      port_protocol:
-                        eq: '{{ item.source_port_protocol_eq | default(omit) }}' 
-                    destination:
-                      any: '{{ item.destination_any | default(omit) }}'
-                      host: '{{ item.destination_host | default(omit) }}'
-                      address: '{{ item.destination_address | default(omit) }}'
-                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
-                      port_protocol:
-                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
-      with_items: 
-          - "{{ iosrtr_external_acl }}"
+        running_config: "{{ lookup('file','host_vars/cisc-rt-000130-ext-acl') }}"
+        state: parsed
+      register: cisc_rt_000130_ext_acl_parsed
 
-    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove Old Internal Access List"
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Convert JSON to DICT For ACL Defined Name For External ACL."
+      set_fact:
+        cisc_rt_000130_ext_acl_name: "{{ cisc_rt_000130_ext_acl_parsed.parsed.0.acls.0.name }}"
+    
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Compare And Update ACL For External ACL."
+      ios_acls:
+        config: "{{ cisc_rt_000130_ext_acl_parsed.parsed }}"
+        state: replaced
+      register: cisc_rt_000130_ext_acl_ran
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Print Changed Lines With Debug When ACL Is Changed For External ACL."
+      debug:
+        var: cisc_rt_000130_ext_acl_ran.commands
+      when: 
+        - cisc_rt_000130_ext_acl_ran.changed
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove Old Internal Access List."
       ios_acls:
           config:
               - afi: ipv4
                 acls:
                   - name: "{{ iosrtr_internal_acl_name_old }}"
           state: deleted
+      when: 
+        - "'none' not in iosrtr_internal_acl_name_old"
 
-    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Configure the ACL for any internal interfaces."
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Parse User Given ACL From host_vars For Internal ACL."
       ios_acls:
-          config:
-              - afi: ipv4
-                acls:
-                - name: "{{ iosrtr_internal_acl_name_new }}"
-                  acl_type: "{{ iosrtr_internal_acl_type }}"
-                  aces:
-                  - grant: '{{ item.grant | default(omit) }}'
-                    sequence: '{{ item.seq | default(omit) }}'
-                    log_input: 
-                      set: '{{ item.log_input | default(omit) }}'
-                    protocol: '{{ item.protocol | default(omit) }}'
-                    protocol_options: 
-                      tcp:
-                        established: '{{ item.protocol_options_tcp_established | default(omit) }}'
-                      icmp:
-                        echo: '{{ item.protocol_options_icmp_echo | default(omit) }}'
-                        echo_reply: '{{ item.protocol_options_icmp_echo_reply | default(omit) }}'
-                    source: 
-                      any: '{{ item.source_any | default(omit) }}'
-                      host: '{{ item.source_host | default(omit) }}'
-                      address: '{{ item.source_address | default(omit) }}'
-                      wildcard_bits: '{{ item.source_wildcard_bits | default(omit) }}'
-                      port_protocol:
-                        eq: '{{ item.source_port_protocol_eq | default(omit) }}' 
-                    destination:
-                      any: '{{ item.destination_any | default(omit) }}'
-                      host: '{{ item.destination_host | default(omit) }}'
-                      address: '{{ item.destination_address | default(omit) }}'
-                      wildcard_bits: '{{ item.destination_wildcard_bits | default(omit) }}'
-                      port_protocol:
-                        eq: '{{ item.destination_port_protocol_eq | default(omit) }}' 
-      with_items: 
-          - "{{ iosrtr_internal_acl }}"
+        running_config: "{{ lookup('file','host_vars/cisc-rt-000130-int-acl') }}"
+        state: parsed
+      register: cisc_rt_000130_int_acl_parsed
 
-    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply EXTERNAL_ACL to proper interfaces."
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Convert JSON to DICT For ACL Defined Name For Internal ACL."
+      set_fact:
+        cisc_rt_000130_int_acl_name: "{{ cisc_rt_000130_int_acl_parsed.parsed.0.acls.0.name }}"
+    
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Compare And Update ACL For External ACL."
+      ios_acls:
+        config: "{{ cisc_rt_000130_int_acl_parsed.parsed }}"
+        state: replaced
+      register: cisc_rt_000130_int_acl_ran
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Print Changed Lines With Debug When ACL Is Changed For Internal ACL."
+      debug:
+        var: cisc_rt_000130_int_acl_ran.commands
+      when: 
+        - cisc_rt_000130_int_acl_ran.changed
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Gather Interface Facts."
+      ios_interfaces:
+        state: gathered
+      register: cisc_rt_000130_interfaceinfo
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Register Show Run With Interfaces."
+      ios_command:
+        commands: 
+          - "show run | section {{ item.name }}" 
+      with_items: "{{ cisc_rt_000130_interfaceinfo.gathered }}"
+      register: cisc_rt_000130_interfaceinfo_showrun
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Set Fact For Interface Name And Stdout." 
+      set_fact:
+        cisc_rt_000130_intname: "{{ cisc_rt_000130_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+        cisc_rt_000130_intstdout: "{{ cisc_rt_000130_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Add ACL To Interfaces Listed In iosrtr_external_acl_interfaces."
       ios_config:
         parents:
-          - "interface {{ item }}"
+          - "interface {{ item.0 }}"
         lines:
-          - "ip access-group {{ iosrtr_external_acl_name_new }} in"
-      with_items:
-        - "{{ iosrtr_external_acl_interfaces }}"
+          - "ip access-group {{ cisc_rt_000130_ext_acl_name }} in"
+      with_together: 
+        - "{{ cisc_rt_000130_intname }}"
+        - "{{ cisc_rt_000130_intstdout }}"
+      when:
+        - item.0 in iosrtr_external_acl_interfaces
+        - cisc_rt_000130_ext_acl_name not in item.1
 
-    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Apply INTERNAL_ACL to proper interfaces."
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Add ACL To Interfaces Listed In iosrtr_internal_acl_interfaces."
       ios_config:
         parents:
-          - "interface {{ item }}"
+          - "interface {{ item.0 }}"
         lines:
-          - "ip access-group {{ iosrtr_internal_acl_name_new }} in"
-      with_items:
-        - "{{ iosrtr_internal_acl_interfaces }}"
+          - "ip access-group {{ cisc_rt_000130_int_acl_name }} in"
+      with_together: 
+        - "{{ cisc_rt_000130_intname }}"
+        - "{{ cisc_rt_000130_intstdout }}"
+      when:
+        - item.0 in iosrtr_internal_acl_interfaces
+        - cisc_rt_000130_int_acl_name not in item.1
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove ACL From Interfaces Not Listed In iosrtr_external_acl_interfaces."
+      ios_config:
+        parents:
+          - "interface {{ item.0 }}"
+        lines:
+          - "no ip access-group {{ cisc_rt_000130_ext_acl_name }} in"
+      with_together: 
+        - "{{ cisc_rt_000130_intname }}"
+        - "{{ cisc_rt_000130_intstdout }}"
+      when:
+        - item.0 not in iosrtr_external_acl_interfaces
+        - cisc_rt_000130_ext_acl_name in item.1
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove ACL From Interfaces Not Listed In iosrtr_external_acl_interfaces."
+      ios_config:
+        parents:
+          - "interface {{ item.0 }}"
+        lines:
+          - "no ip access-group {{ cisc_rt_000130_int_acl_name }} in"
+      with_together: 
+        - "{{ cisc_rt_000130_intname }}"
+        - "{{ cisc_rt_000130_intstdout }}"
+      when:
+        - item.0 not in iosrtr_internal_acl_interfaces
+        - cisc_rt_000130_int_acl_name in item.1
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove Old External ACL From All Interfaces On Router."
+      ios_config:
+        parents:
+          - "interface {{ item.0 }}"
+        lines:
+          - "no ip access-group {{ iosrtr_external_acl_name_old }} in"
+      with_together: 
+        - "{{ cisc_rt_000130_intname }}"
+        - "{{ cisc_rt_000130_intstdout }}"
+      when:
+        - "'none' not in iosrtr_external_acl_name_old"
+        - item.0 is defined
+        - iosrtr_external_acl_name_old in item.1
+
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove Old Internal ACL From All Interfaces On Router."
+      ios_config:
+        parents:
+          - "interface {{ item.0 }}"
+        lines:
+          - "no ip access-group {{ iosrtr_internal_acl_name_old }} in"
+      with_together: 
+        - "{{ cisc_rt_000130_intname }}"
+        - "{{ cisc_rt_000130_intstdout }}"
+      when:
+        - "'none' not in iosrtr_internal_acl_name_old"
+        - item.0 is defined
+        - iosrtr_internal_acl_name_old in item.1
   when:
       - cisc_rt_000130
   tags:

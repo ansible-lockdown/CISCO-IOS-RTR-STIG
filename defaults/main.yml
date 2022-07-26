@@ -30,9 +30,9 @@ cisc_rt_dodin_backbone: false
 # in order for the variables below to take effect.
 
 # CAT 1 rules
-cisc_rt_000130: false
+cisc_rt_000130: true
 cisc_rt_000240: false
-cisc_rt_000280: true
+cisc_rt_000280: false
 cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
@@ -223,67 +223,22 @@ iosrtr_local_bgp_autonomous_system_number: "1123"
 # CISC-RT-000130
 # iosrtr_external_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
 # If you did not have a existing access control list defined in the router leave as is.  
-iosrtr_external_acl_name_old: "EXTERNAL_ACL"
-# iosrtr_external_acl_name_new is the name of access control list that is configured to restrict traffic destined to iteself.  Review the 
-# Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
-# from specific sources destined to itself.
-iosrtr_external_acl_name_new: "EXTERNAL_ACL"
+iosrtr_external_acl_name_old: "none"
 # iosrtr_external_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_external_acl_interfaces:
     - "FastEthernet2/0"
-# iosrtr_external_acl_type is for a standard or extended access-list.  In this case it should be set for extended. 
-iosrtr_external_acl_type: "extended"
-# iosrtr_external_acl is the Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic from specific sources destined to itself.
-# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
-#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
-# The configuration below yields the following example on the router.
-#ip access-list extended EXTERNAL_ACL
-# permit tcp host 1.11.1.1 eq bgp host 1.11.1.2
-# permit tcp host 1.11.1.1 host 1.11.1.2 eq bgp
-# permit icmp host 1.11.1.1 host 1.11.1.2 echo
-# permit icmp host 1.11.1.1 host 1.11.1.2 echo-reply
-# deny   ip any host 1.11.1.2 log-input
-# deny   ip any any log-input
-iosrtr_external_acl:
-    - {seq: 10, grant: permit, protocol: tcp, source_host: 1.11.1.1, source_port_protocol_eq: bgp, destination_host: 1.11.1.2}
-    - {seq: 20, grant: permit, protocol: tcp, source_host: 1.11.1.1, destination_host: 1.11.1.2, destination_port_protocol_eq: bgp}
-    - {seq: 30, grant: permit, protocol: icmp, source_host: 1.11.1.1, destination_host: 1.11.1.2, protocol_options_icmp_echo: true}
-    - {seq: 40, grant: permit, protocol: icmp, source_host: 1.11.1.1, destination_host: 1.11.1.2,  protocol_options_icmp_echo_reply: true}
-    - {seq: 50, grant: deny, protocol: ip , source_any: true, destination_host: 1.11.1.2, log_input: true}
-    - {seq: 200, grant: deny, protocol: ip, source_any: true, destination_any: true, log_input: true}
+
 # iosrtr_internal_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
 # If you did not have a existing access control list defined in the router leave as is.  
-iosrtr_internal_acl_name_old: "INTERNAL_ACL"
+iosrtr_internal_acl_name_old: "none"
 # iosrtr_internal_acl_name_new is the name of access control list that is configured to restrict traffic destined to iteself.  Review the 
 # Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
 # from specific sources destined to itself.
-iosrtr_internal_acl_name_new: "INTERNAL_ACL"
+# iosrtr_internal_acl_name_new: "INTERNAL_ACL"
 # iosrtr_internal_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_internal_acl_interfaces:
     - "FastEthernet0/0"
     - "FastEthernet0/1"
-# iosrtr_internal_acl_type is for a standard or extended access-list.  In this case it should be set for extended. 
-iosrtr_internal_acl_type: "extended"
-# iosrtr_internal_acl is the Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic from specific sources destined to itself.
-# Additional variables may be added later depending on the need, this is currently configured to stig example. The line below is the current variables that are configured to be used. 
-#  - {seq: , grant: , protocol: , source_any: , source_host: , source_address: , source_wildcard_bits: , source_port_protocol_eq: , destination_any: , destination_host: , destination_address: , destination_wildcard_bits: , destination_port_protocol_eq: , protocol_options_tcp_established: , protocol_options_icmp_echo: , protocol_options_icmp_echo_reply: , log_input: }
-# The configuration below yields the following example on the router.
-#ip access-list extended INTERNAL_ACL
-# permit ospf host 10.1.12.1 host 10.1.12.2
-# permit tcp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq 22
-# permit tcp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq tacacs
-# permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq snmp
-# permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq ntp
-# deny   ip any host 10.1.12.2 log-input
-# permit ip any any log-input
-iosrtr_internal_acl:
-    - {seq: 10, grant: permit, protocol: ospf, source_host: 10.1.12.1, destination_host: 10.1.12.2}
-    - {seq: 20, grant: permit, protocol: tcp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: 22}
-    - {seq: 30, grant: permit, protocol: tcp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: tacacs}
-    - {seq: 40, grant: permit, protocol: udp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: snmp}
-    - {seq: 50, grant: permit, protocol: udp, source_address: 10.2.1.0, source_wildcard_bits: 0.0.0.255, destination_host: 10.1.12.2, destination_port_protocol_eq: ntp}
-    - {seq: 60, grant: deny, protocol: ip, source_any: true, destination_host: 10.1.12.2, log_input: true}
-    - {seq: 200, grant: permit, protocol: ip, source_any: true, destination_any: true, log_input: true}
 
 
 # CISC-RT-000280
@@ -347,6 +302,7 @@ iosrtr_block_to_core_acl_name_old: "none"
 # iosrtr_external_facing_interfaces are the interfaces that External Or CE Facing interfaces for the ACL.
 iosrtr_external_facing_interfaces: 
     - "FastEthernet0/0"
+    - "FastEthernet0/1"
 
 
 
