@@ -19,3 +19,12 @@
   tags:
       - CAT3
       - low
+ 
+- name: If Warnings found Output count and control IDs affected
+  debug:
+    msg: 
+      - "You have {{ warn_count }} Warning(s) that require investigating that are related to the following STIG Controls:"
+      - "{{ control_number }}"
+  when: warn_count != 0
+  tags:
+      - always

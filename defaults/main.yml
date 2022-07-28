@@ -31,7 +31,7 @@ cisc_rt_dodin_backbone: false
 
 # CAT 1 rules
 cisc_rt_000130: true
-cisc_rt_000240: false
+cisc_rt_000240: true
 cisc_rt_000280: false
 cisc_rt_000290: false
 cisc_rt_000630: false

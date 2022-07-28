@@ -176,27 +176,34 @@
     - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Search Inbound ACL To Verify That It Is Configured To Deny All Other Traffic That Is Not Explicity Allowed."
       ios_command:
         commands:
-          - "show run | section ip access-list extended {{ iosrtr_external_acl_name_new }}"
-      register: iosrtr_deny_all_other_traffic
-    
+          - "show run | section ip access-list extended {{ cisc_rt_000130_ext_acl_name }}"
+      register: cisc_rt_000240_iosrtr_deny_all_other_traffic_check
+
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Set Fact For Deny Ip Search."
+      set_fact:
+        cisc_rt_000240_acl_check: "{{ cisc_rt_000240_iosrtr_deny_all_other_traffic_check.stdout | regex_search('deny   ip any any log-input') }}"
+
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Acl Addition Warning When cisc_rt_000240_acl_check Is Not Defined."
+      debug:
+        msg: "Warning!!! {{ cisc_rt_000130_ext_acl_name }} Does Not Have Deny All Other Traffic That Is Not Explicity Allowed In The ACL. We Are Adding It To The {{ cisc_rt_000130_ext_acl_name }} At Sequence Number 300.  Please Go Back To host_vars/cisc-rt-000130-ext-acl And Add It To The End Of The ACL."
+      when: 
+        - cisc_rt_000240_acl_check != "deny   ip any any log-input"
+
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Warning Msg At End Of Playbook."
+      set_fact:
+        control_number:
+          - "{{ control_number }} + [ CISC-RT-000240 - Acl Addition Warning ]"
+        warn_count: "{{ warn_count|int + 1 }}"
+      when: 
+        - cisc_rt_000240_acl_check != "deny   ip any any log-input"
+
     - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Correct The ACL By Adding Proper Configuration To Deny All Other Traffic That Is Not Explicity Allowed."
-      ios_acls:
-          config:
-              - afi: ipv4
-                acls:
-                - name: "{{ iosrtr_external_acl_name_new }}"
-                  acl_type: "{{ iosrtr_external_acl_type }}"
-                  aces:
-                  - grant: deny
-                    sequence: 200
-                    log_input: 
-                      set: true
-                    protocol: ip 
-                    source: 
-                      any: true
-                    destination:
-                      any: true
-      when: "'deny   ip any any log-input' not in iosrtr_deny_all_other_traffic"
+      ios_config:
+        parents:
+          - "ip access-list extended {{ cisc_rt_000130_ext_acl_name }}"
+        commands:
+          - "300 deny ip any any log-input"
+      when: cisc_rt_000240_acl_check != "deny   ip any any log-input"
   when:
       - cisc_rt_000240
       - not cisc_rt_dodin_backbone
@@ -207,9 +214,6 @@
       - SRG-NET-000202-RTR-000001
       - SV-216572r531085_rule
       - V-216572
-
-
-
 
 
 

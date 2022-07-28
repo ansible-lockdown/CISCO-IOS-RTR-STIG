@@ -21,7 +21,7 @@
 Extended IP access list FILTER_ISP
     10 permit tcp any any established
     20 permit icmp host 1.12.1.16 host 1.12.1.17 echo
-    # 30 permit icmp host 2.12.1.16 host 2.12.1.17 echo_reply
+    30 permit icmp host 2.12.1.16 host 2.12.1.17 echo-reply
     40 permit tcp any host 1.12.1.22 eq www
     50 permit tcp any host 1.12.1.23 eq www
     60 permit esp any host 1.12.1.24

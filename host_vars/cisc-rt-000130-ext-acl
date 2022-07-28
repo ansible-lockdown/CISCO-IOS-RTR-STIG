@@ -1,7 +1,7 @@
 # NOTES: 
 # New ACL Must Match Actual Example Given At The Bottom For The First Line
 # Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
-# https://github.com/ansible-collections/cisco.ios/pull/626
+# https://github.com/ansible-collections/cisco.ios/pull/626 
 #
 # Example Given In STIG:
 # ip access-list extended EXTERNAL_ACL
@@ -22,6 +22,6 @@ Extended IP access list EXTERNAL_ACL
     10 permit tcp host 1.11.1.1 eq bgp host 1.11.1.2
     20 permit tcp host 1.11.1.1 host 1.11.1.2 eq bgp
     30 permit icmp host 1.11.1.1 host 1.11.1.2 echo
-    # 40 permit icmp host x.11.1.1 host x.11.1.2 echo_reply
+    40 permit icmp host 1.11.1.1 host 1.11.1.2 echo-reply
     50 deny ip any host 1.11.1.1 log-input
-    100 deny ip any any log-input
+    # 100 deny ip any any log-input
