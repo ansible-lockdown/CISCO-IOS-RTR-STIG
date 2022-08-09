@@ -653,14 +653,14 @@
           when:
             - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
 
-        - name:  Set Fact For Interface Name And Stdout." 
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Set Fact For Interface Name And Interface Stdout." 
           set_fact:
             cisc_rt_000730_intname_existing: "{{ cisc_rt_000730_interfaceinfo_showrun_exisiting.results | map(attribute='item.name') }}"
             cisc_rt_000730_intstdout_existing: "{{ cisc_rt_000730_interfaceinfo_showrun_exisiting.results | map(attribute='stdout') }}"
           when: 
             - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
 
-        - name: Attach ACL To CE Or External Interfaces."
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Attach ACL To CE Or External Interfaces."
           ios_config:
             parents:
               - "interface {{ item.0 }}"
@@ -674,7 +674,7 @@
             - item.0 in iosrtr_external_facing_interfaces_exisitng
             - iosrtr_block_to_core_existing_acl not in item.1
 
-        - name: Remove ACL from Interface Not In List."
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove ACL from Interface Not In List."
           ios_config:
             parents:
               - "interface {{ item.0 }}"
@@ -750,12 +750,6 @@
       when: 
         - not cisc_rt_hardening_one_device
         - "'none' not in iosrtr_block_to_core_existing_acl"
-        
-
-
-
-
-
 
     - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Single Router Setup Block."
       block: 
@@ -775,7 +769,7 @@
             state: parsed
           register: cisc_rt_000730_acl_parsed
 
-        - name: Convert JSON to DICT For ACL Name
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Convert JSON to DICT For ACL Name."
           set_fact:
             cisc_rt_000730_acl_name: "{{ cisc_rt_000730_acl_parsed.parsed.0.acls.0.name }}"
         
