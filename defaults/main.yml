@@ -20,24 +20,29 @@ iosrtrstig_skip_reboot: true
 change_requires_reboot: false
 
 # DODIN Backbone Applicable Check
-# If you are on a DODIN Backbone set the toggle to true.  This will skip the controls that arenot applicable 
+# If you are on a DODIN Backbone set the toggle to true.  This will skip the controls that are not applicable 
 # for the STIG.  Setting to false will allow the controls to run.  
 ########### Control 400 Questionable for this review late ###########
 cisc_rt_dodin_backbone: false
+
+# Are you hardening one device.
+# If you are hardening a single device set this variable to true so that all controls will run and you can customize 
+# your router to your liking.  
+cisc_rt_hardening_one_device: false
 
 # These variables correspond with the STIG IDs defined in the STIG and allows you to enable/disable specific rules.
 # PLEASE NOTE: These work in coordination with the cat1, cat2, cat3 group variables. You must enable an entire group
 # in order for the variables below to take effect.
 
 # CAT 1 rules
-cisc_rt_000130: true
-cisc_rt_000240: true
+cisc_rt_000130: false
+cisc_rt_000240: false
 cisc_rt_000280: false
 cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
-cisc_rt_000730: false
+cisc_rt_000730: true
 cisc_rt_000310: false
 
 # CAT 2 rules
@@ -205,7 +210,8 @@ isortr_loopback_0_ip_address:
 
 
 # CISC-RT-000580
-iosrtr_local_bgp_autonomous_system_number: "1123"
+iosrtr_local_bgp_autonomous_system_number: "65000"
+
 
 
 
@@ -222,7 +228,7 @@ iosrtr_local_bgp_autonomous_system_number: "1123"
 # ----------------------------------------------------
 # CISC-RT-000130
 # iosrtr_external_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
-# If you did not have a existing access control list defined in the router leave as is.  
+# If you did not have a existing access control list defined in the router then leave as none.  
 iosrtr_external_acl_name_old: "none"
 # iosrtr_external_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_external_acl_interfaces:
@@ -239,7 +245,6 @@ iosrtr_internal_acl_name_old: "none"
 iosrtr_internal_acl_interfaces:
     - "FastEthernet0/0"
     - "FastEthernet0/1"
-
 
 # CISC-RT-000280
 # iosrtr_filter_isp_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  Review the 
@@ -259,6 +264,11 @@ iosrtr_filter_isp_interface_description: "Link to ISP"
 # The line below is the current variables that are configured to be used on the STIG example. 
 iosrtr_isp_router_ip_address: 
   - "1.22.1.16"
+
+
+
+
+
 
 # CISC-RT-000630
 # CISC-RT-000640
@@ -280,6 +290,12 @@ iosrtr_ce_facing_vrf_interfaces:
     - {vrf_route_name: CISCO, vrf_description: "CISCO VRF", route_distinguisher: "65000:1", route_target_export: "65000:1", route_target_import: "65000:1", interface: "FastEthernet0/0", ip_address: 10.2.1.1, ip_subnet: 255.255.255.0}
     - {vrf_route_name: REDHAT, vrf_description: "REDHAT VRF", route_distinguisher: "65000:2", route_target_export: "65000:2", route_target_import: "65000:2", interface: "FastEthernet0/1", ip_address: 10.2.2.1, ip_subnet: 255.255.255.0}
 
+
+
+
+
+
+
 # CISC-RT-000670
 # ios_rtr_vcid_ce_facing is the configuration to guarantee that all frames are forwarded onto the correct pseudowire and to the correct customer and attachment circuits, it is imperative that 
 # the correct VC ID is configured for each attachment circuit.
@@ -295,14 +311,57 @@ ios_rtr_vcid_ce_facing:
 
 
 # CISC-RT-000730
-# iosrtr_block_to_core_acl_name_old is the name of the old access control list that is configured in the Cisco PE router, that must be configured to block any traffic that is destined 
-# to IP core infrastructure. 
-# If you did not have a existing access control list defined in the router leave as is.  
+# User Defined (Existing ACL) In Defaults Main 
+# -------------------------------------------------------
+# iosrtr_block_to_core_existing_acl is the current ACL defined in the router is used to discard and logs packets destined to the 
+# IP core address space. 
+# By default none is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run.  
+# Example: "BLOCK_TO_CORE"
+iosrtr_block_to_core_existing_acl: "BLOCK_TO_CORE"
+# iosrtr_block_to_core_existing_acl_ip_core_address_space is the list of IP ranges that are in your core space that must be in the ACL.
+# Note: Please follow proper syntax in entering your own ip blocks and wildcards, based on example below. Also when adding the lines to 
+#       the ACL make sure log-input is attached to them to properly satisfy the STIG requirements.  
+# Example:
+#   - '10.1.0.0 0.0.255.255'
+#   - '1.1.0.0 0.0.255.255'
+#   - '3.3.0.0 0.0.255.255'
+iosrtr_block_to_core_existing_acl_ip_core_address_space: 
+    - '10.1.0.0 0.0.255.255'
+    - '1.1.0.0 0.0.255.255'
+    - '3.3.0.0 0.0.255.255'
+# iosrtr_external_facing_interfaces_exisitng are the external or CE-facing interfaces that the ACL will be applied too. 
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
+iosrtr_external_facing_interfaces_exisitng:
+    - "FastEthernet0/0"
+    - "FastEthernet0/1"
+
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# Note: To setup a single router set cisc_rt_hardening_one_device: true 
+# iosrtr_block_to_core_acl_name_old is the name of the old access control list that is configured in the Cisco PE router, 
+# that must be configured to block any traffic that is destined to IP core infrastructure. This section when run, will 
+# replace the existing ACL with a user defined one that is located in /files and apply to all interfaces in list below.  
+# If you did not have a existing access control list defined in the router leave setting set as "none".
+# Example: "BLOCK_TO_CORE_OLD"
 iosrtr_block_to_core_acl_name_old: "none"
 # iosrtr_external_facing_interfaces are the interfaces that External Or CE Facing interfaces for the ACL.
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
 iosrtr_external_facing_interfaces: 
     - "FastEthernet0/0"
     - "FastEthernet0/1"
+
+
+
+
+
+
+
 
 
 

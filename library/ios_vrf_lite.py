@@ -278,14 +278,14 @@ import time
 from functools import partial
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.connection import exec_command
-from ansible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
+from cisco.ios.plugins.module_utils.network.ios.ios import (
     load_config,
     get_config,
 )
-from ansible_collections.cisco.ios.plugins.module_utils.network.ios.ios import (
+from cisco.ios.plugins.module_utils.network.ios.ios import (
     ios_argument_spec,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
+from ansible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
 )
 from ansible.module_utils.six import iteritems
@@ -311,7 +311,7 @@ def get_interface_type(interface):
 
 
 def add_command_to_vrf(name, cmd, commands):
-    if "ip vrf %s" % name not in commands:
+    if "vrf definition %s" % name not in commands:
         commands.extend(["ip vrf %s" % name])
     commands.append(cmd)
 
@@ -735,7 +735,7 @@ def main():
         want_vrfs = [x["name"] for x in want]
         have_vrfs = [x["name"] for x in have]
         for item in set(have_vrfs).difference(want_vrfs):
-            cmd = "no ip vrf %s" % item
+            cmd = "no vrf definition %s" % item
             if cmd not in commands:
                 commands.append(cmd)
     result["commands"] = commands

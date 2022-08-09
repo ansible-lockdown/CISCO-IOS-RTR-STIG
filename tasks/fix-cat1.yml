@@ -13,7 +13,7 @@
 
     - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Parse User Given ACL From host_vars For External ACL."
       ios_acls:
-        running_config: "{{ lookup('file','host_vars/cisc-rt-000130-ext-acl') }}"
+        running_config: "{{ lookup('file','files/cisc-rt-000130-ext-acl.txt') }}"
         state: parsed
       register: cisc_rt_000130_ext_acl_parsed
 
@@ -45,7 +45,7 @@
 
     - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Parse User Given ACL From host_vars For Internal ACL."
       ios_acls:
-        running_config: "{{ lookup('file','host_vars/cisc-rt-000130-int-acl') }}"
+        running_config: "{{ lookup('file','files/cisc-rt-000130-int-acl.txt') }}"
         state: parsed
       register: cisc_rt_000130_int_acl_parsed
 
@@ -215,16 +215,6 @@
       - SV-216572r531085_rule
       - V-216572
 
-
-
-
-
-
-
-
-
-
-
 - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space."
   block:
     - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Rmmove Old FILTER_ISP Access Control Lost."
@@ -239,7 +229,7 @@
 
     - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Parse User Given ACL From host_vars."
       ios_acls:
-        running_config: "{{ lookup('file','host_vars/cisc-rt-000280') }}"
+        running_config: "{{ lookup('file','files/cisc-rt-000280-acl.txt') }}"
         state: parsed
       register: cisc_rt_000280_acl_parsed
 
@@ -355,7 +345,6 @@
       - SV-216576r531085_rule
       - V-216576
 
-
 - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider."
   block:
     - name: Verify that the router is not BGP peering with this router.
@@ -366,7 +355,7 @@
 
     - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Set Fact For Neighbor Ip Addresses."
       set_fact:
-          list: "{{ iosrtr_bgp_peering_with_alterrnate_gateway_service_provider.stdout_lines | regex_findall('((?:[0-9]{1,3}.){3}[0-9]{1,3})') }}"
+          cisc_rt_000290_list: "{{ iosrtr_bgp_peering_with_alterrnate_gateway_service_provider.stdout_lines | regex_findall('((?:[0-9]{1,3}.){3}[0-9]{1,3})') }}"
 
     - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Add Static Route If It Is BGP Peering With Provider."
       ios_static_routes:
@@ -379,7 +368,7 @@
                     - forward_router_address: "{{ item }}"
       with_items:
         - "{{ iosrtr_isp_router_ip_address }}"
-      when: item in list
+      when: item in cisc_rt_000290_list
       
     - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Remove any BGP Peering neighbors from configuration."
       ios_config:
@@ -389,7 +378,7 @@
             - "no neighbor {{ item }}"
       with_items:
         - "{{ iosrtr_isp_router_ip_address }}"
-      when: item in list
+      when: item in cisc_rt_000290_list
   when:
       - cisc_rt_000290
       - not cisc_rt_dodin_backbone
@@ -401,49 +390,131 @@
       - SV-216577r531085_rule
       - V-216577
 
+
+
+
+
+
+
+
+
+
+
 - name: | 
         "HIGH | CISC-RT-000630 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs."
         "HIGH | CISC-RT-000640 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance with the appropriate Route Target (RT)."
   block:
-    - name: "Check For Active VRF's For Stig"
+    - name: "Create VRF Entries"
+      ios_vrf_lite:
+        name: 'test' 
+        # rd: '400:1'
+        # route_import: '400:1'
+        # route_export: '400:1'
+        description: 'Why Arent You Working'
+        state: present
+      # with_items:
+      #   - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    - name: Gather Interface Facts."
+      ios_interfaces:
+        state: gathered
+      register: cisc_rt_000630_interfaceinfo
+
+    - name: Register Show Run With Interfaces."
       ios_command:
         commands: 
-          - show run | include ip vrf
-      register: cisc_rt_000630_ip_vrf_active
-      # with_items: 
-      #   - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+          - "show run | section {{ item.name }}" 
+      with_items: "{{ cisc_rt_000630_interfaceinfo.gathered }}"
+      register: cisc_rt_000630_interfaceinfo_showrun
 
-    - name: set fact
+    - name: Set Fact For Interface Name And Stdout." 
       set_fact:
-        list_prune: "{{ cisc_rt_000630_ip_vrf_active.stdout_lines | regex_replace('ip vrf forwarding ', '') | regex_replace('ip vrf ', '')  }}"
-    
-    - name: Print Fact
-      debug:
-        msg: "{{ list_prune }}"
-    
-    - name: "Clear Exiting VRF From iosrtr_ce_facing_vrf_interfaces"
-      ios_vrf_lite:
-        name: "{{ list_prune }}"
-        state: absent
-      when: list_prune.stdout_lines not in item.vrf_route_name
-      with_items:
-        - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+        cisc_rt_000630_intname: "{{ cisc_rt_000630_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+        cisc_rt_000630_intstdout: "{{ cisc_rt_000630_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+
+
+
+
+
+
+
 
     
-    - name: Wait For delete
-      wait_for_connection:
-        delay: 10
+    # - name: Apply VRF To Interfaces
+    #   ios_config:
+    #     parents: 
+    #       - "interface {{ item.1 }}"
+    #     lines: 
+    #       - "ip vrf forwarding {{ 0.item.vrf_route_name }}"
+    #   with_items: 
+    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+    #     - "{{ cisc_rt_000630_intname }}"
+    #     - "{{ cisc_rt_000630_intstdout }}"
+    #   when:
+    #     - 
+    #     - cisc_rt_000280_acl_name in item.1
 
-    # - name: "Create VRF Entries"
+
+
+
+
+
+    # - name: "Check For Active VRF's For Stig"
+    #   ios_command:
+    #     commands: 
+    #       - show run | include ip vrf
+    #   register: cisc_rt_000630_ip_vrf_active
+
+    # - name: set fact
+    #   set_fact:
+    #     list_prune: "{{ cisc_rt_000630_ip_vrf_active.stdout_lines | regex_replace('ip vrf forwarding ', '') | regex_replace('ip vrf ', '')  }}"
+
+    # - name: Print Fact
+    #   debug:
+    #     msg: "{{ list_prune }}"
+    
+    # - name: "Clear Exiting VRF From iosrtr_ce_facing_vrf_interfaces"
     #   ios_vrf_lite:
-    #     name: "{{ item.vrf_route_name | default(omit) }}"
-    #     rd: "{{ item.route_distinguisher | default(omit) }}"
-    #     route_export:
-    #     - "{{ item.route_target_export | default(omit) }}"
-    #     route_import:
-    #     - "{{ item.route_target_import | default(omit) }}"
+    #     name: "{{ list_prune }}"
+    #     state: absent
+    #   when: list_prune not in item.vrf_route_name
     #   with_items:
     #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    # - name: "Clear Exiting VRF From iosrtr_ce_facing_vrf_interfaces"
+    #   ios_vrf_lite:
+    #     name: "{{ item }}"
+    #     state: absent
+    #   with_items:
+    #     - "{{ list_prune }}"
+    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+    #   when: list_prune not in item.vrf_route_name
+
+    # - name: Wait For delete
+    #   wait_for_connection:
+    #     delay: 10
+
 
     # - name: Check To See if description matches
     #   ios_command:
@@ -459,13 +530,7 @@
     #   with_items:
     #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
 
-    # - name: Apply VRF To Interfaces
-    #   ios_config:
-    #     parents: interface {{ item.interface }}
-    #     lines: 
-    #       - ip vrf forwarding {{ item.vrf_route_name }}
-    #   with_items: 
-    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
     
     # - name: Apply IP Address Back On Interface
     #   ios_config:
@@ -527,83 +592,249 @@
 
 - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure."
   block:
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove Old ACL." 
-      ios_acls:
-        config:
-          - afi: ipv4
-            acls:
-              - name: "{{ iosrtr_block_to_core_acl_name_old }}"
-        state: deleted
+    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | No ACL Defined Check Block."
+      block:
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Review the router configuration to verify that an ingress ACL is applied to all external or CE-facing interfaces."
+              - "If the PE router is not configured to block any traffic with a destination address assigned to the IP core infrastructure, this is a finding. To Fix this error please define a existing ACL in iosrtr_block_to_core_existing_acl in defaults main."
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-730 - You Have Not Entered A ACL Name ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_block_to_core_existing_acl"
+        - not cisc_rt_hardening_one_device
+        
+    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | User Defined (Existing ACL) In Defaults Main Or Template."
+      block: 
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Show Run Existing ACL."
+          ios_command:
+            commands:
+              - "show run | section {{ iosrtr_block_to_core_existing_acl }}"
+          register: cisc_rt_000730_acl_showrun_existing
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | No ACL Defined By That Name Warning." 
+          debug:
+            msg: 
+              - "Warning!!! Review the router configuration to verify that an ingress ACL is applied to all external or CE-facing interfaces."
+              - "The defined ACL {{ item }} is not present on the Router and must be configured."
+          when:
+            - item not in cisc_rt_000730_acl_showrun_existing.stdout | string
+          with_items:
+            - "{{ iosrtr_block_to_core_existing_acl }}"
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-730 - User Defined (Existing ACL) {{ item }} Not Present ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - item not in cisc_rt_000730_acl_showrun_existing.stdout | string
+          with_items:
+            - "{{ iosrtr_block_to_core_existing_acl }}"
+        
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000730_interfaceinfo  
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000730_interfaceinfo.gathered }}"
+          register: cisc_rt_000730_interfaceinfo_showrun_exisiting
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+
+        - name:  Set Fact For Interface Name And Stdout." 
+          set_fact:
+            cisc_rt_000730_intname_existing: "{{ cisc_rt_000730_interfaceinfo_showrun_exisiting.results | map(attribute='item.name') }}"
+            cisc_rt_000730_intstdout_existing: "{{ cisc_rt_000730_interfaceinfo_showrun_exisiting.results | map(attribute='stdout') }}"
+          when: 
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+
+        - name: Attach ACL To CE Or External Interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip access-group {{ iosrtr_block_to_core_existing_acl }} in"
+          with_together: 
+            - "{{ cisc_rt_000730_intname_existing }}"
+            - "{{ cisc_rt_000730_intstdout_existing }}"
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+            - item.0 in iosrtr_external_facing_interfaces_exisitng
+            - iosrtr_block_to_core_existing_acl not in item.1
+
+        - name: Remove ACL from Interface Not In List."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ iosrtr_block_to_core_existing_acl }} in"
+          with_together: 
+            - "{{ cisc_rt_000730_intname_existing }}"
+            - "{{ cisc_rt_000730_intstdout_existing }}"
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+            - item.0 not in iosrtr_external_facing_interfaces_exisitng
+            - iosrtr_block_to_core_existing_acl in item.1
+ 
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Set Facts For Ip And Wildcard."
+          set_fact: 
+            cisc_rt_000730_acl_all_addresses: "{{ cisc_rt_000730_acl_showrun_existing.stdout_lines | regex_findall('\\S*\\d+ \\S*') | list }}"
+            cisc_rt_000730_acl_permit_addresses: "{{ cisc_rt_000730_acl_showrun_existing.stdout | regex_findall('permit ip any \\S*\\d+ \\S*') | regex_replace('permit ip any ') }}"
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+        
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove Permit Ip Address Entries From ACL."
+          ios_config:
+            parents: 
+              - "ip access-list extended {{ iosrtr_block_to_core_existing_acl }}"
+            lines:
+              - "no permit ip any {{ item }} log-input"
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+            - item in cisc_rt_000730_acl_all_addresses
+          with_items:
+            - "{{ cisc_rt_000730_acl_permit_addresses }}"
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Add Permit Entry At End Of ACL." 
+          ios_acls:
+            config:
+                - afi: ipv4
+                  acls:
+                  - name: '{{ iosrtr_block_to_core_existing_acl }}'
+                    acl_type: extended
+                    aces:
+                    - grant: permit
+                      sequence: 300
+                      protocol: ip
+                      source: 
+                        any: true
+                      destination:
+                        any: true
+            state: merged
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Warning Display For ACL Inaccuracy."
+          debug:
+            msg: 
+              - "Warning!!! The defined IP Address Space {{ item }} in the variable iosrtr_block_to_core_existing_acl_ip_core_address_space"
+              - "is not present in the the current {{ iosrtr_block_to_core_existing_acl }} ACL on the router."
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+            - item not in cisc_rt_000730_acl_all_addresses
+          with_items:
+            - "{{ iosrtr_block_to_core_existing_acl_ip_core_address_space }}"
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-730 - IP Core Address Space {{ item }} Not In ACL ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "iosrtr_block_to_core_existing_acl in cisc_rt_000730_acl_showrun_existing.stdout | string"
+            - item not in cisc_rt_000730_acl_all_addresses
+          with_items:
+            - "{{ iosrtr_block_to_core_existing_acl_ip_core_address_space }}" 
       when: 
-        - "'none' not in iosrtr_block_to_core_acl_name_old"
+        - not cisc_rt_hardening_one_device
+        - "'none' not in iosrtr_block_to_core_existing_acl"
+        
 
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Parse Given ACL From host_vars."
-      ios_acls:
-        running_config: "{{ lookup('file','host_vars/cisc-rt-000730') }}"
-        state: parsed
-      register: cisc_rt_000730_acl_parsed
 
-    - name: Convert JSON to DICT For ACL Name
-      set_fact:
-        cisc_rt_000730_acl_name: "{{ cisc_rt_000730_acl_parsed.parsed.0.acls.0.name }}"
 
-    - name: debug
-      debug:
-        msg: "{{ cisc_rt_000730_acl_name }}"
-    
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Compare And Reconsile ACL."
-      ios_acls:
-        config: "{{ cisc_rt_000730_acl_parsed.parsed }}"
-        state: replaced
-      register: cisc_rt_000730_acl_ran
 
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Print Changed Lines With Debug Acl Is Changed."
-      debug:
-        var: cisc_rt_000730_acl_ran.commands
-      when: cisc_rt_000730_acl_ran.changed
 
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Gather Interface Facts."
-      ios_interfaces:
-        state: gathered
-      register: cisc_rt_000730_interfaceinfo
 
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Register Show Run With Interfaces."
-      ios_command:
-        commands: 
-          - "show run | section {{ item.name }}" 
-      with_items: "{{ cisc_rt_000730_interfaceinfo.gathered }}"
-      register: cisc_rt_000730_interfaceinfo_showrun
+    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Single Router Setup Block."
+      block: 
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove Old ACL." 
+          ios_acls:
+            config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_block_to_core_acl_name_old }}"
+            state: deleted
+          when: 
+            - "'none' not in iosrtr_block_to_core_acl_name_old"
 
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Set Fact For Interface Name And Stdout." 
-      set_fact:
-        cisc_rt_000730_intname: "{{ cisc_rt_000730_interfaceinfo_showrun.results | map(attribute='item.name') }}"
-        cisc_rt_000730_intstdout: "{{ cisc_rt_000730_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Parse Given ACL From host_vars."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000730-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000730_acl_parsed
 
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove ACL from Interface Not In List."
-      ios_config:
-        parents:
-          - "interface {{ item.0 }}"
-        lines:
-          - "no ip access-group {{ cisc_rt_000730_acl_name }} in"
-      with_together: 
-        - "{{ cisc_rt_000730_intname }}"
-        - "{{ cisc_rt_000730_intstdout }}"
-      when:
-        - item.0 not in iosrtr_external_facing_interfaces
-        - cisc_rt_000730_acl_name in item.1
+        - name: Convert JSON to DICT For ACL Name
+          set_fact:
+            cisc_rt_000730_acl_name: "{{ cisc_rt_000730_acl_parsed.parsed.0.acls.0.name }}"
+        
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Compare And Reconsile ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000730_acl_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000730_acl_ran
 
-    - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Attach ACL To CE Or External Interfaces."
-      ios_config:
-        parents:
-          - "interface {{ item.0 }}"
-        lines:
-          - "ip access-group {{ cisc_rt_000730_acl_name }} in"
-      with_together: 
-        - "{{ cisc_rt_000730_intname }}"
-        - "{{ cisc_rt_000730_intstdout }}"
-      when:
-        - item.0 in iosrtr_external_facing_interfaces
-        - cisc_rt_000730_acl_name not in item.1
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Print Changed Lines With Debug Acl Is Changed."
+          debug:
+            var: cisc_rt_000730_acl_ran.commands
+          when: cisc_rt_000730_acl_ran.changed
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000730_interfaceinfo
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000730_interfaceinfo.gathered }}"
+          register: cisc_rt_000730_interfaceinfo_showrun
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Set Fact For Interface Name And Stdout." 
+          set_fact:
+            cisc_rt_000730_intname: "{{ cisc_rt_000730_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000730_intstdout: "{{ cisc_rt_000730_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove ACL from Interface Not In List."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ cisc_rt_000730_acl_name }} in"
+          with_together: 
+            - "{{ cisc_rt_000730_intname }}"
+            - "{{ cisc_rt_000730_intstdout }}"
+          when:
+            - item.0 not in iosrtr_external_facing_interfaces
+            - cisc_rt_000730_acl_name in item.1
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Attach ACL To CE Or External Interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip access-group {{ cisc_rt_000730_acl_name }} in"
+          with_together: 
+            - "{{ cisc_rt_000730_intname }}"
+            - "{{ cisc_rt_000730_intstdout }}"
+          when:
+            - item.0 in iosrtr_external_facing_interfaces
+            - cisc_rt_000730_acl_name not in item.1
+      when: 
+        - cisc_rt_hardening_one_device
+        - "'none' in iosrtr_block_to_core_existing_acl"
   when:
       - cisc_rt_000730
   tags:
@@ -613,6 +844,14 @@
       - SRG-NET-000205-RTR-000007
       - SV-216616r531085_rule
       - V-216616
+
+
+
+
+
+
+
+
 
 
 
@@ -637,7 +876,7 @@
 
     - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Parse User Given ACL From host_var."
       ios_acls:
-        running_config: "{{ lookup('file','host_vars/cisc-rt-000310') }}"
+        running_config: "{{ lookup('file','fles/cisc-rt-000310-acl.txt') }}"
         state: parsed
       register: cisc_rt_000310_acl_parsed
       when: 

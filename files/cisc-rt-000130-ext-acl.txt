@@ -3,6 +3,12 @@
 # Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
 # https://github.com/ansible-collections/cisco.ios/pull/626 
 #
+# There is also a open issue Regarding the way the ios_acl runs the add and remove for the commands.
+# If you failed to add deny ip any any log-input to the original acl file and are back here to fix it
+# regarding the warning posted at the end of the run. Make sure you add it as Sequence 300 to match 
+# how the fix is applied in the system so Shows the task as ok, if Not It will always show changed.  
+# https://github.com/ansible-collections/cisco.ios/issues/598
+#
 # Example Given In STIG:
 # ip access-list extended EXTERNAL_ACL
 # permit tcp host x.11.1.1 eq bgp host x.11.1.2
@@ -14,7 +20,7 @@
 # …
 # …
 # …
-# deny ip any any log-input
+# deny ip any any log-input <------ MAKE SURE YOU ADD THIS TO THE END OF YOUR ACL. 
 #
 #
 Extended IP access list EXTERNAL_ACL
@@ -24,4 +30,4 @@ Extended IP access list EXTERNAL_ACL
     30 permit icmp host 1.11.1.1 host 1.11.1.2 echo
     40 permit icmp host 1.11.1.1 host 1.11.1.2 echo-reply
     50 deny ip any host 1.11.1.1 log-input
-    # 100 deny ip any any log-input
+    100 deny ip any any log-input
