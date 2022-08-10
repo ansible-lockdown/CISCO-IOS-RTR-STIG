@@ -9,7 +9,7 @@
 # how the fix is applied in the system so Shows the task as ok, if Not It will always show changed.  
 # https://github.com/ansible-collections/cisco.ios/issues/598
 #
-## Example Given In STIG:
+# Example Given In STIG:
 # ip access-list extended BLOCK_TO_CORE
 # deny ip any 10.1.x.0 0.0.255.255 log-input
 # …
@@ -18,8 +18,5 @@
 Extended IP access list BLOCK_TO_CORE
     10 deny ip any 10.1.1.0 0.0.255.255 log-input
     20 deny ip any 10.0.8.0 0.0.0.3 log-input
-    30 deny ip any 10.1.0.0 0.0.255.255 log-input
-    40 deny ip any 1.1.0.0 0.0.255.255 log-input
-    50 deny ip any 3.3.0.0 0.0.255.255 log-input
     300 permit ip any any
     

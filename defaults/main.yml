@@ -42,8 +42,8 @@ cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
-cisc_rt_000730: true
-cisc_rt_000310: false
+cisc_rt_000730: false
+cisc_rt_000310: true
 
 # CAT 2 rules
 cisc_rt_000010: false
@@ -310,7 +310,7 @@ ios_rtr_vcid_ce_facing:
 
 
 
-# CISC-RT-000730
+# CISC-RT-000730 
 # User Defined (Existing ACL) In Defaults Main 
 # -------------------------------------------------------
 # iosrtr_block_to_core_existing_acl is the current ACL defined in the router is used to discard and logs packets destined to the 
@@ -360,12 +360,17 @@ iosrtr_external_facing_interfaces:
 
 
 
-
-
-
-
-
 # CISC-RT-000310
+# User Defined (Existing ACL) In Defaults Main 
+# -------------------------------------------------------
+# iosrtr_egress_acl_filter_existing 
+# By default none is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run.  
+# Example: "EGRESS_FILTER"
+iosrtr_egress_acl_filter_existing: "EGRESS_FILTER"
+
+
+iosrtr_egress_internal_interfaces_existing:
+    - "Serial1/1"
 # iosrtr_egress_acl_filter is the setting to adjust to true if you would like to use the ACL filter for control
 # 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
 # internal interfaces to restrict the router from accepting any outbound IP packet that contains an
@@ -378,6 +383,10 @@ iosrtr_egress_acl_filter: true
 iosrtr_unicast_reverse_path_forwarding: false
 # iosrtr_egress_acl_filter_old is used to remove the old access control list for egress filter if one is used.
 # If you did not have a existing access control list defined in the router leave as is.  
+
+
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
 iosrtr_egress_acl_filter_old: "none"
 # iosrtr_internal_interfaces is the list of all internal interfaces to restrict the router from accepting 
 # outbound IP packets that contain an illegitimate address in the source address field.
