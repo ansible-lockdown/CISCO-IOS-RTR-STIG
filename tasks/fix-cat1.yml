@@ -718,7 +718,7 @@
                     - grant: permit
                       sequence: 300
                       protocol: ip
-                      source: 
+                      source:
                         any: true
                       destination:
                         any: true
@@ -854,6 +854,7 @@
 
 
 
+
 - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure."
   block:
     - name: No ACL Defined Check Block."
@@ -930,12 +931,96 @@
               when:
                 - iosrtr_egress_acl_filter or iosrtr_unicast_reverse_path_forwarding
 
+            - name: Set Facts For Ip And Wildcard."
+              set_fact: 
+                cisc_rt_000310_acl_all_addresses: "{{ cisc_rt_000310_acl_showrun_existing.stdout_lines | regex_findall('\\S*\\d+ \\S*') | unique | list }}"
+              when:
+                - "iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string"
+
+            - name: Warning Display For ACL Inaccuracy."
+              debug:
+                msg: 
+                  - "Warning!!! The defined IP Address {{ item }} in the variable iosrtr_egress_acl_filter_address_space"
+                  - "is not present in the the current {{ iosrtr_egress_acl_filter_existing }} ACL on the router."
+              when:
+                - "iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string"
+                - item not in cisc_rt_000310_acl_all_addresses
+              with_items:
+                - "{{ iosrtr_egress_acl_filter_address_space }}"
+
+            - name: Create Control Warning For End Of Play."
+              set_fact:
+                control_number:
+                  - "{{ control_number }} + [ CISC-RT-000310 - IP Address {{ item }} Not In ACL ]"
+                warn_count: "{{ warn_count|int + 1 }}"
+              when:
+                - "iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string"
+                - item not in cisc_rt_000310_acl_all_addresses
+              with_items:
+                - "{{ iosrtr_egress_acl_filter_address_space }}" 
+
+            - name: Add Ip With Prooper Settings
+              ios_config:
+                parents:
+                  - "ip access-list extended {{ iosrtr_egress_acl_filter_existing }}"
+                lines:
+                  - "permit udp {{ item }} any eq domain"
+                  - "permit tcp {{ item }} any eq ftp"
+                  - "permit tcp {{ item }} any eq ftp-data"
+                  - "permit tcp {{ item }} any eq www"
+                  - "permit icmp {{ item }} any"
+                  - "permit icmp {{ item }} any echo"
+              with_items:
+                - "{{ iosrtr_egress_acl_filter_address_space }}"
+              when:
+                - "iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string"
+                - iosrtr_egress_acl_filter
+                - "'none' not in iosrtr_egress_acl_filter_address_space"
+                - item not in cisc_rt_000310_acl_all_addresses
+            
+            - name: Remove Ip With Prooper Settings
+              ios_config:
+                parents:
+                  - "ip access-list extended {{ iosrtr_egress_acl_filter_existing }}"
+                lines:
+                  - "no permit udp {{ item }} any eq domain"
+                  - "no permit tcp {{ item }} any eq ftp"
+                  - "no permit tcp {{ item }} any eq ftp-data"
+                  - "no permit tcp {{ item }} any eq www"
+                  - "no permit icmp {{ item }} any"
+                  - "no permit icmp {{ item }} any echo"
+              with_items:
+                - "{{ cisc_rt_000310_acl_all_addresses }}"
+              when:
+                - "iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string"
+                - iosrtr_egress_acl_filter
+                - item not in iosrtr_egress_acl_filter_address_space
+
+            - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Add Permit Entry At End Of ACL." 
+              ios_acls:
+                config:
+                    - afi: ipv4
+                      acls:
+                      - name: '{{ iosrtr_egress_acl_filter_existing }}'
+                        acl_type: extended
+                        aces:
+                        - grant: deny
+                          sequence: 400
+                          protocol: ip
+                          source:
+                            any: true
+                          destination:
+                            any: true
+                state: merged
+              when:
+                - "iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string"
+
             - name: Attach ACL To Interface In iosrtr_egress_internal_interfaces."
               ios_config:
                 parents:
                   - "interface {{ item.0 }}"
                 lines:
-                  - "ip access-group {{ cisc_rt_000310_acl_name }} in"
+                  - "ip access-group {{ iosrtr_egress_acl_filter_existing }} in"
               with_together: 
                 - "{{ cisc_rt_000310_intname }}"
                 - "{{ cisc_rt_000310_intstdout }}"
@@ -943,14 +1028,14 @@
                 - iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string
                 - iosrtr_egress_acl_filter
                 - item.0 in iosrtr_egress_internal_interfaces
-                - cisc_rt_000310_acl_name not in item.1
+                - iosrtr_egress_acl_filter_existing not in item.1
 
             - name: Remove ACL from Interface Not In List."
               ios_config:
                 parents:
                   - "interface {{ item.0 }}"
                 lines:
-                  - "no ip access-group {{ cisc_rt_000310_acl_name }} in"
+                  - "no ip access-group {{ iosrtr_egress_acl_filter_existing }} in"
               with_together: 
                 - "{{ cisc_rt_000310_intname }}"
                 - "{{ cisc_rt_000310_intstdout }}"
@@ -958,7 +1043,7 @@
                 - iosrtr_egress_acl_filter_existing in cisc_rt_000310_acl_showrun_existing.stdout | string
                 - iosrtr_egress_acl_filter
                 - item.0 not in iosrtr_egress_internal_interfaces
-                - cisc_rt_000310_acl_name in item.1
+                - iosrtr_egress_acl_filter_existing in item.1
 
             - name: Remove URPF From Interfaces In List When ACL Filter Used."
               ios_config:
@@ -1023,28 +1108,28 @@
                 parents:
                   - "interface {{ item.0 }}"
                 lines:
-                  - "no ip access-group {{ cisc_rt_000310_acl_name }} in"
+                  - "no ip access-group {{ iosrtr_egress_acl_filter_existing }} in"
               with_together: 
                 - "{{ cisc_rt_000310_intname }}"
                 - "{{ cisc_rt_000310_intstdout }}"
               when:
                 - iosrtr_unicast_reverse_path_forwarding
                 - item.0 in iosrtr_egress_internal_interfaces
-                - cisc_rt_000310_acl_name in item.1
+                - iosrtr_egress_acl_filter_existing in item.1
 
             - name: Remove ACL From Interfaces Not Listed In iosrtr_egress_internal_interfaces."
               ios_config:
                 parents:
                   - "interface {{ item.0 }}"
                 lines:
-                  - "no ip access-group {{ cisc_rt_000310_acl_name }} in"
+                  - "no ip access-group {{ iosrtr_egress_acl_filter_existing }} in"
               with_together: 
                 - "{{ cisc_rt_000310_intname }}"
                 - "{{ cisc_rt_000310_intstdout }}"
               when:
                 - iosrtr_unicast_reverse_path_forwarding
                 - item.0 not in iosrtr_egress_internal_interfaces
-                - cisc_rt_000310_acl_name in item.1
+                - iosrtr_egress_acl_filter_existing in item.1
 
             - name: Set Fact For Interfaces With Description."
               set_fact:
