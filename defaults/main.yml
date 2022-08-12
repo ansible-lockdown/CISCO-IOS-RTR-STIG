@@ -42,7 +42,7 @@ cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
-cisc_rt_000730: false
+cisc_rt_000730: true
 cisc_rt_000310: true
 
 # CAT 2 rules
@@ -310,7 +310,20 @@ ios_rtr_vcid_ce_facing:
 
 
 
-# CISC-RT-000730 
+# CISC-RT-000730
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+# iosrtr_external_facing_interfaces are the interfaces that External Or CE Facing interfaces for the ACL.
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
+iosrtr_external_facing_interfaces: 
+    - "FastEthernet0/0"
+    - "FastEthernet0/1"
+#
+# -------------------------------------------------------
 # User Defined (Existing ACL) In Defaults Main 
 # -------------------------------------------------------
 # iosrtr_block_to_core_existing_acl is the current ACL defined in the router is used to discard and logs packets destined to the 
@@ -328,16 +341,8 @@ iosrtr_block_to_core_existing_acl: "BLOCK_TO_CORE"
 iosrtr_block_to_core_existing_acl_ip_core_address_space: 
     - '10.1.0.0 0.0.255.255'
     - '1.1.0.0 0.0.255.255'
-    - '3.3.0.0 0.0.255.255'
-# iosrtr_external_facing_interfaces_exisitng are the external or CE-facing interfaces that the ACL will be applied too. 
-# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
-# Example:
-#   - "FastEthernet0/0"
-#   - "FastEthernet0/1"
-iosrtr_external_facing_interfaces_exisitng:
-    - "FastEthernet0/0"
-    - "FastEthernet0/1"
-
+#
+# -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
 # -------------------------------------------------------
 # Note: To setup a single router set cisc_rt_hardening_one_device: true 
@@ -347,20 +352,12 @@ iosrtr_external_facing_interfaces_exisitng:
 # If you did not have a existing access control list defined in the router leave setting set as "none".
 # Example: "BLOCK_TO_CORE_OLD"
 iosrtr_block_to_core_acl_name_old: "none"
-# iosrtr_external_facing_interfaces are the interfaces that External Or CE Facing interfaces for the ACL.
-# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
-# Example:
-#   - "FastEthernet0/0"
-#   - "FastEthernet0/1"
-iosrtr_external_facing_interfaces: 
-    - "FastEthernet0/0"
-    - "FastEthernet0/1"
-
 
 
 
 
 # CISC-RT-000310
+# -------------------------------------------------------
 # User Defined Settings In Defaults Main (Used In Full Task)
 # -------------------------------------------------------
 # iosrtr_egress_acl_filter is the setting to adjust to true if you would like to use the ACL filter for control
@@ -380,13 +377,14 @@ iosrtr_internal_interface_description: "downstream link to LAN"
 iosrtr_egress_internal_interfaces:
     - "Serial1/1"
 #
+# -------------------------------------------------------
 # User Defined Settings In Defaults Main (Existing ACL)
 # -------------------------------------------------------
 # iosrtr_egress_acl_filter_existing is a egress ACL name to restrict the router from accepting outbound IP packets that contain 
 # an illegitimate address in the source address field.
 # By default none is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run.  
 # Example: "EGRESS_FILTER"
-iosrtr_egress_acl_filter_existing: "EGRESS_FILTER"
+iosrtr_egress_filter_existing_acl: "EGRESS_FILTER"
 # iosrtr_egress_acl_filter_address_space is the list of addresses that are used to restrict the router from accepting outbound IP 
 # packets that contain an illegitimate address in the source address field.
 # Note: Please follow proper syntax in entering your own ip and wildcards, based on example below. The task will remove ip not listed here
@@ -395,7 +393,9 @@ iosrtr_egress_acl_filter_existing: "EGRESS_FILTER"
 #   - '10.1.15.0 0.0.0.255'
 iosrtr_egress_acl_filter_address_space:
     - '10.1.15.0 0.0.0.255'
-#    
+
+#
+# -------------------------------------------------------
 # Single Router Setup Settings (New Setup ACL) 
 # -------------------------------------------------------
 # iosrtr_egress_acl_filter_old is used to remove the old access control list for egress filter if one is used.
