@@ -367,12 +367,12 @@ iosrtr_external_facing_interfaces:
 # 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
 # internal interfaces to restrict the router from accepting any outbound IP packet that contains an
 # illegitimate address in the source field. 
-iosrtr_egress_acl_filter: true
+iosrtr_egress_acl_filter: false
 # iosrtr_unicast_reverse_path_forwarding is the setting to adjustto true if you would like to use uRPF for control
 # 000310 to configure Configure the router to ensure that an egress ACL or uRPF is configured on 
 # internal interfaces to restrict the router from accepting any outbound IP packet that contains an
 # illegitimate address in the source field. 
-iosrtr_unicast_reverse_path_forwarding: false
+iosrtr_unicast_reverse_path_forwarding: true
 # iosrtr_internal_interface_description is the interface description noting the conneciton details. 
 iosrtr_internal_interface_description: "downstream link to LAN"
 #iosrtr_internal_interfaces is the list of all internal interfaces to restrict the router from accepting 
@@ -394,7 +394,7 @@ iosrtr_egress_acl_filter_existing: "EGRESS_FILTER"
 # Example:
 #   - '10.1.15.0 0.0.0.255'
 iosrtr_egress_acl_filter_address_space:
-    - '10.1.15.0 0.0.0.255'   
+    - '10.1.15.0 0.0.0.255'
 #    
 # Single Router Setup Settings (New Setup ACL) 
 # -------------------------------------------------------
