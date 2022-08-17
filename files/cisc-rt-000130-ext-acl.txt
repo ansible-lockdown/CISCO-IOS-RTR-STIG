@@ -30,4 +30,4 @@ Extended IP access list EXTERNAL_ACL
     30 permit icmp host 1.11.1.1 host 1.11.1.2 echo
     40 permit icmp host 1.11.1.1 host 1.11.1.2 echo-reply
     50 deny ip any host 1.11.1.1 log-input
-    100 deny ip any any log-input
+    300 deny ip any any log-input

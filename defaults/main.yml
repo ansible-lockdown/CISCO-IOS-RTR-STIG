@@ -35,15 +35,15 @@ cisc_rt_hardening_one_device: false
 # in order for the variables below to take effect.
 
 # CAT 1 rules
-cisc_rt_000130: false
+cisc_rt_000130: true
 cisc_rt_000240: false
 cisc_rt_000280: false
 cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
 cisc_rt_000670: false
-cisc_rt_000730: true
-cisc_rt_000310: true
+cisc_rt_000730: false
+cisc_rt_000310: false
 
 # CAT 2 rules
 cisc_rt_000010: false
@@ -225,26 +225,70 @@ iosrtr_local_bgp_autonomous_system_number: "65000"
 
 
 # Cat 1
-# ----------------------------------------------------
 # CISC-RT-000130
-# iosrtr_external_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
-# If you did not have a existing access control list defined in the router then leave as none.  
-iosrtr_external_acl_name_old: "none"
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
 # iosrtr_external_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_external_acl_interfaces:
     - "FastEthernet2/0"
 
-# iosrtr_internal_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
-# If you did not have a existing access control list defined in the router leave as is.  
-iosrtr_internal_acl_name_old: "none"
-# iosrtr_internal_acl_name_new is the name of access control list that is configured to restrict traffic destined to iteself.  Review the 
-# Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
-# from specific sources destined to itself.
-# iosrtr_internal_acl_name_new: "INTERNAL_ACL"
 # iosrtr_internal_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_internal_acl_interfaces:
     - "FastEthernet0/0"
     - "FastEthernet0/1"
+
+
+# -------------------------------------------------------
+# User Defined (Existing ACL) In Defaults Main 
+# -------------------------------------------------------
+# iosrtr_external_exisiting_acl is the existing user defined ACL that  is configured to only allow specific management and control 
+# plane traffic from specific sources destined to itself.
+# Example: "EXTERNAL_ACL"
+iosrtr_external_existing_acl: "EXTERNAL_ACL"
+# iosrtr_internal_exisiting_acl
+# Example: "INTERNAL_ACL"
+iosrtr_internal_existing_acl: "INTERNAL_ACL"
+
+
+iosrtr_external_acl_addresses:
+    - {source_host: 1.11.1.1, destination_host: 1.11.1.2}
+# 
+
+iosrtr_internal_acl_addresses:
+    - '10.1.0.0 0.0.255.255'
+    - '1.1.0.0 0.0.255.255'
+
+
+
+
+
+
+
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# iosrtr_external_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
+# If you did not have a existing access control list defined in the router then leave as none.  
+iosrtr_external_acl_name_old: "none"
+# iosrtr_internal_acl_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_internal_acl_name_old: "none"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 # CISC-RT-000280
 # iosrtr_filter_isp_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  Review the 
@@ -301,8 +345,8 @@ iosrtr_ce_facing_vrf_interfaces:
 # the correct VC ID is configured for each attachment circuit.
 # - { vcd: , ip_address , interface }
 ios_rtr_vcid_ce_facing:
-    - {vcid: 2211, ip_address: 10.2.1.4, interface: FastEthernet0/0}
-    - {vcid: 2212, ip_address: 10.2.2.4, interface: FastEthernet0/1}
+    - {vcid: 2211, address: 2.2.1.1, interface: FastEthernet0/0.1}
+    - {vcid: 2212, address: 2.2.1.2, interface: FastEthernet0/1.1}
 
 
 
@@ -353,9 +397,6 @@ iosrtr_block_to_core_existing_acl_ip_core_address_space:
 # Example: "BLOCK_TO_CORE_OLD"
 iosrtr_block_to_core_acl_name_old: "none"
 
-
-
-
 # CISC-RT-000310
 # -------------------------------------------------------
 # User Defined Settings In Defaults Main (Used In Full Task)
@@ -401,6 +442,21 @@ iosrtr_egress_acl_filter_address_space:
 # iosrtr_egress_acl_filter_old is used to remove the old access control list for egress filter if one is used.
 # If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_egress_acl_filter_old: "none"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

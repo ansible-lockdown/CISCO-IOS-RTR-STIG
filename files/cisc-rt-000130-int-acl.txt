@@ -3,6 +3,12 @@
 # Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
 # https://github.com/ansible-collections/cisco.ios/pull/626
 #
+# Note: For the internal ACL example, all routers within the hypothetical network (10.1.0.0/16) have been configured 
+# to use the loopback address to source all management traffic (not shown); hence, the loopbacks are the only 
+# allowable destination address for management traffic. In addition, all management traffic destined to the router
+# must originate from the management network (10.2.1.0/24). With the exception of link-local control plane traffic 
+# and ICMP, all other traffic destined to any physical interface address will be dropped.
+#
 # Example Given In STIG:
 # ip access-list extended INTERNAL_ACL
 # permit icmp any any
@@ -27,4 +33,4 @@ Extended IP access list INTERNAL_ACL
     50 permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq snmp
     60 permit udp 10.2.1.0 0.0.0.255 host 10.1.12.2 eq ntp
     70 deny ip any host 10.1.12.2 log-input
-    100 deny ip any any log-inputs
+    300 deny ip any any log-inputs
