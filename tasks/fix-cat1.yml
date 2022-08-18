@@ -3,7 +3,7 @@
   block:
     - name: Single Router Setup Block.
       block:
-        - name:  No ACL Defined Warning Message."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | No ACL Defined Warning Message."
           debug:
             msg: 
               - "Warning!!! Review the external and internal Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic from specific sources destined to itself."
@@ -12,7 +12,7 @@
             - "'none' in iosrtr_external_existing_acl"
             - not cisc_rt_hardening_one_device
 
-        - name: Create Control Warning For End Of Play."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - You Have Not Entered External ACL Name ]"
@@ -21,7 +21,7 @@
             - "'none' in iosrtr_external_existing_acl"
             - not cisc_rt_hardening_one_device
 
-        - name:  No ACL Defined Warning Message."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself.| No ACL Defined Warning Message."
           debug:
             msg: 
               - "Warning!!! Review the external and internal Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic from specific sources destined to itself."
@@ -30,7 +30,7 @@
             - "'none' in iosrtr_internal_existing_acl"
             - not cisc_rt_hardening_one_device
 
-        - name: Create Control Warning For End Of Play."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - You Have Not Entered Internal ACL Name ]"
@@ -39,7 +39,7 @@
             - "'none' in iosrtr_internal_existing_acl"
             - not cisc_rt_hardening_one_device
 
-    - name: User Defined (Existing ACL) In Defaults Main Or Template."
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | User Defined (Existing ACL) In Defaults Main Or Template."
       block:
         - name: Show Run Existing External ACL."
           ios_command:
@@ -49,7 +49,7 @@
           when:
             - "'none' not in iosrtr_external_existing_acl"
 
-        - name: Show Run Existing Internal ACL."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Show Run Existing Internal ACL."
           ios_command:
             commands:
               - "show run | section ip access-list extended {{ iosrtr_internal_existing_acl }}"
@@ -57,7 +57,7 @@
           when:
             - "'none' not in iosrtr_internal_existing_acl"
 
-        - name:  No ACL Defined By That Name Warning iosrtr_external_existing_acl."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | No ACL Defined By That Name Warning iosrtr_external_existing_acl."
           debug:
             msg: 
               - "Warning!!! Review the external Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic from specific sources destined to itself."
@@ -68,7 +68,7 @@
           with_items:
             - "{{ iosrtr_external_existing_acl }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_external_existing_acl."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_external_existing_acl."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - User Defined (Existing ACL) {{ item }} Not Present ]"
@@ -79,7 +79,7 @@
           with_items:
             - "{{ iosrtr_external_existing_acl }}"
 
-        - name:  No ACL Defined By That Name Warning iosrtr_internal_existing_acl." 
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. |  No ACL Defined By That Name Warning iosrtr_internal_existing_acl." 
           debug:
             msg: 
               - "Warning!!! Review the internal Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic from specific sources destined to itself."
@@ -90,7 +90,7 @@
           with_items:
             - "{{ iosrtr_internal_existing_acl }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_existing_acl."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_existing_acl."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - User Defined (Existing ACL) {{ item }} Not Present ]"
@@ -101,14 +101,14 @@
           with_items:
             - "{{ iosrtr_internal_existing_acl }}"
 
-        - name: Gather Interface Facts."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Gather Interface Facts."
           ios_interfaces:
             state: gathered
           register: cisc_rt_000130_interfaceinfo
           when:
             - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string or iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
-        - name: Register Show Run With Interfaces."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Register Show Run With Interfaces."
           ios_command:
             commands: 
               - "show run | section {{ item.name }}" 
@@ -117,14 +117,14 @@
           when:
             - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string or iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
-        - name: Set Fact For Interface Name And Interface Stdout." 
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Set Fact For Interface Name And Interface Stdout." 
           set_fact:
             cisc_rt_000130_intname: "{{ cisc_rt_000130_interfaceinfo_showrun.results | map(attribute='item.name') }}"
             cisc_rt_000130_intstdout: "{{ cisc_rt_000130_interfaceinfo_showrun.results | map(attribute='stdout') }}"
           when:
             - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string or iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
-        - name: Set Fact For External ACL Lines."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Set Fact For External ACL Lines."
           set_fact:
             cisc_rt_000130_ext_acl_line_1: permit tcp host {{ item.source_host }} eq bgp host {{ item.destination_host }}
             cisc_rt_000130_ext_acl_line_2: permit tcp host {{ item.source_host }} host {{ item.destination_host }} eq bgp
@@ -138,7 +138,7 @@
             - "'none' not in iosrtr_external_existing_acl"
             - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 1."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 1."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
@@ -150,7 +150,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 1."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 1."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_external_existing_acl }} permit tcp host {{ item.source_host }} eq bgp host {{ item.destination_host }} Not Present ]"
@@ -162,7 +162,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
             
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 2."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 2."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
@@ -174,7 +174,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 2."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 2."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_external_existing_acl }} permit tcp host {{ item.source_host }} host {{ item.destination_host }} eq bgp Not Present ]"
@@ -186,7 +186,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 3."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 3."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
@@ -198,7 +198,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 3."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 3."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_external_existing_acl }} permit icmp host {{ item.source_host }} host {{ item.destination_host }} echo Not Present ]"
@@ -210,7 +210,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
           
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 4."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 4."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
@@ -222,7 +222,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 4."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 4."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_external_existing_acl }} permit icmp host {{ item.source_host }} host {{ item.destination_host }} echo-reply Not Present ]"
@@ -234,7 +234,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 5."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 5."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
@@ -246,7 +246,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 5."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 5."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_external_existing_acl }} deny ip any host {{ item.source_host }} log-input Not Present ]"
@@ -258,7 +258,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 6."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 6."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
@@ -270,7 +270,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 6."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_external_acl_addresses Line 6."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_external_existing_acl }} deny ip any any log-input Not Present At End Of ACL ]"
@@ -282,7 +282,7 @@
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Set Fact For Internal ACL Lines."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Set Fact For Internal ACL Lines."
           set_fact:
             cisc_rt_000130_int_acl_line_1: permit icmp any any
             cisc_rt_000130_int_acl_line_2: permit ospf host {{ item.source_host }} host {{ item.destination_host }}
@@ -298,7 +298,7 @@
             - "'none' not in iosrtr_internal_existing_acl"
             - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 1."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 1."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -310,7 +310,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 1."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 1."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit icmp any any Not Present ]"
@@ -322,7 +322,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 2."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 2."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -334,7 +334,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 2."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 2."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit ospf host {{ item.source_host }} host {{ item.destination_host }} Not Present ]"
@@ -346,7 +346,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 3."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 3."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -358,7 +358,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 3."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 3."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq 22 Not Present ]"
@@ -370,7 +370,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 4."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 4."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -382,7 +382,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 4."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 4."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq tacacs Not Present ]"
@@ -394,7 +394,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 5."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 5."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -406,7 +406,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 5."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 5."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq snmp Not Present ]"
@@ -418,7 +418,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 6."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 6."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -430,7 +430,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 6."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 6."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq ntp Not Present ]"
@@ -442,7 +442,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 7."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 7."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -454,7 +454,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 7."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 7."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} deny   ip any host {{ item.destination_host }} log-input Not Present ]"
@@ -466,7 +466,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 8."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 8."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
@@ -478,7 +478,7 @@
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
 
-        - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 8."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 8."
           set_fact:
             control_number:
               - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} deny   ip any any log-input Not Present ]"
@@ -532,7 +532,6 @@
             - item.0 in iosrtr_internal_acl_interfaces
             - iosrtr_internal_existing_acl not in item.1
 
-
         - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove ACL From Interfaces Not Listed In iosrtr_internal_acl_interfaces."
           ios_config:
             parents:
@@ -550,10 +549,7 @@
         - not cisc_rt_hardening_one_device
         - "'none' not in iosrtr_external_existing_acl or 'none' not in iosrtr_internal_existing_acl"
 
-
-
-  
-    - name: Single Router Setup
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Single Router Setup."
       block:
         - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove Old External Access List."
           ios_acls:
@@ -718,15 +714,6 @@
       when: 
         - cisc_rt_hardening_one_device
         - "'none' in iosrtr_external_existing_acl or iosrtr_internal_existing_acl"
-
-
-
-
-
-
-
-
-
   when:
       - cisc_rt_000130
   tags:
