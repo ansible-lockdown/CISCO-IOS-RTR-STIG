@@ -35,9 +35,9 @@ cisc_rt_hardening_one_device: false
 # in order for the variables below to take effect.
 
 # CAT 1 rules
-cisc_rt_000130: true
+cisc_rt_000130: false
 cisc_rt_000240: false
-cisc_rt_000280: false
+cisc_rt_000280: true
 cisc_rt_000290: false
 cisc_rt_000630: false
 cisc_rt_000640: false
@@ -235,7 +235,7 @@ iosrtr_external_acl_interfaces:
 # iosrtr_internal_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_internal_acl_interfaces:
     - "FastEthernet0/0"
-    - "FastEthernet0/1"
+    - "FastEthernet0/1"    
 # -------------------------------------------------------
 # User Defined (Existing ACL) In Defaults Main 
 # -------------------------------------------------------
@@ -254,7 +254,6 @@ iosrtr_external_acl_addresses:
 # iosrtr_internal_acl_addresses are the configured addresses.
 iosrtr_internal_acl_addresses:
     - {source_host: 10.1.0.0, source_wildcard_bits: 0.0.255.255, destination_host: 10.1.12.2}
-
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
 # -------------------------------------------------------
@@ -281,17 +280,34 @@ iosrtr_internal_acl_name_old: "none"
     
 
 # CISC-RT-000280
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+# iosrtr_filter_isp_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
+iosrtr_filter_isp_acl_interfaces:
+    - "Serial1/0"
+# -------------------------------------------------------
+# User Defined (Existing ACL) In Defaults Main 
+# -------------------------------------------------------
+iosrtr_filter_isp_exisiting_acl: "FILTER_ISP"
+# iosrtr_filter_isp_interface_description is variable to assign a description to the interface for this acl filter. 
+iosrtr_filter_isp_interface_description: "Link to ISP"
+
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
 # iosrtr_filter_isp_name_old is the name of the old access control list that is configured to restrict traffic destined to iteself.  Review the 
 # Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic
 # from specific sources destined to itself.  It is used to protect an enclave connected to an alternate gateway by using an 
 # inbound filter that only permits packets with destination addresses within the sites address space.
 # If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_filter_isp_name_old: "none"
-# iosrtr_filter_isp_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
-iosrtr_filter_isp_acl_interfaces:
-    - "Serial1/0"
-# iosrtr_filter_isp_interface_description is variable to assign a description to the interface for this acl filter. 
-iosrtr_filter_isp_interface_description: "Link to ISP"
+
+
+
+
+
+
 
 # CISC-RT-000290
 # iosrtr_isp_router_ip_address is the ip address of the service provider router.  This is used to check for BGP peering with the service provder. 

@@ -41,7 +41,7 @@
 
     - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | User Defined (Existing ACL) In Defaults Main Or Template."
       block:
-        - name: Show Run Existing External ACL."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Show Run Existing External ACL."
           ios_command:
             commands:
               - "show run | section ip access-list extended {{ iosrtr_external_existing_acl }}"
@@ -724,68 +724,51 @@
       - SV-216561r531085_rule
       - V-216561
 
+- name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception."
+  block:
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Search Inbound ACL To Verify That It Is Configured To Deny All Other Traffic That Is Not Explicity Allowed."
+      ios_command:
+        commands:
+          - "show run | section ip access-list extended {{ iosrtr_external_existing_acl }}"
+      register: cisc_rt_000240_iosrtr_deny_all_other_traffic_check
 
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Set Fact For Deny Ip Search."
+      set_fact:
+        cisc_rt_000240_acl_check: "{{ cisc_rt_000240_iosrtr_deny_all_other_traffic_check.stdout | regex_search('deny   ip any any log-input') }}"
 
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Acl Addition Warning When cisc_rt_000240_acl_check Is Not Defined."
+      debug:
+        msg: 
+          - "Warning!!! {{ iosrtr_external_existing_acl }} Does Not Have Deny All Other Traffic That Is Not Explicity Allowed In The ACL. We Are Adding It To The {{ iosrtr_external_existing_acl }} At Sequence Number 300." 
+          - "Please Go Back To host_vars/cisc-rt-000130-ext-acl And Add It To The End Of The ACL and make appropriate changes to the exisitng ACL If need be."
+      when: 
+        - cisc_rt_000240_acl_check != "deny   ip any any log-input"
 
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Warning Msg At End Of Playbook."
+      set_fact:
+        control_number:
+          - "{{ control_number }} + [ CISC-RT-000240 - {{ iosrtr_external_existing_acl }} deny   ip any any log-input Has Been Added To ACL At Line 300 ]"
+        warn_count: "{{ warn_count|int + 1 }}"
+      when:   
+        - cisc_rt_000240_acl_check != "deny   ip any any log-input"
 
-
-
-
-
-
-
-
-
-# - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception."
-#   block:
-#     - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Search Inbound ACL To Verify That It Is Configured To Deny All Other Traffic That Is Not Explicity Allowed."
-#       ios_command:
-#         commands:
-#           - "show run | section ip access-list extended {{ cisc_rt_000130_ext_acl_name }}"
-#       register: cisc_rt_000240_iosrtr_deny_all_other_traffic_check
-
-#     - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Set Fact For Deny Ip Search."
-#       set_fact:
-#         cisc_rt_000240_acl_check: "{{ cisc_rt_000240_iosrtr_deny_all_other_traffic_check.stdout | regex_search('deny   ip any any log-input') }}"
-
-#     - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Acl Addition Warning When cisc_rt_000240_acl_check Is Not Defined."
-#       debug:
-#         msg: "Warning!!! {{ cisc_rt_000130_ext_acl_name }} Does Not Have Deny All Other Traffic That Is Not Explicity Allowed In The ACL. We Are Adding It To The {{ cisc_rt_000130_ext_acl_name }} At Sequence Number 300.  Please Go Back To host_vars/cisc-rt-000130-ext-acl And Add It To The End Of The ACL."
-#       when: 
-#         - cisc_rt_000240_acl_check != "deny   ip any any log-input"
-
-#     - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Warning Msg At End Of Playbook."
-#       set_fact:
-#         control_number:
-#           - "{{ control_number }} + [ CISC-RT-000240 - Acl Addition Warning ]"
-#         warn_count: "{{ warn_count|int + 1 }}"
-#       when: 
-#         - cisc_rt_000240_acl_check != "deny   ip any any log-input"
-
-#     - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Correct The ACL By Adding Proper Configuration To Deny All Other Traffic That Is Not Explicity Allowed."
-#       ios_config:
-#         parents:
-#           - "ip access-list extended {{ cisc_rt_000130_ext_acl_name }}"
-#         commands:
-#           - "300 deny ip any any log-input"
-#       when: cisc_rt_000240_acl_check != "deny   ip any any log-input"
-#   when:
-#       - cisc_rt_000240
-#       - not cisc_rt_dodin_backbone
-#   tags:
-#       - CISC-RT-000240
-#       - CAT1
-#       - CCI-001109
-#       - SRG-NET-000202-RTR-000001
-#       - SV-216572r531085_rule
-#       - V-216572
-
-
-
-
-
-
-
+    - name: "HIGH | CISC-RT-000240 | PATCH | The Cisco perimeter router must be configured to deny network traffic by default and allow network traffic by exception. | Correct The ACL By Adding Proper Configuration To Deny All Other Traffic That Is Not Explicity Allowed."
+      ios_config:
+        parents:
+          - "ip access-list extended {{ iosrtr_external_existing_acl }}"
+        commands:
+          - "300 deny ip any any log-input"
+      when: cisc_rt_000240_acl_check != "deny   ip any any log-input"
+  when:
+      - cisc_rt_000240
+      - not cisc_rt_dodin_backbone
+  tags:
+      - CISC-RT-000240
+      - CAT1
+      - CCI-001109
+      - SRG-NET-000202-RTR-000001
+      - SV-216572r531085_rule
+      - V-216572
 
 
 
@@ -798,123 +781,290 @@
 
 - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space."
   block:
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Rmmove Old FILTER_ISP Access Control Lost."
-      ios_acls:
-        config:
-          - afi: ipv4
-            acls:
-              - name: "{{ iosrtr_filter_isp_name_old }}"
-        state: deleted
+    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | No ACL Defined Check Block."
+      block:
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Verify the interface connecting to ISP has an inbound ACL."
+              - "To Fix this error please define a existing ACL in iosrtr_external_exisiting_acl in defaults main."
+          when:
+            - "'none' in iosrtr_filter_isp_exisiting_acl"
+            - not cisc_rt_hardening_one_device
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000280 - You Have Not Entered External ACL Name ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_filter_isp_exisiting_acl"
+            - not cisc_rt_hardening_one_device
+
+
+
+
+
+
+
+    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | User Defined (Existing ACL) In Defaults Main Or Template."
+      block:
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | No ACL Defined Warning Message."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_filter_isp_exisiting_acl }}"
+          register: cisc_rt_000280_acl_showrun_existing
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | No ACL Defined By That Name Warning." 
+          debug:
+            msg: 
+              - "Warning!!! Verify the interface connecting to ISP has an inbound ACL."
+              - "The defined ACL {{ item }} is not present on the Router and must be configured."
+          when:
+            - item not in cisc_rt_000280_acl_showrun_existing.stdout | string
+          with_items:
+            - "{{ iosrtr_filter_isp_exisiting_acl }}"
+
+        - name: "HIGH | CISC-RT-000730 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000280 - User Defined (Existing ACL) {{ item }} Not Present ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - item not in cisc_rt_000280_acl_showrun_existing.stdout | string
+          with_items:
+            - "{{ iosrtr_filter_isp_exisiting_acl }}"
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000280_interfaceinfo
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000280_interfaceinfo.gathered }}"
+          register: cisc_rt_000280_interfaceinfo_showrun
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Set Fact For Interface Name And Stdout." 
+          set_fact:
+            cisc_rt_000280_intname: "{{ cisc_rt_000280_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000280_intstdout: "{{ cisc_rt_000280_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Add ACL To Interfaces Listed In iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip access-group {{ iosrtr_filter_isp_exisiting_acl }} in"
+          with_together: 
+            - "{{ cisc_rt_000280_intname }}"
+            - "{{ cisc_rt_000280_intstdout }}"
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+            - item.0 in iosrtr_filter_isp_acl_interfaces
+            - iosrtr_filter_isp_exisiting_acl not in item.1
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove ACL From Interfaces Not Listed In iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ iosrtr_filter_isp_exisiting_acl }} in"
+          with_together: 
+            - "{{ cisc_rt_000280_intname }}"
+            - "{{ cisc_rt_000280_intstdout }}"
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+            - item.0 not in iosrtr_filter_isp_acl_interfaces
+            - iosrtr_filter_isp_exisiting_acl in item.1
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Set Fact For Interfaces With Description."
+          set_fact:
+            cisc_rt_000280_interface_with_descriptions: "{{ item.name, item.description }}"
+          with_items: "{{ cisc_rt_000280_interfaceinfo.gathered }}"
+          when:   
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Fix Descriptions For iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item }}"
+            lines:
+              - "description {{ iosrtr_filter_isp_interface_description }}"
+          with_items: 
+            - "{{ iosrtr_filter_isp_acl_interfaces }}"
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+            - cisc_rt_000280_interface_with_descriptions != iosrtr_filter_isp_interface_description     
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove Description From Interface Not In iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.name }}"
+            lines:
+              - "no description"
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+            - item.name not in iosrtr_filter_isp_acl_interfaces
+            - item.description is defined
+            - item.description == iosrtr_filter_isp_interface_description
+          with_items: 
+            - "{{ cisc_rt_000280_interfaceinfo.gathered }}"
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove Old ACL From All Interfaces On Router."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ iosrtr_filter_isp_name_old }} in"
+          with_together: 
+            - "{{ cisc_rt_000280_intname }}"
+            - "{{ cisc_rt_000280_intstdout }}"
+          when:
+            - iosrtr_filter_isp_exisiting_acl in cisc_rt_000280_acl_showrun_existing.stdout | string
+            - "'none' not in iosrtr_filter_isp_name_old"
+            - item.0 is defined
+            - iosrtr_filter_isp_name_old in item.1
       when: 
-        - "'none' not in iosrtr_filter_isp_name_old"
+        - not cisc_rt_hardening_one_device
 
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Parse User Given ACL From host_vars."
-      ios_acls:
-        running_config: "{{ lookup('file','files/cisc-rt-000280-acl.txt') }}"
-        state: parsed
-      register: cisc_rt_000280_acl_parsed
 
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Convert JSON to DICT For ACL Defined Name."
-      set_fact:
-        cisc_rt_000280_acl_name: "{{ cisc_rt_000280_acl_parsed.parsed.0.acls.0.name }}"
-    
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Compare And Update ACL."
-      ios_acls:
-        config: "{{ cisc_rt_000280_acl_parsed.parsed }}"
-        state: replaced
-      register: cisc_rt_000280_acl_ran
 
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Print Changed Lines With Debug When ACL Is Changed."
-      debug:
-        var: cisc_rt_000280_acl_ran.commands
+
+
+
+
+
+    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. |  Single Router Setup."
+      block:
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Rmmove Old FILTER_ISP Access Control Lost."
+          ios_acls:
+            config:
+              - afi: ipv4
+                acls:
+                  - name: "{{ iosrtr_filter_isp_name_old }}"
+            state: deleted
+          when: 
+            - "'none' not in iosrtr_filter_isp_name_old"
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Parse User Given ACL From host_vars."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000280-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000280_acl_parsed
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Convert JSON to DICT For ACL Defined Name."
+          set_fact:
+            cisc_rt_000280_acl_name: "{{ cisc_rt_000280_acl_parsed.parsed.0.acls.0.name }}"
+        
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Compare And Update ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000280_acl_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000280_acl_ran
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Print Changed Lines With Debug When ACL Is Changed."
+          debug:
+            var: cisc_rt_000280_acl_ran.commands
+          when: 
+            - cisc_rt_000280_acl_ran.changed
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000280_interfaceinfo
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000280_interfaceinfo.gathered }}"
+          register: cisc_rt_000280_interfaceinfo_showrun
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Set Fact For Interface Name And Stdout." 
+          set_fact:
+            cisc_rt_000280_intname: "{{ cisc_rt_000280_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000280_intstdout: "{{ cisc_rt_000280_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Add ACL To Interfaces Listed In iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip access-group {{ cisc_rt_000280_acl_name }} in"
+          with_together: 
+            - "{{ cisc_rt_000280_intname }}"
+            - "{{ cisc_rt_000280_intstdout }}"
+          when:
+            - item.0 in iosrtr_filter_isp_acl_interfaces
+            - cisc_rt_000280_acl_name not in item.1
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove ACL From Interfaces Not Listed In iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ cisc_rt_000280_acl_name }} in"
+          with_together: 
+            - "{{ cisc_rt_000280_intname }}"
+            - "{{ cisc_rt_000280_intstdout }}"
+          when:
+            - item.0 not in iosrtr_filter_isp_acl_interfaces
+            - cisc_rt_000280_acl_name in item.1
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Set Fact For Interfaces With Description."
+          set_fact:
+            cisc_rt_000280_interface_with_descriptions: "{{ item.name, item.description }}"
+          with_items: "{{ cisc_rt_000280_interfaceinfo.gathered }}"
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Fix Descriptions For iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item }}"
+            lines:
+              - "description {{ iosrtr_filter_isp_interface_description }}"
+          with_items: 
+            - "{{ iosrtr_filter_isp_acl_interfaces }}"
+          when:
+            - cisc_rt_000280_interface_with_descriptions != iosrtr_filter_isp_interface_description     
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove Description From Interface Not In iosrtr_filter_isp_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.name }}"
+            lines:
+              - "no description"
+          when: 
+            - item.name not in iosrtr_filter_isp_acl_interfaces
+            - item.description is defined
+            - item.description == iosrtr_filter_isp_interface_description
+          with_items: 
+            - "{{ cisc_rt_000280_interfaceinfo.gathered }}"
+
+        - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove Old ACL From All Interfaces On Router."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ iosrtr_filter_isp_name_old }} in"
+          with_together: 
+            - "{{ cisc_rt_000280_intname }}"
+            - "{{ cisc_rt_000280_intstdout }}"
+          when:
+            - "'none' not in iosrtr_filter_isp_name_old"
+            - item.0 is defined
+            - iosrtr_filter_isp_name_old in item.1
       when: 
-        - cisc_rt_000280_acl_ran.changed
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Gather Interface Facts."
-      ios_interfaces:
-        state: gathered
-      register: cisc_rt_000280_interfaceinfo
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Register Show Run With Interfaces."
-      ios_command:
-        commands: 
-          - "show run | section {{ item.name }}" 
-      with_items: "{{ cisc_rt_000280_interfaceinfo.gathered }}"
-      register: cisc_rt_000280_interfaceinfo_showrun
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Set Fact For Interface Name And Stdout." 
-      set_fact:
-        cisc_rt_000280_intname: "{{ cisc_rt_000280_interfaceinfo_showrun.results | map(attribute='item.name') }}"
-        cisc_rt_000280_intstdout: "{{ cisc_rt_000280_interfaceinfo_showrun.results | map(attribute='stdout') }}"
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Add ACL To Interfaces Listed In iosrtr_filter_isp_acl_interfaces."
-      ios_config:
-        parents:
-          - "interface {{ item.0 }}"
-        lines:
-          - "ip access-group {{ cisc_rt_000280_acl_name }} in"
-      with_together: 
-        - "{{ cisc_rt_000280_intname }}"
-        - "{{ cisc_rt_000280_intstdout }}"
-      when:
-        - item.0 in iosrtr_filter_isp_acl_interfaces
-        - cisc_rt_000280_acl_name not in item.1
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove ACL From Interfaces Not Listed In iosrtr_filter_isp_acl_interfaces."
-      ios_config:
-        parents:
-          - "interface {{ item.0 }}"
-        lines:
-          - "no ip access-group {{ cisc_rt_000280_acl_name }} in"
-      with_together: 
-        - "{{ cisc_rt_000280_intname }}"
-        - "{{ cisc_rt_000280_intstdout }}"
-      when:
-        - item.0 not in iosrtr_filter_isp_acl_interfaces
-        - cisc_rt_000280_acl_name in item.1
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Set Fact For Interfaces With Description."
-      set_fact:
-        cisc_rt_000280_interface_with_descriptions: "{{ item.name, item.description }}"
-      with_items: "{{ cisc_rt_000280_interfaceinfo.gathered }}"
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Fix Descriptions For iosrtr_filter_isp_acl_interfaces."
-      ios_config:
-        parents:
-          - "interface {{ item }}"
-        lines:
-          - "description {{ iosrtr_filter_isp_interface_description }}"
-      with_items: 
-        - "{{ iosrtr_filter_isp_acl_interfaces }}"
-      when:
-        - cisc_rt_000280_interface_with_descriptions != iosrtr_filter_isp_interface_description     
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove Description From Interface Not In iosrtr_filter_isp_acl_interfaces."
-      ios_config:
-        parents:
-          - "interface {{ item.name }}"
-        lines:
-          - "no description"
-      when: 
-        - item.name not in iosrtr_filter_isp_acl_interfaces
-        - item.description is defined
-        - item.description == iosrtr_filter_isp_interface_description
-      with_items: 
-        - "{{ cisc_rt_000280_interfaceinfo.gathered }}"
-
-    - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Remove Old ACL From All Interfaces On Router."
-      ios_config:
-        parents:
-          - "interface {{ item.0 }}"
-        lines:
-          - "no ip access-group {{ iosrtr_filter_isp_name_old }} in"
-      with_together: 
-        - "{{ cisc_rt_000280_intname }}"
-        - "{{ cisc_rt_000280_intstdout }}"
-      when:
-        - "'none' not in iosrtr_filter_isp_name_old"
-        - item.0 is defined
-        - iosrtr_filter_isp_name_old in item.1
+        - cisc_rt_hardening_one_device
+        - "'none' in iosrtr_filter_isp_name_old"
   when:
       - cisc_rt_000280
       - not cisc_rt_dodin_backbone
@@ -925,6 +1075,22 @@
       - SRG-NET-000019-RTR-000008
       - SV-216576r531085_rule
       - V-216576
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider."
   block:
