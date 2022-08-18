@@ -39,8 +39,6 @@
             - "'none' in iosrtr_internal_existing_acl"
             - not cisc_rt_hardening_one_device
 
-
-
     - name: User Defined (Existing ACL) In Defaults Main Or Template."
       block:
         - name: Show Run Existing External ACL."
@@ -59,8 +57,7 @@
           when:
             - "'none' not in iosrtr_internal_existing_acl"
 
-
-        - name:  No ACL Defined By That Name Warning iosrtr_external_existing_acl." 
+        - name:  No ACL Defined By That Name Warning iosrtr_external_existing_acl."
           debug:
             msg: 
               - "Warning!!! Review the external Access Control Lists (ACLs) to verify that the router is configured to only allow specific management and control plane traffic from specific sources destined to itself."
@@ -108,6 +105,8 @@
           ios_interfaces:
             state: gathered
           register: cisc_rt_000130_interfaceinfo
+          when:
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string or iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
         - name: Register Show Run With Interfaces."
           ios_command:
@@ -115,13 +114,17 @@
               - "show run | section {{ item.name }}" 
           with_items: "{{ cisc_rt_000130_interfaceinfo.gathered }}"
           register: cisc_rt_000130_interfaceinfo_showrun
+          when:
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string or iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
         - name: Set Fact For Interface Name And Interface Stdout." 
           set_fact:
             cisc_rt_000130_intname: "{{ cisc_rt_000130_interfaceinfo_showrun.results | map(attribute='item.name') }}"
             cisc_rt_000130_intstdout: "{{ cisc_rt_000130_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+          when:
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string or iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
-        - name: Set Fact For External ACL Lines
+        - name: Set Fact For External ACL Lines."
           set_fact:
             cisc_rt_000130_ext_acl_line_1: permit tcp host {{ item.source_host }} eq bgp host {{ item.destination_host }}
             cisc_rt_000130_ext_acl_line_2: permit tcp host {{ item.source_host }} host {{ item.destination_host }} eq bgp
@@ -133,14 +136,16 @@
             - "{{ iosrtr_external_acl_addresses }}"
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 1
+        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 1."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
               - "permit tcp host {{ item.source_host }} eq bgp host {{ item.destination_host }} has not been added to the ACL."
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_1 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
@@ -152,17 +157,19 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_1 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
             
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 2
+        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 2."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
               - "permit tcp host {{ item.source_host }} host {{ item.destination_host }} eq bgp has not been added to the ACL."
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_2 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
@@ -174,17 +181,19 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_2 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 3
+        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 3."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
               - "permit icmp host {{ item.source_host }} host {{ item.destination_host }} echo has not been added to the ACL."
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_3 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
@@ -196,17 +205,19 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_3 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
           
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 4
+        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 4."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
               - "permit icmp host {{ item.source_host }} host {{ item.destination_host }} echo-reply has not been added to the ACL."
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_4 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
@@ -218,17 +229,19 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_4 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 5
+        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 5."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
               - "deny ip any host {{ item.source_host }} log-input has not been added to the ACL."
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_5 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
@@ -240,17 +253,19 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_5 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 6
+        - name: Check External ACL For Compliance Using iosrtr_external_acl_addresses Line 6."
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_external_existing_acl }} Access Control Lists (ACLs)."
               - "deny ip any any log-input has not been added to the ACL."
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_6 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
@@ -262,28 +277,26 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_external_existing_acl"
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - cisc_rt_000130_ext_acl_line_6 not in cisc_rt_000130_acl_showrun_external_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_external_acl_addresses }}"
 
-
-
-
-
-        - name: Set Fact For Internal ACL Lines
+        - name: Set Fact For Internal ACL Lines."
           set_fact:
             cisc_rt_000130_int_acl_line_1: permit icmp any any
             cisc_rt_000130_int_acl_line_2: permit ospf host {{ item.source_host }} host {{ item.destination_host }}
-            cisc_rt_000130_int_acl_line_3: permit tcp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq 22
-            cisc_rt_000130_int_acl_line_4: permit tcp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq tacacs
-            cisc_rt_000130_int_acl_line_5: permit udp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq snmp
-            cisc_rt_000130_int_acl_line_6: permit udp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq ntp
+            cisc_rt_000130_int_acl_line_3: permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq 22
+            cisc_rt_000130_int_acl_line_4: permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq tacacs
+            cisc_rt_000130_int_acl_line_5: permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq snmp
+            cisc_rt_000130_int_acl_line_6: permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq ntp
             cisc_rt_000130_int_acl_line_7: deny   ip any host {{ item.destination_host }} log-input
             cisc_rt_000130_int_acl_line_8: deny   ip any any log-input
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
 
         - name: Check Internal ACL For Compliance Using iosrtr_internal_acl_addresses Line 1."
           debug:
@@ -292,6 +305,7 @@
               - "permit icmp any any has not been added to the ACL."
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_1 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -303,6 +317,7 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_1 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -314,6 +329,7 @@
               - "permit ospf host {{ item.source_host }} host {{ item.destination_host }} has not been added to the ACL." 
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_2 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -325,6 +341,7 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_2 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -333,9 +350,10 @@
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
-              - "permit tcp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq 22 has not been added to the ACL."
+              - "permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq 22 has not been added to the ACL."
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_3 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -343,10 +361,11 @@
         - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 3."
           set_fact:
             control_number:
-              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit tcp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq 22 Not Present ]"
+              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq 22 Not Present ]"
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_3 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -355,9 +374,10 @@
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
-              - "permit tcp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq tacacs has not been added to the ACL."
+              - "permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq tacacs has not been added to the ACL."
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_4 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -365,10 +385,11 @@
         - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 4."
           set_fact:
             control_number:
-              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit tcp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq tacacs Not Present ]"
+              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit tcp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq tacacs Not Present ]"
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_4 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -377,9 +398,10 @@
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
-              - "permit udp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq snmp has not been added to the ACL."
+              - "permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq snmp has not been added to the ACL."
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_5 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -387,10 +409,11 @@
         - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 5."
           set_fact:
             control_number:
-              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit udp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq snmp Not Present ]"
+              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq snmp Not Present ]"
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_5 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -399,9 +422,10 @@
           debug:
             msg: 
               - "Warning!!! Review {{ iosrtr_internal_existing_acl }} Access Control Lists (ACLs)."
-              - "permit udp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq ntp has not been added to the ACL."
+              - "permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq ntp has not been added to the ACL."
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_6 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -409,10 +433,11 @@
         - name: Create Control Warning For End Of Play iosrtr_internal_acl_addresses Line 6."
           set_fact:
             control_number:
-              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit udp {{ item.source_host }} {{ source_wildcard_bits }} host {{ item.destination_host }} eq ntp Not Present ]"
+              - "{{ control_number }} + [ CISC-RT-000130 - {{ iosrtr_internal_existing_acl }} permit udp {{ item.source_host }} {{ item.source_wildcard_bits }} host {{ item.destination_host }} eq ntp Not Present ]"
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_6 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -424,6 +449,7 @@
               - "deny   ip any host {{ item.destination_host }} log-input has not been added to the ACL."
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_7 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -435,6 +461,7 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_7 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -446,6 +473,7 @@
               - "deny   ip any any log-input has not been added to the ACL."
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_8 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
@@ -457,14 +485,10 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' not in iosrtr_internal_existing_acl"
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - cisc_rt_000130_int_acl_line_8 not in cisc_rt_000130_acl_showrun_internal_existing.stdout_lines | string
           with_items:
             - "{{ iosrtr_internal_acl_addresses }}"
-
-
-
-
-            
 
         - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Add ACL To Interfaces Listed In iosrtr_external_acl_interfaces."
           ios_config:
@@ -476,21 +500,9 @@
             - "{{ cisc_rt_000130_intname }}"
             - "{{ cisc_rt_000130_intstdout }}"
           when:
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - item.0 in iosrtr_external_acl_interfaces
             - iosrtr_external_existing_acl not in item.1
-
-        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Add ACL To Interfaces Listed In iosrtr_internal_acl_interfaces."
-          ios_config:
-            parents:
-              - "interface {{ item.0 }}"
-            lines:
-              - "ip access-group {{ iosrtr_internal_existing_acl }} in"
-          with_together: 
-            - "{{ cisc_rt_000130_intname }}"
-            - "{{ cisc_rt_000130_intstdout }}"
-          when:
-            - item.0 in iosrtr_internal_acl_interfaces
-            - iosrtr_internal_existing_acl not in item.1
 
         - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove ACL From Interfaces Not Listed In iosrtr_external_acl_interfaces."
           ios_config:
@@ -502,10 +514,26 @@
             - "{{ cisc_rt_000130_intname }}"
             - "{{ cisc_rt_000130_intstdout }}"
           when:
+            - iosrtr_external_existing_acl in cisc_rt_000130_acl_showrun_external_existing.stdout | string
             - item.0 not in iosrtr_external_acl_interfaces
             - iosrtr_external_existing_acl in item.1
 
-        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove ACL From Interfaces Not Listed In iosrtr_external_acl_interfaces."
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Add ACL To Interfaces Listed In iosrtr_internal_acl_interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip access-group {{ iosrtr_internal_existing_acl }} in"
+          with_together: 
+            - "{{ cisc_rt_000130_intname }}"
+            - "{{ cisc_rt_000130_intstdout }}"
+          when:
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
+            - item.0 in iosrtr_internal_acl_interfaces
+            - iosrtr_internal_existing_acl not in item.1
+
+
+        - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | Remove ACL From Interfaces Not Listed In iosrtr_internal_acl_interfaces."
           ios_config:
             parents:
               - "interface {{ item.0 }}"
@@ -515,37 +543,12 @@
             - "{{ cisc_rt_000130_intname }}"
             - "{{ cisc_rt_000130_intstdout }}"
           when:
+            - iosrtr_internal_existing_acl in cisc_rt_000130_acl_showrun_internal_existing.stdout | string
             - item.0 not in iosrtr_internal_acl_interfaces
             - iosrtr_internal_existing_acl in item.1
       when: 
         - not cisc_rt_hardening_one_device
         - "'none' not in iosrtr_external_existing_acl or 'none' not in iosrtr_internal_existing_acl"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

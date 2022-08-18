@@ -232,38 +232,28 @@ iosrtr_local_bgp_autonomous_system_number: "65000"
 # iosrtr_external_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_external_acl_interfaces:
     - "FastEthernet2/0"
-
 # iosrtr_internal_acl_interfaces are the interfaces on the device that will have the access control list assigned to it.  
 iosrtr_internal_acl_interfaces:
     - "FastEthernet0/0"
     - "FastEthernet0/1"
-
-
 # -------------------------------------------------------
 # User Defined (Existing ACL) In Defaults Main 
 # -------------------------------------------------------
-# iosrtr_external_exisiting_acl is the existing user defined ACL that  is configured to only allow specific management and control 
+# iosrtr_external_exisiting_acl is the existing user defined ACL that is configured to only allow specific management and control 
 # plane traffic from specific sources destined to itself.
 # Example: "EXTERNAL_ACL"
 iosrtr_external_existing_acl: "EXTERNAL_ACL"
-# iosrtr_internal_exisiting_acl
-# Example: "INTERNAL_ACL"
+# iosrtr_internal_exisiting_acl is the existing user defined ACL that is configured to only allow specific management and control 
+# plane traffic from specific sources destined to itself. 
+# Note: Please refer to the STIG notes for additional information on configuration examples.  
+# Example: "INTERNAL_ACL" 
 iosrtr_internal_existing_acl: "INTERNAL_ACL"
-
-
+# iosrtr_external_acl_addresses are the configured addresses.
 iosrtr_external_acl_addresses:
     - {source_host: 1.11.1.1, destination_host: 1.11.1.2}
-# 
-
+# iosrtr_internal_acl_addresses are the configured addresses.
 iosrtr_internal_acl_addresses:
-    - '10.1.0.0 0.0.255.255'
-    - '1.1.0.0 0.0.255.255'
-
-
-
-
-
-
+    - {source_host: 10.1.0.0, source_wildcard_bits: 0.0.255.255, destination_host: 10.1.12.2}
 
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
@@ -396,6 +386,7 @@ iosrtr_block_to_core_existing_acl_ip_core_address_space:
 # If you did not have a existing access control list defined in the router leave setting set as "none".
 # Example: "BLOCK_TO_CORE_OLD"
 iosrtr_block_to_core_acl_name_old: "none"
+
 
 # CISC-RT-000310
 # -------------------------------------------------------
