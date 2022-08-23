@@ -97,10 +97,10 @@ cisc_rt_000030: false
 cisc_rt_000080: false
 cisc_rt_000350: false
 cisc_rt_000480: false
-cisc_rt_000750: false
+cisc_rt_000750: true
 cisc_rt_000235: false
 cisc_rt_000237: false
-cisc_rt_000391: true
+cisc_rt_000391: false
 cisc_rt_000392: false
 cisc_rt_000393: false
 cisc_rt_000394: false
@@ -459,6 +459,10 @@ iosrtr_filter_ipv6:
 iosrtr_external_ipv6_interfaces: 
     - "FastEthernet0/0"
     - "FastEthernet0/1"
+
+
+
+
 
 
 # CISC-RT-000398

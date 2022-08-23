@@ -683,8 +683,9 @@
       - V-216992
 
 - name: "MEDIUM | CISC-RT-000750 | PATCH | The Cisco PE router must be configured to drop all packets with any IP options."
-  debug:
-    msg: "test"
+  ios_config:
+    commands: 
+      - "ip options drop"
   when:
       - cisc_rt_000750
   tags:
