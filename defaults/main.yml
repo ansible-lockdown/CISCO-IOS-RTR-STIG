@@ -98,9 +98,9 @@ cisc_rt_000080: false
 cisc_rt_000350: false
 cisc_rt_000480: false
 cisc_rt_000750: false
-cisc_rt_000235: true
+cisc_rt_000235: false
 cisc_rt_000237: false
-cisc_rt_000391: false
+cisc_rt_000391: true
 cisc_rt_000392: false
 cisc_rt_000393: false
 cisc_rt_000394: false
@@ -170,13 +170,6 @@ iosrtr_all_interfaces:
     - Serial1/2
     - Serial1/3
     - FastEthernet2/0
-
-#EXTERNAL FACING PORTS
-# iosrtr_external_ipv6_interfaces
-# These are external IPv6-enabled interfaces.  
-iosrtr_external_ipv6_interfaces: "FastEthernet 0/0"
-
-
 
 
 # iosrtr_inactive_interfaces
@@ -460,7 +453,12 @@ iosrtr_filter_ipv6:
 
 
 
-
+# CISC-RT-000391
+# iosrtr_external_ipv6_interfaces
+# These are external IPv6-enabled interfaces.  
+iosrtr_external_ipv6_interfaces: 
+    - "FastEthernet0/0"
+    - "FastEthernet0/1"
 
 
 # CISC-RT-000398

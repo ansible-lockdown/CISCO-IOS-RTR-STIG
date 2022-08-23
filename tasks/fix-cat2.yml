@@ -745,10 +745,45 @@
       - V-230041
 
 - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces."
-  ios_command:
-      commands:
-        - interface range {{ iosrtr_external_ipv6_interfaces }}
-        - ipv6 nd ra suppress
+  block:
+    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Apply To Interfaces In List."
+      ios_config:
+        parents:
+          - interface {{ item }}
+        lines:  
+          - ipv6 nd ra suppress
+      with_items:
+        - "{{ iosrtr_external_ipv6_interfaces }}"
+
+    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Gather Interface Facts."
+      ios_interfaces:
+        state: gathered
+      register: cisc_rt_000391_interfaceinfo
+
+    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Register Show Run With Interfaces."
+      ios_command:
+        commands: 
+          - "show run | section {{ item.name }}" 
+      with_items: "{{ cisc_rt_000391_interfaceinfo.gathered }}"
+      register: cisc_rt_000391_interfaceinfo_showrun
+
+    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Set Fact For Interface Name And Interface Stdout." 
+      set_fact:
+        cisc_rt_000391_intname: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+        cisc_rt_000391_intstdout: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Remove ipv6 nd ra suppress From Interfaces Not In List."
+      ios_config:
+        parents:
+          - interface {{ item.0 }}
+        lines:  
+          - no ipv6 nd ra suppress
+      with_together: 
+        - "{{ cisc_rt_000391_intname }}"
+        - "{{ cisc_rt_000391_intstdout }}"
+      when:
+        - item.0 not in iosrtr_external_ipv6_interfaces
+        - "'ipv6 nd ra suppress' in item.1"
   when:
       - cisc_rt_000391
       - not cisc_rt_dodin_backbone
@@ -871,22 +906,56 @@
 
 
 
-- name: 
-  block:
-    - name:  No ACL Defined Check Block."
-      block:
-        - name: No ACL Defined Warning Message."
-          debug:
-            msg: 
-              - "Warning!!! Review the router configuration to verify egress ACL has been configured on all internal interfaces to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field."
-              - "If the egress ACL to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field has not been configured on all internal interfaces in an enclave, this is a finding."
-              - "To Fix this error please define a existing ACL in iosrtr_egress_filter_existing_acl in defaults main."
+# - name: 
+#   block:
+#     - name:  No ACL Defined Check Block."
+#       block:
+#         - name: No ACL Defined Warning Message."
+#           debug:
+#             msg: 
+#               - "Warning!!! Review the router configuration to verify egress ACL has been configured on all internal interfaces to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field."
+#               - "If the egress ACL to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field has not been configured on all internal interfaces in an enclave, this is a finding."
+#               - "To Fix this error please define a existing ACL in iosrtr_egress_filter_existing_acl in defaults main."
 
-        - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create Control Warning For End Of Play."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000310 - You Have Not Entered A ACL Name ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-      when:
-        - "'none' in iosrtr_egress_filter_existing_acl"
-        - not cisc_rt_hardening_one_device
+#         - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create Control Warning For End Of Play."
+#           set_fact:
+#             control_number:
+#               - "{{ control_number }} + [ CISC-RT-000310 - You Have Not Entered A ACL Name ]"
+#             warn_count: "{{ warn_count|int + 1 }}"
+#       when:
+#         - "'none' in iosrtr_egress_filter_existing_acl"
+#         - not cisc_rt_hardening_one_device
+
+
+
+
+#   block:
+#     - name: Gather Interface Facts."
+#       ios_interfaces:
+#         state: gathered
+#       register: cisc_rt_000391_interfaceinfo
+
+#     - name: Register Show Run With Interfaces."
+#       ios_command:
+#         commands: 
+#           - "show run | section {{ item.name }}" 
+#       with_items: "{{ cisc_rt_000391_interfaceinfo.gathered }}"
+#       register: cisc_rt_000391_interfaceinfo_showrun
+
+#     - name: Set Fact For Interface Name And Interface Stdout." 
+#       set_fact:
+#         cisc_rt_000391_intname: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+#         cisc_rt_000391_intstdout: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+#     - name: Apply To Interfaces In List
+#       ios_config:
+#         parents:
+#           - interface {{ item.0 }}
+#         lines:  
+#           - ipv6 nd ra suppress
+#       with_together: 
+#         - "{{ cisc_rt_000391_intname }}"
+#         - "{{ cisc_rt_000391_intstdout }}"
+#       when:
+#         - item.0 in iosrtr_external_ipv6_interfaces
+#         - "'ipv6 nd ra suppress' not in cisc_rt_000391_intstdout"
