@@ -306,6 +306,8 @@ def get_interface_type(interface):
         return "portchannel"
     elif interface.upper().startswith("NV"):
         return "nve"
+    elif interface.upper().startswith("SE"):
+        return "serial"
     else:
         return "unknown"
 

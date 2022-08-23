@@ -940,9 +940,7 @@
 
 
 
-
-
-
+               
     - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. |  Single Router Setup."
       block:
         - name: "HIGH | CISC-RT-000280 | PATCH | The Cisco perimeter router must be configured to protect an enclave connected to an alternate gateway by using an inbound filter that only permits packets with destination addresses within the sites address space. | Rmmove Old FILTER_ISP Access Control Lost."
@@ -1076,22 +1074,6 @@
       - SV-216576r531085_rule
       - V-216576
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider."
   block:
     - name: Verify that the router is not BGP peering with this router.
@@ -1102,7 +1084,7 @@
 
     - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Set Fact For Neighbor Ip Addresses."
       set_fact:
-          cisc_rt_000290_list: "{{ iosrtr_bgp_peering_with_alterrnate_gateway_service_provider.stdout_lines | regex_findall('((?:[0-9]{1,3}.){3}[0-9]{1,3})') }}"
+          cisc_rt_000290_list: "{{ iosrtr_bgp_peering_with_alterrnate_gateway_service_provider.stdout_lines | regex_findall('((?:[0-9]{1,3}.){3}[0-9]{1,3})') | unique | list }}"
 
     - name: "HIGH | CISC-RT-000290 | PATCH | The Cisco perimeter router must be configured to not be a Border Gateway Protocol (BGP) peer to an alternate gateway service provider. | Add Static Route If It Is BGP Peering With Provider."
       ios_static_routes:
@@ -1141,35 +1123,86 @@
 
 
 
-
-
-
-
+####################################################################################
+####################################################################################
+#                         NEED TO FINISH BELOW                                     #
+####################################################################################
+####################################################################################
 
 
 - name: | 
         "HIGH | CISC-RT-000630 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance bound to the appropriate physical or logical interfaces to maintain traffic separation between all MPLS L3VPNs."
         "HIGH | CISC-RT-000640 | PATCH | The Cisco PE router must be configured to have each Virtual Routing and Forwarding (VRF) instance with the appropriate Route Target (RT)."
   block:
-    - name: "Create VRF Entries"
-      ios_vrf_lite:
-        name: 'test' 
-        # rd: '400:1'
-        # route_import: '400:1'
-        # route_export: '400:1'
-        description: 'Why Arent You Working'
-        state: present
-      # with_items:
-      #   - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
+    - name: Show Run VRF Names
+      ios_command:
+        commands: 
+          - "show run | section ip vrf {{ item.vrf_route_name }}"
+      register: cisc_rt_000640_vrf_name_check
+      with_items:
+        - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+
+    - name: Set Facts
+      set_fact:
+        cisc_rt_000640_intstdout_vrf_name_check: "{{ cisc_rt_000640_vrf_name_check.results | map(attribute='stdout') }}"
+
+    - name: Create VRF When Not in cisc_rt_000640_vrf_name_check
+      ios_config:
+        parents:
+          - "ip vrf {{ item.vrf_route_name }}"
+        lines:
+          - "description {{ item.vrf_description }}"
+      with_items:
+        - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+      when: 
+        - item.vrf_route_name not in cisc_rt_000640_intstdout_vrf_name_check | string
+
+###############################################
+
+#     REMOVE VRF NOT DEFINED IN VARIABLES     #
+
+###############################################
+
+    # - name: "Check For Active VRF's For Stig"
+    #   ios_command:
+    #     commands: 
+    #       - show run | include ip vrf
+    #   register: cisc_rt_000630_ip_vrf_active
+
+    # - name: set fact
+    #   set_fact:
+    #     list_prune: "{{ cisc_rt_000630_ip_vrf_active.stdout | regex_replace('ip vrf forwarding ', '') | regex_replace('ip vrf ', '') | from_json }}"
+    #     vrf_list_user: "{{ iosrtr_ce_facing_vrf_interfaces | map(attribute='vrf_route_name') }}"
   
-    
-    
-    
-    
-    
-    
-    
-    
+    # - name: test debug for vrf
+    #   debug:
+    #     msg: 
+    #     - THIS IS GONNA WORK
+    #   with_items: 
+    #     - "{{ list_prune }}"
+    #   when: "item in cisc_rt_000640_intstdout_vrf_name_check"
+
+    # - name: Remove VRF When Not in cisc_rt_000640_intstdout_vrf_name_check_removal
+    #   ios_config:
+    #     parents:
+    #       - "ip vrf {{ item.1 }}"
+    #     commands:
+    #       - "no ip vrf {{ item.1 }}"
+    #   with_items:
+    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+    #     - "{{ list_prune }}"
+
+    # - name: Reaquire Set FACTS
+    #   set_fact:
+    #     cisc_rt_000640_intstdout_vrf_name_check: "{{ cisc_rt_000640_vrf_name_check.results | map(attribute='stdout') }}"
+
+###############################################
+
+# END OF REMOVE VRF NOT DEFINED IN VARIABLES  #
+
+###############################################
+
     - name: Gather Interface Facts."
       ios_interfaces:
         state: gathered
@@ -1186,33 +1219,52 @@
       set_fact:
         cisc_rt_000630_intname: "{{ cisc_rt_000630_interfaceinfo_showrun.results | map(attribute='item.name') }}"
         cisc_rt_000630_intstdout: "{{ cisc_rt_000630_interfaceinfo_showrun.results | map(attribute='stdout') }}"
-
-
-
-
-
-
-
-
-
     
-    # - name: Apply VRF To Interfaces
-    #   ios_config:
-    #     parents: 
-    #       - "interface {{ item.1 }}"
-    #     lines: 
-    #       - "ip vrf forwarding {{ 0.item.vrf_route_name }}"
-    #   with_items: 
-    #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
-    #     - "{{ cisc_rt_000630_intname }}"
-    #     - "{{ cisc_rt_000630_intstdout }}"
-    #   when:
-    #     - 
-    #     - cisc_rt_000280_acl_name in item.1
+    - name: Apply VRF To Interfaces
+      ios_config:
+        parents: 
+          - "interface {{ item.0 }}"
+        lines: 
+          - "ip vrf forwarding {{ item.3 }}"
+      with_together: 
+        - "{{ cisc_rt_000630_intname }}"
+        - "{{ cisc_rt_000630_intstdout }}"
+        - "{{ iosrtr_ce_facing_vrf_interfaces }}"
+      when:
+        - item.3 not in item.1
 
 
 
 
+            # - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Attach ACL To Interface In iosrtr_egress_internal_interfaces."
+            #   ios_config:
+            #     parents:
+            #       - "interface {{ item.0 }}"
+            #     lines:
+            #       - "ip access-group {{ iosrtr_egress_filter_existing_acl }} in"
+            #   with_together: 
+            #     - "{{ cisc_rt_000310_intname }}"
+            #     - "{{ cisc_rt_000310_intstdout }}"
+            #   when:
+            #     - iosrtr_egress_filter_existing_acl in cisc_rt_000310_acl_showrun_existing.stdout | string
+            #     - iosrtr_egress_acl_filter
+            #     - item.0 in iosrtr_egress_internal_interfaces
+            #     - iosrtr_egress_filter_existing_acl not in item.1
+
+            # - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Remove ACL from Interface Not In List."
+            #   ios_config:
+            #     parents:
+            #       - "interface {{ item.0 }}"
+            #     lines:
+            #       - "no ip access-group {{ iosrtr_egress_filter_existing_acl }} in"
+            #   with_together: 
+            #     - "{{ cisc_rt_000310_intname }}"
+            #     - "{{ cisc_rt_000310_intstdout }}"
+            #   when:
+            #     - iosrtr_egress_filter_existing_acl in cisc_rt_000310_acl_showrun_existing.stdout | string
+            #     - iosrtr_egress_acl_filter
+            #     - item.0 not in iosrtr_egress_internal_interfaces
+            #     - iosrtr_egress_filter_existing_acl in item.1
 
 
     # - name: "Check For Active VRF's For Stig"
@@ -1228,7 +1280,8 @@
     # - name: Print Fact
     #   debug:
     #     msg: "{{ list_prune }}"
-    
+
+
     # - name: "Clear Exiting VRF From iosrtr_ce_facing_vrf_interfaces"
     #   ios_vrf_lite:
     #     name: "{{ list_prune }}"
@@ -1236,18 +1289,6 @@
     #   when: list_prune not in item.vrf_route_name
     #   with_items:
     #     - "{{ iosrtr_ce_facing_vrf_interfaces }}"
-
-
-
-
-
-
-
-
-
-
-    
-
     
     # - name: "Clear Exiting VRF From iosrtr_ce_facing_vrf_interfaces"
     #   ios_vrf_lite:
@@ -1299,6 +1340,20 @@
       - SV-216612r531085_rule
       - V-216611
       - V-216612
+
+####################################################################################
+####################################################################################
+#                       NEED TO FINISH ABOVE                                       #
+####################################################################################
+####################################################################################
+
+
+
+
+
+
+
+
 
 - name: "HIGH | CISC-RT-000670 | PATCH | The Cisco PE router providing MPLS Virtual Private Wire Service (VPWS) must be configured to have the appropriate virtual circuit identification (VC ID) for each attachment circuit."
   block:

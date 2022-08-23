@@ -707,7 +707,8 @@
       ios_config:
         commands: 
           - "ip cef"
-      when: "'ip cef' not in cisc_rt_000235_ip_cef_check.stdout"
+      when: 
+        - "'ip cef' not in cisc_rt_000235_ip_cef_check.stdout or 'no ip cef' in cisc_rt_000235_ip_cef_check.stdout"
 
     - name: "MEDIUM | CISC-RT-000235 | PATCH | The Cisco router must be configured to have Cisco Express Forwarding enabled. | Enable IPV6 Unicast-Routing."
       ios_config:
@@ -846,6 +847,11 @@
 
 - name: "MEDIUM | CISC-RT-000398 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Hop-by-Hop or Destination Option extension header with an undefined option type."
   debug:
+
+
+
+
+    
     msg: "test"
   when:
       - cisc_rt_000398
@@ -858,3 +864,29 @@
       - SV-230158r538614_rule
       - V-230158
 
+
+
+
+
+
+
+
+- name: 
+  block:
+    - name:  No ACL Defined Check Block."
+      block:
+        - name: No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Review the router configuration to verify egress ACL has been configured on all internal interfaces to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field."
+              - "If the egress ACL to restrict the router from accepting outbound IP packets that contain an illegitimate address in the source address field has not been configured on all internal interfaces in an enclave, this is a finding."
+              - "To Fix this error please define a existing ACL in iosrtr_egress_filter_existing_acl in defaults main."
+
+        - name: "HIGH | CISC-RT-000310 | PATCH | The Cisco PE router must be configured to block any traffic that is destined to IP core infrastructure. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000310 - You Have Not Entered A ACL Name ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_egress_filter_existing_acl"
+        - not cisc_rt_hardening_one_device

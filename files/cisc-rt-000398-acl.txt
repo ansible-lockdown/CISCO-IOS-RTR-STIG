@@ -1,0 +1,63 @@
+# NOTES: 
+# New ACL Must Match Actual Example Given At The Bottom For The First Line
+# Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
+# https://github.com/ansible-collections/cisco.ios/pull/626 
+#
+# There is also a open issue Regarding the way the ios_acl runs the add and remove for the commands.
+# If you failed to deny ipv6 any any log to the original acl file and are back here to fix it
+# regarding the warning posted at the end of the run. Make sure you add it as Sequence 600 to match 
+# how the fix is applied in the system so Shows the task as ok, if Not It will always show changed.  
+# https://github.com/ansible-collections/cisco.ios/issues/598
+#
+# Example Given In STIG:
+# ip access-list extended FILTER_IPV6
+# deny any any dest-option-type 2
+# deny any any dest-option-type 3
+# deny any any dest-option-type 6
+# deny any any dest-option-type 9
+# deny any any dest-option-type 10
+# deny any any dest-option-type 11
+# deny any any dest-option-type 12
+# deny any any dest-option-type 13
+# deny any any dest-option-type 14
+# deny any any dest-option-type 16
+# …
+# deny any any dest-option-type 34
+# deny any any dest-option-type 36
+# deny any any dest-option-type 37
+# deny any any dest-option-type 39
+# …
+# deny any any dest-option-type 47
+# deny any any dest-option-type 49
+# … 
+# deny any any dest-option-type 255
+# permit …
+# …
+# …
+# …
+# deny ipv6 any any log
+#
+#
+Extended IP access list FILTER_IPV6
+    10 deny any any dest-option-type 2
+    20 deny any any dest-option-type 3
+    30 deny any any dest-option-type 6
+    40 deny any any dest-option-type 9
+    50 deny any any dest-option-type 10
+    60 deny any any dest-option-type 11
+    70 deny any any dest-option-type 12
+    80 deny any any dest-option-type 13
+    90 deny any any dest-option-type 14
+    100 deny any any dest-option-type 16
+
+    290 deny any any dest-option-type 34
+    300 deny any any dest-option-type 36
+    310 deny any any dest-option-type 37
+    320 deny any any dest-option-type 39
+
+    400 deny any any dest-option-type 47
+    420 deny any any dest-option-type 49
+
+    500 deny any any dest-option-type 255
+
+    600 deny ipv6 any any log
