@@ -638,13 +638,23 @@
 
 - name: "MEDIUM | CISC-RT-000080 | PATCH | The Cisco router must not be configured to have any feature enabled that calls home to the vendor."
   block:
-    - name: Search For Call home
+    - name: ios Facts
+      ios_facts:
+        
+    - name: Search For Call Home."
       ios_command:
         commands: 
           - "show run | include call-home"
       register: ios_rtr_call_home_check
 
-    # - name: Turn Off Call Home
+    - name: Turn Off Call-Home."
+      ios_config:
+        parents:
+          - "call-home"
+        commands:
+          - "no call-home"
+      when: 
+        - "'call-home' in ios_rtr_call_home_check.stdout"
   when:
       - cisc_rt_000080
   tags:

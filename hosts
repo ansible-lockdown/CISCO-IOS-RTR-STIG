@@ -1,3 +1,4 @@
+
 [cisco]
 #Define Host By Ip Address
 #192.168.68.220
@@ -8,16 +9,28 @@
 #192.168.68.112
 #192.168.68.147
 
+#[Local Machine Testing]
+
+#[Local Cisco Router C3725-ADVENTERPRISEK9-M Version 12.4(15)T14]
+192.168.68.147
+#[Local Cisco Router C7200-ADVIPSERVICESK9-M Version 15.2(4)S5]
+192.168.68.125
+
+
+
+
+
 
 #[Frontier RTP Co Workspace]
 #172.16.184.94
-172.16.16.51
+#172.16.16.51
 
 #[Home Ip Address]
 #192.168.68.127
 #192.168.68.146
 #192.168.68.123
 #192.168.68.141
+
 
 
 #[Maryland House]

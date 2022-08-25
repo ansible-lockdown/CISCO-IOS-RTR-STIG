@@ -94,10 +94,10 @@ cisc_rt_000900: false
 cisc_rt_000910: false
 cisc_rt_000020: false
 cisc_rt_000030: false
-cisc_rt_000080: false
+cisc_rt_000080: true
 cisc_rt_000350: false
 cisc_rt_000480: false
-cisc_rt_000750: true
+cisc_rt_000750: false
 cisc_rt_000235: false
 cisc_rt_000237: false
 cisc_rt_000391: false
