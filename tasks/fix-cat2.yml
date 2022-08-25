@@ -165,8 +165,9 @@
       - V-216562
 
 - name: "MEDIUM | CISC-RT-000150 | PATCH | The Cisco router must be configured to have Gratuitous ARP disabled on all external interfaces."
-  debug:
-    msg: "test"  
+  ios_config:
+    commands:
+      - "no ip gratuitous-arps"
   when:
       - cisc_rt_000150
   tags:
