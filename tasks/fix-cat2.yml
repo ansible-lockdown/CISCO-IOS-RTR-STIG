@@ -40,8 +40,94 @@
       - V-216555  
 
 - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network."
-  debug:
-    msg: "test"  
+  block:
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Show Run For Auto Configuration."
+      ios_command:
+        commands:
+          - "show run | include boot network"
+          - "show run | include service config"
+      register: iosrtr_000090_auto_configuration_check
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Disable Auto Configuration."
+      ios_config:
+        commands:
+          - "no service config"
+          - "no boot network"
+      when: 
+        - "'service config' in iosrtr_000090_auto_configuration_check.stdout or 'boot network' in iosrtr_000090_auto_configuration_check.stdout | string"
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Show Run For CNS zero-touch Deployment."
+      ios_command:
+        commands:
+          - "show run | include cns config"
+          - "show run | include cns exec"
+          - "show run | include cns image"
+      register: iosrtr_000090_cns_zero_touch_check
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Show Run For CNS zero-touch Deployment For Trusted-Server Config."
+      ios_command:
+        commands:
+          - "show run | include cns trusted-server config"
+      register: iosrtr_000090_cns_zero_touch_check_config
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Show Run For CNS zero-touch Deployment For Trusted-Server Image."
+      ios_command:
+        commands:
+          - "show run | include cns trusted-server image"
+      register: iosrtr_000090_cns_zero_touch_check_image
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Set Fact For Trused-Servers."
+      set_fact:
+        trusted_server_config_word: "{{ iosrtr_000090_cns_zero_touch_check_config.stdout_lines | regex_replace('cns trusted-server config ', '') }}"
+        trusted_server_image_word: "{{ iosrtr_000090_cns_zero_touch_check_image.stdout_lines | regex_replace('cns trusted-server image ', '') }}"
+      when:         
+        - "'cns trusted-server image' in iosrtr_000090_cns_zero_touch_check_image.stdout | string or 'cns trusted-server config' in iosrtr_000090_cns_zero_touch_check_config.stdout | string"
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Create Lists."
+      set_fact:
+        trusted_server_config_word_list: "{{ trusted_server_config_word | flatten | list }}"
+        trusted_server_image_word_list: "{{ trusted_server_image_word | flatten | list }}"
+      when: 
+        - "'cns trusted-server image' in iosrtr_000090_cns_zero_touch_check_image.stdout | string or 'cns trusted-server config' in iosrtr_000090_cns_zero_touch_check_config.stdout | string"
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Disable CNS Config."
+      ios_config:
+        commands:
+          - "no cns config initial"
+      when: 
+        - "'cns config' in iosrtr_000090_cns_zero_touch_check.stdout | string"
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Disable CNS Exec."
+      ios_config:
+        commands:
+          - "no cns exec"
+      when: 
+        - "'cns exec' in iosrtr_000090_cns_zero_touch_check.stdout | string"  
+    
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Disable CNS Image."
+      ios_config:
+        commands:
+          - "no cns image"
+      when: 
+        - "'cns image' in iosrtr_000090_cns_zero_touch_check.stdout | string"  
+    
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Disable CNS Trusted-Server Config."
+      ios_config:
+        commands:
+          - "no cns trusted-server config {{ item }}"
+      when: 
+        - "'cns trusted-server config' in iosrtr_000090_cns_zero_touch_check_config.stdout | string"
+      with_items:
+        - "{{ trusted_server_config_word_list }}"
+
+    - name: "MEDIUM | CISC-RT-000090 | PATCH | The Cisco router must not be configured to have any zero-touch deployment feature enabled when connected to an operational network. | Disable CNS Trusted-Server Image."
+      ios_config:
+        commands:
+          - "no cns trusted-server image {{ item }}"
+      when: 
+        - "'cns trusted-server image' in iosrtr_000090_cns_zero_touch_check_image.stdout | string"
+      with_items:
+        - "{{ trusted_server_image_word_list }}"
   when:
       - cisc_rt_000090
   tags:
@@ -638,23 +724,20 @@
 
 - name: "MEDIUM | CISC-RT-000080 | PATCH | The Cisco router must not be configured to have any feature enabled that calls home to the vendor."
   block:
-    - name: ios Facts
-      ios_facts:
-        
-    - name: Search For Call Home."
+    - name: "MEDIUM | CISC-RT-000080 | PATCH | The Cisco router must not be configured to have any feature enabled that calls home to the vendor. | Search For Call Home."
       ios_command:
         commands: 
           - "show run | include call-home"
-      register: ios_rtr_call_home_check
+      register: iosrtr_000080_call_home_check
 
-    - name: Turn Off Call-Home."
+    - name: "MEDIUM | CISC-RT-000080 | PATCH | The Cisco router must not be configured to have any feature enabled that calls home to the vendor. | Turn Off Call-Home."
       ios_config:
         parents:
           - "call-home"
         commands:
           - "no call-home"
       when: 
-        - "'call-home' in ios_rtr_call_home_check.stdout"
+        - "'call-home' in iosrtr_000080_call_home_check.stdout"
   when:
       - cisc_rt_000080
   tags:
