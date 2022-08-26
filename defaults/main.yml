@@ -53,7 +53,7 @@ cisc_rt_000090: false
 cisc_rt_000120: false
 cisc_rt_000140: false
 cisc_rt_000150: false
-cisc_rt_000170: false
+cisc_rt_000170: true
 cisc_rt_000180: false
 cisc_rt_000190: false
 cisc_rt_000210: false
@@ -447,6 +447,18 @@ iosrtr_egress_acl_filter_old: "none"
 
 # Cat 2
 # ----------------------------------------------------
+# CISC-RT-000170
+iosrtr_external_facing_interfaces_000170:
+    - "GigabitEthernet0/0"
+    # - "FastEthernet2/0"
+
+
+
+
+
+
+
+
 # CISC-RT-000398
 iosrtr_filter_ipv6:
   - {seq: , grant: , source_any: , destination_any: , }
@@ -596,7 +608,7 @@ iiosrtr_block_to_core_acl_name_old: "none"
 
 # Cat 3
 # ----------------------------------------------------
-#CISC-RT-000070
+# CISC-RT-000070
 # Not all Cisco Routers support these services please make sure you check your documentation.
 # Review the router configuration to verify that the switch does not have any unnecessary 
 # or non-secure services enabled. 

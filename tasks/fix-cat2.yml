@@ -179,8 +179,18 @@
       - V-216563
 
 - name: "MEDIUM | CISC-RT-000170 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) unreachable messages disabled on all external interfaces."
-  debug:
-    msg: "test"  
+  ios_config:
+    commands:
+      - "no ip unreachables"
+
+
+
+
+
+
+
+
+
   when:
       - cisc_rt_000170
   tags:

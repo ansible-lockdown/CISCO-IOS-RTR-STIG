@@ -99,7 +99,7 @@
     - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable service pad."
       ios_config:
         lines: "no service pad"
-      when: "'service pad' in cisc_rt_000070_intstdout | string and 'no service pad' not in cisc_rt_000070_intstdout | string"
+      when: "'service pad' in cisc_rt_000070_intstdout | string"
   when:
       - cisc_rt_000070
   tags:
