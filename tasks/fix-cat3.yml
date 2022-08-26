@@ -18,10 +18,88 @@
       - V-216556
 
 - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled."
-  ios_config:
-      lines: no {{ item }}
-  with_items:
-      - "{{ iosrtr_non_essential_serv }}"
+  block:
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Show Run For Services."
+      ios_command:
+        commands: 
+          - "show run all | include {{ item }}"
+      with_items:
+        - "{{ iosrtr_non_essential_serv }}"
+      register: iosrtr_000070_show_run_services
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Set Fact For Stdout."
+      set_fact:
+        cisc_rt_000070_intstdout: "{{ iosrtr_000070_show_run_services.results | map(attribute='stdout') }}"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable Boot Network."
+      ios_config:
+        lines: "no boot network"
+      when: "'no boot network' in cisc_rt_000070_intstdout | string and 'no boot network' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip boot server."
+      ios_config:
+        lines: "no ip boot server"
+      when: "'ip boot server' in cisc_rt_000070_intstdout | string and 'no ip boot server' not in cisc_rt_000070_intstdout | string"
+    
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip bootp server."
+      ios_config:
+        lines: "no ip bootp server"
+      when: "'ip bootp server' in cisc_rt_000070_intstdout | string and 'no ip bootp server' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip dns server."
+      ios_config:
+        lines: "no ip dns server"
+      when: "'dns server' in cisc_rt_000070_intstdout | string and 'no dns server' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip identd."
+      ios_config:
+        lines: "no ip identd"
+      when: "'ip identd' in cisc_rt_000070_intstdout | string and 'no ip identd' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip finger."
+      ios_config:
+        lines: "no ip finger"
+      when: "'ip finger' in cisc_rt_000070_intstdout | string and 'no ip finger' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip http server."
+      ios_config:
+        lines: "no ip http server"
+      when: "'ip http server' in cisc_rt_000070_intstdout | string and 'no ip http server' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip rcmd rcp-enable."
+      ios_config:
+        lines: "no ip rcmd rcp-enable"
+      when: "'ip rcmd rcp-enable' in cisc_rt_000070_intstdout | string and 'no ip rcmd rcp-enable' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable ip rcmd rsh-enable."
+      ios_config:
+        lines: "no ip rcmd rsh-enable"
+      when: "'ip rcmd rsh-enable' in cisc_rt_000070_intstdout | string and 'no ip rcmd rsh-enable' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable service config."
+      ios_config:
+        lines: "no service config"
+      when: "'service config' in cisc_rt_000070_intstdout | string and 'no service config' not in cisc_rt_000070_intstdout | string"
+    
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable service finger."
+      ios_config:
+        lines: "no service finger"
+      when: "'service finger' in cisc_rt_000070_intstdout | string and 'no service finger' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable service service tcp-small-servers."
+      ios_config:
+        lines: "no service tcp-small-servers"
+      when: "'service tcp-small-servers' in cisc_rt_000070_intstdout | string and 'no service tcp-small-servers' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable service udp-small-servers."
+      ios_config:
+        lines: "no service udp-small-servers"
+      when: "'service udp-small-servers' in cisc_rt_000070_intstdout | string and 'no service udp-small-servers' not in cisc_rt_000070_intstdout | string"
+
+    - name: "LOW | CISC-RT-000070 | PATCH | The Cisco router must be configured to have all non-essential capabilities disabled. | Disable service pad."
+      ios_config:
+        lines: "no service pad"
+      when: "'service pad' in cisc_rt_000070_intstdout | string and 'no service pad' not in cisc_rt_000070_intstdout | string"
   when:
       - cisc_rt_000070
   tags:
@@ -35,9 +113,9 @@
 - name: "LOW | CISC-RT-000160 | PATCH | The Cisco router must be configured to have IP directed broadcast disabled on all interfaces."
   ios_config:
       parents: 
-        - interface {{ item }}
+        - "interface {{ item }}"
       lines:
-        - no ip directed-broadcast
+        - "no ip directed-broadcast"
   with_items: 
       - "{{ iosrtr_all_interfaces }}"
   when:
