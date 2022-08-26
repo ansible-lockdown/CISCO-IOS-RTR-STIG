@@ -179,18 +179,165 @@
       - V-216563
 
 - name: "MEDIUM | CISC-RT-000170 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) unreachable messages disabled on all external interfaces."
-  ios_config:
-    commands:
-      - "no ip unreachables"
+  block:
+    # - name: Add No Ip Unreachables To External And Null0
+    #   block:
+    #     - name: Gather Interface Facts."
+    #       ios_interfaces:
+    #         state: gathered
+    #       register: cisc_rt_000170_interfaceinfo
+
+    #     - name: Register Show Run With Interfaces."
+    #       ios_command:
+    #         commands: 
+    #           - "show run | section {{ item.name }}" 
+    #       with_items: "{{ cisc_rt_000170_interfaceinfo.gathered }}"
+    #       register: cisc_rt_000170_interfaceinfo_showrun
+
+    #     - name: Set Fact For Interface Name And Interface Stdout." 
+    #       set_fact:
+    #         cisc_rt_000170_intname: "{{ cisc_rt_000170_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+    #         cisc_rt_000170_intstdout: "{{ cisc_rt_000170_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+    #     - name: Disable Ip Unreachables On External Interfaces."
+    #       ios_config:
+    #         parents:
+    #           - "interface {{ item }}"
+    #         lines:
+    #           - "no ip unreachables"
+    #       with_items:
+    #         - "{{ iosrtr_external_facing_interfaces_000170 }}"
+    #       when:
+    #         - "item in cisc_rt_000170_intname"
+        
+    #     - name: Show Run Null 0
+    #       ios_command:
+    #         commands:
+    #           - "show run | section Null0"
+    #       register: cisc_rt_000170_interfaceinfo_showrun_null0
+        
+    #     - name: Disable Ip Unreachables On Null Interfaces,"
+    #       ios_config:
+    #         parents:
+    #           - "interface Null0"
+    #         lines:
+    #           - "no ip unreachables"
+    #       when:
+    #         - "' no ip unreachables' not in cisc_rt_000170_interfaceinfo_showrun_null0.stdout"
+    
+    - name: ALternative - DODIN Backbone Config
+      block:
+        - name: Configure Alternative Dodin Backbone."
+          ios_config:
+            lines:
+              - "ip icmp rate-limit unreachable DF {{ iosrtr_icmp_rate_limit_unreachable_df }}"
+              - "ip icmp rate-limit unreachable {{ iosrtr_icmp_rate_limit_unreachable }}"
+
+        - name: Remove Route-Map LOCAL_POLICY
+          ios_route_maps:
+            config:
+              - route_map: LOCAL_POLICY
+            state: deleted
+
+        - name: Remove ACL ICMP_T3C1C13
+          ios_acls:
+            config:
+              - afi: ipv4
+                acls:
+                - name: ICMP_T3C1C13
+                  acl_type: extended
+            state: deleted
+
+        - name: Show Run 
+          ios_command:
+            commands:
+              - "show run | include ip local policy route-map LOCAL_POLICY"
+          register: cisc_rt_000170_ip_local_policy
+
+        - name: Remove Alternative Non DODIN Backbone."
+          ios_config:
+            lines:
+              - "no ip local policy route-map LOCAL_POLICY"
+          when:
+            - "'ip local policy route-map LOCAL_POLICY' in cisc_rt_000170_ip_local_policy.stdout"
+      when: 
+        - iosrtr_alternative_dodin_backbone
+
+    - name: Alternative Non DODIN Backbone
+      block:
+        - name: Configure For Alternative Non Dodin Backbone."
+          ios_config:
+            lines:
+              - "no ip icmp rate-limit unreachable DF"
+              - "no ip icmp rate-limit unreachable"
+        
+        - name: Wait For delete
+          wait_for_connection:
+            delay: 10
+
+        - name: Remove ACL ICMP_T3C1C13
+          ios_acls:
+            config:
+              - afi: ipv4
+                acls:
+                - name: ICMP_T3C1C13
+                  acl_type: extended
+                  aces:
+                  - grant: permit
+                    destination:
+                      any: true
+                    protocol: icmp
+                    protocol_options:
+                      icmp:
+                        host_unreachable: true
+                    sequence: 10
+                    source:
+                        any: true
+                  - destination:
+                        any: true
+                    grant: permit
+                    protocol: icmp
+                    protocol_options:
+                        icmp:
+                            administratively_prohibited: true
+                    sequence: 20
+                    source:
+                        any: true
+            state: merged
+
+        - name: Remove Route-Map LOCAL_POLICY
+          ios_route_maps:
+            config:
+              - entries:
+                - action: permit
+                  match:
+                    ip:
+                      address:
+                        acls:
+                        - ICMP_T3C1C13
+                  sequence: 10
+                  set:
+                    interfaces:
+                    - Null0
+                route_map: LOCAL_POLICY
+            state: merged
+
+        - name: Show Run 
+          ios_command:
+            commands:
+              - "show run | include ip local policy route-map LOCAL_POLICY"
+          register: cisc_rt_000170_ip_local_policy
+
+        - name: Remove Alternative Non DODIN Backbone."
+          ios_config:
+            lines:
+              - "ip local policy route-map LOCAL_POLICY"
+          when:
+            - "'ip local policy route-map LOCAL_POLICY' not in cisc_rt_000170_ip_local_policy.stdout"
 
 
-
-
-
-
-
-
-
+      when: 
+        - iosrtr_alternative_non_dodin_backbone
   when:
       - cisc_rt_000170
   tags:
