@@ -437,13 +437,21 @@
             - "{{ cisc_rt_000180_intname }}"
             - "{{ cisc_rt_000180_intstdout }}"
           when:
-            - item.0 in iosrtr_external_facing_interfaces_000180
+            - item.0 not in iosrtr_external_facing_interfaces_000180
             - "' ip mask-reply' in item.1"
 
-
-
-
-        
+        - name: Apply ip mask-reply On Interfaces Not Listed In iosrtr_external_facing_interfaces_000180."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip mask-reply"
+          with_together: 
+            - "{{ cisc_rt_000180_intname }}"
+            - "{{ cisc_rt_000180_intstdout }}"
+          when:
+            - item.0 not in iosrtr_external_facing_interfaces_000180
+            - "' no ip mask-reply' in item.1"
       when: "'none' not in iosrtr_external_facing_interfaces_000180"
   when:
       - cisc_rt_000180
@@ -502,6 +510,20 @@
             - "{{ iosrtr_external_facing_interfaces_000190 }}"
           when:
             - "item in cisc_rt_000190_intname"
+
+        - name: Enable ip redirects On Interfaces Not Listed In iosrtr_external_facing_interfaces_000190."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip redirects"
+          with_together: 
+            - "{{ cisc_rt_000190_intname }}"
+            - "{{ cisc_rt_000190_intstdout }}"
+          when:
+            - item.0 not in iosrtr_external_facing_interfaces_000190
+            - "' no ip redirects' in item.1"
+      when: "'none' not in iosrtr_external_facing_interfaces_000190"
   when:
       - cisc_rt_000190
   tags:

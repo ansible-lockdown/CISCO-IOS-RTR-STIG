@@ -54,7 +54,7 @@ cisc_rt_000120: false
 cisc_rt_000140: false
 cisc_rt_000150: false
 cisc_rt_000170: false
-cisc_rt_000180: false
+cisc_rt_000180: true
 cisc_rt_000190: true
 cisc_rt_000210: false
 cisc_rt_000220: false
