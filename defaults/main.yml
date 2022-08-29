@@ -454,9 +454,9 @@ iosrtr_external_facing_interfaces_000170:
 
 
 
-iosrtr_alternative_dodin_backbone: true
-iosrtr_icmp_rate_limit_unreachable: '1000000'
-iosrtr_icmp_rate_limit_unreachable_df: '1000000'
+iosrtr_alternative_dodin_backbone: false
+iosrtr_icmp_rate_limit_unreachable: '100'
+iosrtr_icmp_rate_limit_unreachable_df: '100000'
 
 
 iosrtr_alternative_non_dodin_backbone: false

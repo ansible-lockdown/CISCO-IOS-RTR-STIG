@@ -1,7 +1,7 @@
 ---
 - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself."
   block:
-    - name: Single Router Setup Block.
+    - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. |  No ACL Defined Check Block."
       block:
         - name: "HIGH | CISC-RT-000130 | PATCH | The Cisco router must be configured to restrict traffic destined to itself. | No ACL Defined Warning Message."
           debug:
