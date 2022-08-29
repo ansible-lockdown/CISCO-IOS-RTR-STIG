@@ -392,23 +392,21 @@
 
 - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces."
   block:
-    - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Error No Interface Defoined."
+    - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Interfaces Not Defined Error Check."
       block:
-        - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Interfaces Not Defined Error Check."
-          block:
-            - name:  "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Warning Message Check."
-              debug:
-                msg: 
-                  - "Warning!!! PE router is not configured verify that the IP Mask-Reply Command is not enabled on external facing interfaces."
-                  - "To Fix this error please set interfaces in iosrtr_external_facing_interfaces_000180 in defaults main."
+        - name:  "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Warning Message Check."
+          debug:
+            msg: 
+              - "Warning!!! PE router is not configured verify that the IP Mask-Reply Command is not enabled on external facing interfaces."
+              - "To Fix this error please set interfaces in iosrtr_external_facing_interfaces_000180 in defaults main."
 
-            - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Create Control Warning For End Of Play."
-              set_fact:
-                control_number:
-                  - "{{ control_number }} + [ CISC-RT-000180 - You Have Not Entered Interfaces ]"
-                warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - "'none' in iosrtr_external_facing_interfaces_000180"
+        - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000180 - You Have Not Entered Interfaces ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_external_facing_interfaces_000180"
   
     - name: No IP Mask-Reply Block Fix
       block:
@@ -441,6 +439,11 @@
           when:
             - item.0 in iosrtr_external_facing_interfaces_000180
             - "' ip mask-reply' in item.1"
+
+
+
+
+        
       when: "'none' not in iosrtr_external_facing_interfaces_000180"
   when:
       - cisc_rt_000180
@@ -452,11 +455,53 @@
       - SV-216566r531085_rule
       - V-216566
       
-
-
 - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces."
-  debug:
-    msg: "test"  
+  block:
+    - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Interfaces Not Defined Error Check."
+      block:
+        - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Warning Message Check."
+          debug:
+            msg: 
+              - "Warning!!! PE router is not configured to have no ip redirects on external interfaces."
+              - "To Fix this error please set interfaces in iosrtr_external_facing_interfaces_000190 in defaults main."
+
+        - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000190 - You Have Not Entered Interfaces ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_external_facing_interfaces_000190"
+
+    - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Add No Ip Redirects To External Interface."
+      block:
+        - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000190_interfaceinfo
+
+        - name: Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000190_interfaceinfo.gathered }}"
+          register: cisc_rt_000190_interfaceinfo_showrun
+
+        - name: Set Fact For Interface Name And Interface Stdout." 
+          set_fact:
+            cisc_rt_000190_intname: "{{ cisc_rt_000190_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000190_intstdout: "{{ cisc_rt_000190_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: Disable Ip Unreachables On External Interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item }}"
+            lines:
+              - "no ip redirects"
+          with_items:
+            - "{{ iosrtr_external_facing_interfaces_000190 }}"
+          when:
+            - "item in cisc_rt_000190_intname"
   when:
       - cisc_rt_000190
   tags:
