@@ -397,7 +397,7 @@
         - name:  "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Warning Message Check."
           debug:
             msg: 
-              - "Warning!!! PE router is not configured verify that the IP Mask-Reply Command is not enabled on external facing interfaces."
+              - "Warning!!! Router is not configured verify that the IP Mask-Reply Command is not enabled on external facing interfaces."
               - "To Fix this error please set interfaces in iosrtr_external_facing_interfaces_000180 in defaults main."
 
         - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Create Control Warning For End Of Play."
@@ -408,7 +408,7 @@
       when:
         - "'none' in iosrtr_external_facing_interfaces_000180"
   
-    - name: No IP Mask-Reply Block Fix
+    - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | No IP Mask-Reply Block Fix."
       block:
         - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Gather Interface Facts."
           ios_interfaces:
@@ -440,7 +440,7 @@
             - item.0 not in iosrtr_external_facing_interfaces_000180
             - "' ip mask-reply' in item.1"
 
-        - name: Apply ip mask-reply On Interfaces Not Listed In iosrtr_external_facing_interfaces_000180."
+        - name: "MEDIUM | CISC-RT-000180 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) mask reply messages disabled on all external interfaces. | Apply ip mask-reply On Interfaces Not Listed In iosrtr_external_facing_interfaces_000180."
           ios_config:
             parents:
               - "interface {{ item.0 }}"
@@ -488,19 +488,19 @@
             state: gathered
           register: cisc_rt_000190_interfaceinfo
 
-        - name: Register Show Run With Interfaces."
+        - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Register Show Run With Interfaces."
           ios_command:
             commands: 
               - "show run | section {{ item.name }}" 
           with_items: "{{ cisc_rt_000190_interfaceinfo.gathered }}"
           register: cisc_rt_000190_interfaceinfo_showrun
 
-        - name: Set Fact For Interface Name And Interface Stdout." 
+        - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Set Fact For Interface Name And Interface Stdout." 
           set_fact:
             cisc_rt_000190_intname: "{{ cisc_rt_000190_interfaceinfo_showrun.results | map(attribute='item.name') }}"
             cisc_rt_000190_intstdout: "{{ cisc_rt_000190_interfaceinfo_showrun.results | map(attribute='stdout') }}"
 
-        - name: Disable Ip Unreachables On External Interfaces."
+        - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Disable Ip Unreachables On External Interfaces."
           ios_config:
             parents:
               - "interface {{ item }}"
@@ -511,7 +511,7 @@
           when:
             - "item in cisc_rt_000190_intname"
 
-        - name: Enable ip redirects On Interfaces Not Listed In iosrtr_external_facing_interfaces_000190."
+        - name: "MEDIUM | CISC-RT-000190 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) redirect messages disabled on all external interfaces. | Enable ip redirects On Interfaces Not Listed In iosrtr_external_facing_interfaces_000190."
           ios_config:
             parents:
               - "interface {{ item.0 }}"
@@ -643,8 +643,66 @@
       - V-216582
 
 - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces."
-  debug:
-    msg: "test"
+  block:  
+    - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Interfaces Not Defined Error Check."
+      block:
+        - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Warning Message Check."
+          debug:
+            msg: 
+              - "Warning!!! Router is not configured to have no ip proxy-arp on external interfaces."
+              - "To Fix this error please set interfaces in iosrtr_external_facing_interfaces_000380 in defaults main."
+
+        - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000380 - You Have Not Entered Interfaces ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_external_facing_interfaces_000380"
+
+    - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Add No Ip Proxy-arp To External Interface."
+      block:
+        - name: Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000380_interfaceinfo
+
+        - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000380_interfaceinfo.gathered }}"
+          register: cisc_rt_000380_interfaceinfo_showrun
+
+        - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Set Fact For Interface Name And Interface Stdout." 
+          set_fact:
+            cisc_rt_000380_intname: "{{ cisc_rt_000380_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000380_intstdout: "{{ cisc_rt_000380_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: Disable Ip Proxy-Arp On External Interfaces."
+          ios_config:
+            parents:
+              - "interface {{ item }}"
+            lines:
+              - "no ip proxy-arp"
+          with_items:
+            - "{{ iosrtr_external_facing_interfaces_000380 }}"
+          when:
+            - "item in cisc_rt_000380_intname"
+
+        - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Enable ip proxy-arp On Interfaces Not Listed In iosrtr_external_facing_interfaces_000380."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip proxy-arp"
+          with_together: 
+            - "{{ cisc_rt_000380_intname }}"
+            - "{{ cisc_rt_000380_intstdout }}"
+          when:
+            - item.0 not in iosrtr_external_facing_interfaces_000380
+            - "' no ip proxy-arp' in item.1"
+      when: "'none' not in iosrtr_external_facing_interfaces_000380"
   when:
       - cisc_rt_000380
       - not cisc_rt_dodin_backbone

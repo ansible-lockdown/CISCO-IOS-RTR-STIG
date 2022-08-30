@@ -1,7 +1,7 @@
 ---
 iosrtrstig_cat1_patch: false
-iosrtrstig_cat2_patch: false
-iosrtrstig_cat3_patch: true
+iosrtrstig_cat2_patch: true
+iosrtrstig_cat3_patch: false
 
 # We've defined complexity-high to mean that we cannot automatically remediate
 # the rule in question.  In the future this might mean that the remediation
@@ -64,7 +64,7 @@ cisc_rt_000270: false
 cisc_rt_000320: false
 cisc_rt_000330: false
 cisc_rt_000340: false
-cisc_rt_000380: false
+cisc_rt_000380: true
 cisc_rt_000390: false
 cisc_rt_000400: false
 cisc_rt_000410: false
@@ -487,13 +487,17 @@ iosrtr_external_facing_interfaces_000190:
     - "FastEthernet2/0"
 
 
-
+# CISC-RT-000380
+# iosrtr_external_facing_interfaces_000380 are the external facing interfaces that will have the
+# setting of no ip proxy-arp set on them.
+iosrtr_external_facing_interfaces_000380:
+    - "GigabitEthernet0/0"
+    - "FastEthernet2/0"
 
 
 # CISC-RT-000398
 iosrtr_filter_ipv6:
   - {seq: , grant: , source_any: , destination_any: , }
-
 
 
 # CISC-RT-000391
