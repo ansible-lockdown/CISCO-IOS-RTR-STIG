@@ -937,8 +937,28 @@
       - V-216623
 
 - name: "MEDIUM | CISC-RT-000850 | PATCH | The Cisco multicast Rendezvous Point (RP) must be configured to rate limit the number of Protocol Independent Multicast (PIM) Register messages."
-  debug:
-    msg: "test"
+  block:
+    - name: pim register-rate-limit Check
+      block:
+        - name: No pim register-rate-limit Check Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! The router is not configured to rate limit the number of PIM register messages."
+              - "To Fix this error please define a value in iosrtr_pim_register_rate_limit in defaults main."
+
+        - name: Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000850 - You Have Not Entered A Value ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_pim_register_rate_limit"
+
+    - name: Configure pim register-rate-limit
+      ios_config:
+        lines: ip pim register-rate-limit {{ iosrtr_pim_register_rate_limit }}
+      when:
+        - "'none' not in iosrtr_pim_register_rate_limit"
   when:
       - cisc_rt_000850
   tags:

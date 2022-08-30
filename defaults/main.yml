@@ -1,7 +1,7 @@
 ---
 iosrtrstig_cat1_patch: false
-iosrtrstig_cat2_patch: true
-iosrtrstig_cat3_patch: false
+iosrtrstig_cat2_patch: false
+iosrtrstig_cat3_patch: true
 
 # We've defined complexity-high to mean that we cannot automatically remediate
 # the rule in question.  In the future this might mean that the remediation
@@ -89,7 +89,7 @@ cisc_rt_000800: false
 cisc_rt_000850: false
 cisc_rt_000870: false
 cisc_rt_000880: false
-cisc_rt_000890: true
+cisc_rt_000890: false
 cisc_rt_000900: false
 cisc_rt_000910: false
 cisc_rt_000020: false
@@ -128,7 +128,7 @@ cisc_rt_000610: false
 cisc_rt_000760: false
 cisc_rt_000770: false
 cisc_rt_000810: false
-cisc_rt_000820: false
+cisc_rt_000820: true
 cisc_rt_000830: false
 cisc_rt_000840: false
 cisc_rt_000860: false
@@ -504,7 +504,11 @@ iosrtr_external_ipv6_interfaces:
     - "FastEthernet0/1"
 
 
-
+# CISC-RT-000850
+# iosrtr_pim_register_rate_limit is used to configure the RP to rate limit the number of multicast register messages.
+# Allowed Values <8000-2000000000>  Bits per second on C7200 Series V15.2
+# Allowed Values <1-65535>  Packets per second on C3700 Series V12.4
+iosrtr_pim_register_rate_limit: '8000'
 
 
 
@@ -519,7 +523,6 @@ iosrtr_external_ipv6_interfaces:
 #   - "Serial1/3"
 iosrtr_: 
     - "Serial1/3"
-
 
 
 
@@ -941,8 +944,7 @@ iosrtr_pim_register_filter_traffic_acl:
     - {seq: 20, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.6, destination_any: true}
     - {seq: 30, grant: permit, protocol: ip, source_any: false, source_host: 10.1.2.7, destination_any: true}
     - {seq: 40, grant: deny, protocol: ip, source_any: true, destination_any: true}
-# iosrtr_pim_register_rate_limit is used to configure the RP to rate limit the number of multicast register messages.
-iosrtr_pim_register_rate_limit: '50'
+
 
 
 # iosrtr_msdp_known_peers_acl_name_old is used to remove the old access control list for msdp known peers.  

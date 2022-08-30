@@ -691,10 +691,28 @@
         lines: 
           - ip pim accept-register list {{ iosrtr_pim_register_filter_acl_name_new }}
       when: cisc_rt_000820 or cisc_rt_000830
-    
-    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Configure the Rendezvous Point (RP) to rate limit mullticast register messages."
-      ios_config:
-        lines: ip pim register-rate-limit {{ iosrtr_pim_register_rate_limit }}
+
+
+    - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Check For Limiting PIM Register Messages."
+      block:
+        - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Show Run For PIM Register Messages."
+          ios_command:
+            commands: "show run | include ip pim register-rate-limit"
+          register: iosrtr_pim_register_rate_limit_check
+
+        - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | No pim register-rate-limit Check Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! The router is not configured to rate limit the number of PIM register messages."
+              - "To Fix this error please define a value in iosrtr_pim_register_rate_limit in defaults main."
+          when: "'ip pim register-rate-limit' not in iosrtr_pim_register_rate_limit_check.stdout | string"
+
+        - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000820 - Configure Or Turn On CISC-RT-000850 ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when: "'ip pim register-rate-limit' not in iosrtr_pim_register_rate_limit_check.stdout | string"
       when: cisc_rt_000820
     
     - name: "LOW | CISC-RT-000820 | PATCH | The Cisco multicast Rendezvous Point (RP) router must be configured to limit the multicast forwarding cache so that its resources are not saturated by managing an overwhelming number of Protocol Independent Multicast (PIM) and Multicast Source Discovery Protocol (MSDP) source-active entries. | Remove Old MSDP Control Access List."
