@@ -844,8 +844,9 @@
       - V-216604
 
 - name: "MEDIUM | CISC-RT-000620 | PATCH | The Cisco MPLS router must be configured to have TTL Propagation disabled."
-  debug:
-    msg: "test"
+  ios_config:
+    lines:
+      - "no mpls ip propagate-ttl"
   when:
       - cisc_rt_000620
   tags:
