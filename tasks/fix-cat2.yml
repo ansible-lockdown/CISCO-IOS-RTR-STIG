@@ -976,8 +976,9 @@
       - V-216631
 
 - name: "MEDIUM | CISC-RT-000890 | PATCH | The Cisco multicast Designated Router (DR) must be configured to set the shortest-path tree (SPT) threshold to infinity to minimalize source-group (S, G) state within the multicast topology where Any Source Multicast (ASM) is deployed."
-  debug:
-    msg: "test"
+  ios_config:
+    lines:
+      - "ip pim spt-threshold infinity"
   when:
       - cisc_rt_000890
   tags:

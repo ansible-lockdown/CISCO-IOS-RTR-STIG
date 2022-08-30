@@ -54,8 +54,8 @@ cisc_rt_000120: false
 cisc_rt_000140: false
 cisc_rt_000150: false
 cisc_rt_000170: false
-cisc_rt_000180: true
-cisc_rt_000190: true
+cisc_rt_000180: false
+cisc_rt_000190: false
 cisc_rt_000210: false
 cisc_rt_000220: false
 cisc_rt_000250: false
@@ -79,7 +79,7 @@ cisc_rt_000510: false
 cisc_rt_000520: false
 cisc_rt_000530: false
 cisc_rt_000560: false
-cisc_rt_000620: true
+cisc_rt_000620: false
 cisc_rt_000650: false
 cisc_rt_000660: false
 cisc_rt_000740: false
@@ -89,7 +89,7 @@ cisc_rt_000800: false
 cisc_rt_000850: false
 cisc_rt_000870: false
 cisc_rt_000880: false
-cisc_rt_000890: false
+cisc_rt_000890: true
 cisc_rt_000900: false
 cisc_rt_000910: false
 cisc_rt_000020: false
