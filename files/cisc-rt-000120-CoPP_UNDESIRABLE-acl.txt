@@ -1,0 +1,33 @@
+# NOTES: 
+# New ACL Must Match Actual Example Given At The Bottom For The First Line
+# Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
+# https://github.com/ansible-collections/cisco.ios/pull/626 
+#
+# There is also a open issue Regarding the way the ios_acl runs the add and remove for the commands.
+# If you failed to add permit ip any any to the original acl file and are back here to fix it
+# regarding the warning posted at the end of the run. Make sure you add it as Sequence 300 to match 
+# how the fix is applied in the system so Shows the task as ok, if Not It will always show changed.  
+# https://github.com/ansible-collections/cisco.ios/issues/598
+#
+# Example Given In STIG:
+# ip access-list extended CoPP_UNDESIRABLE 
+# remark other management plane traffic that should not be received 
+# permit udp any any eq ntp 
+# permit udp any any eq snmp
+# permit tcp any any eq 22 
+# permit tcp any any eq 23 
+# remark other control plane traffic not configured on router 
+# permit eigrp any any 
+# permit udp any any eq rip 
+# deny ip any any 
+#
+#
+Extended IP access list CoPP_UNDESIRABLE
+remark management plane traffic that should not be received
+10 permit udp any any eq ntp
+20 permit udp any any eq snmp
+30 permit tcp any any eq 22
+40 permit tcp any any eq telnet
+50 permit eigrp any any
+60 permit udp any any eq rip
+300 deny ip any any

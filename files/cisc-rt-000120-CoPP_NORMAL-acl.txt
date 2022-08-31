@@ -1,0 +1,27 @@
+# NOTES: 
+# New ACL Must Match Actual Example Given At The Bottom For The First Line
+# Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
+# https://github.com/ansible-collections/cisco.ios/pull/626 
+#
+# There is also a open issue Regarding the way the ios_acl runs the add and remove for the commands.
+# If you failed to add permit ip any any to the original acl file and are back here to fix it
+# regarding the warning posted at the end of the run. Make sure you add it as Sequence 300 to match 
+# how the fix is applied in the system so Shows the task as ok, if Not It will always show changed.  
+# https://github.com/ansible-collections/cisco.ios/issues/598
+#
+# ip access-list extended CoPP_NORMAL 
+# remark we will want to rate limit ICMP traffic 
+# permit icmp any any echo 
+# permit icmp any any echo-reply 
+# permit icmp any any time-exceeded 
+# permit icmp any any unreachable 
+# deny ip any any 
+#
+#
+Extended IP access list CoPP_NORMAL
+remark we will want to rate limit ICMP traffic
+10 permit icmp any any echo
+20 permit icmp any any echo-reply
+30 permit icmp any any time-exceeded
+40 permit icmp any any unreachable
+300 deny ip any any

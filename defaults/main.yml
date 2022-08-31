@@ -28,7 +28,7 @@ cisc_rt_dodin_backbone: false
 # Are you hardening one device.
 # If you are hardening a single device set this variable to true so that all controls will run and you can customize 
 # your router to your liking.  
-cisc_rt_hardening_one_device: false
+cisc_rt_hardening_one_device: true
 
 # These variables correspond with the STIG IDs defined in the STIG and allows you to enable/disable specific rules.
 # PLEASE NOTE: These work in coordination with the cat1, cat2, cat3 group variables. You must enable an entire group
@@ -50,7 +50,7 @@ cisc_rt_000010: false
 cisc_rt_000040: false
 cisc_rt_000050: false
 cisc_rt_000090: false
-cisc_rt_000120: false
+cisc_rt_000120: true
 cisc_rt_000140: false
 cisc_rt_000150: false
 cisc_rt_000170: false
@@ -64,7 +64,7 @@ cisc_rt_000270: false
 cisc_rt_000320: false
 cisc_rt_000330: false
 cisc_rt_000340: false
-cisc_rt_000380: true
+cisc_rt_000380: false
 cisc_rt_000390: false
 cisc_rt_000400: false
 cisc_rt_000410: false
@@ -128,7 +128,7 @@ cisc_rt_000610: false
 cisc_rt_000760: false
 cisc_rt_000770: false
 cisc_rt_000810: false
-cisc_rt_000820: true
+cisc_rt_000820: false
 cisc_rt_000830: false
 cisc_rt_000840: false
 cisc_rt_000860: false
@@ -274,7 +274,6 @@ iosrtr_filter_isp_acl_interfaces:
 iosrtr_filter_isp_exisiting_acl: "FILTER_ISP"
 # iosrtr_filter_isp_interface_description is variable to assign a description to the interface for this acl filter. 
 iosrtr_filter_isp_interface_description: "Link to ISP"
-
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
 # -------------------------------------------------------
@@ -284,6 +283,7 @@ iosrtr_filter_isp_interface_description: "Link to ISP"
 # inbound filter that only permits packets with destination addresses within the sites address space.
 # If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_filter_isp_name_old: "none"
+
 
 # CISC-RT-000290
 # iosrtr_isp_router_ip_address is the ip address of the service provider router.  This is used to check for BGP peering with the service provder. 
@@ -346,7 +346,6 @@ ios_rtr_vcid_ce_facing:
 iosrtr_external_facing_interfaces: 
     - "FastEthernet0/0"
     - "FastEthernet0/1"
-#
 # -------------------------------------------------------
 # User Defined (Existing ACL) In Defaults Main 
 # -------------------------------------------------------
@@ -365,7 +364,6 @@ iosrtr_block_to_core_existing_acl: "BLOCK_TO_CORE"
 iosrtr_block_to_core_existing_acl_ip_core_address_space: 
     - '10.1.0.0 0.0.255.255'
     - '1.1.0.0 0.0.255.255'
-#
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
 # -------------------------------------------------------
@@ -398,7 +396,6 @@ iosrtr_internal_interface_description: "downstream link to LAN"
 # outbound IP packets that contain an illegitimate address in the source address field.
 iosrtr_egress_internal_interfaces:
     - "Serial1/1"
-#
 # -------------------------------------------------------
 # User Defined Settings In Defaults Main (Existing ACL)
 # -------------------------------------------------------
@@ -415,8 +412,6 @@ iosrtr_egress_filter_existing_acl: "EGRESS_FILTER"
 #   - '10.1.15.0 0.0.0.255'
 iosrtr_egress_acl_filter_address_space:
     - '10.1.15.0 0.0.0.255'
-
-#
 # -------------------------------------------------------
 # Single Router Setup Settings (New Setup ACL) 
 # -------------------------------------------------------
@@ -447,6 +442,56 @@ iosrtr_egress_acl_filter_old: "none"
 
 # Cat 2
 # ----------------------------------------------------
+# CISC-RT-000120
+# -------------------------------------------------------
+# User Defined (Existing ACL) In Defaults Main 
+# -------------------------------------------------------
+iosrtr_copp_critical_acl: "CoPP_CRITICAL"
+iosrtr_copp_important_acl: "CoPP_IMPORTANT"
+iosrtr_copp_normal_acl: "CoPP_NORMAL"
+iosrtr_copp_undesirable_acl: "CoPP_UNDESIRABLE"
+iosrtr_copp_default_acl: "CoPP_DEFAULT"
+
+
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# The settings below are the name of the old access control lists that are referenced by the class maps to determine if the traffic is being 
+# classified appropriately. 
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_copp_critical_acl_old: "none"
+iosrtr_copp_important_acl_old: "none"
+iosrtr_copp_normal_acl_old: "none"
+iosrtr_copp_undesirable_acl_old: "none"
+iosrtr_copp_default_acl_old: "none"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # CISC-RT-000170
 # Note: Setting both iosrtr_alternative_dodin_backbone and iosrtr_alternative_non_dodin_backbone to false will 
 # configure the basi settings needed for the STIG requirements.  

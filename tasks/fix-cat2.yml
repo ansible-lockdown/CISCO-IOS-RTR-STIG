@@ -139,8 +139,495 @@
       - V-216559
 
 - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection."
-  debug:
-    msg: "test"  
+  block:
+    - name: No ACL Defined Check Block."
+      block:
+        - name: No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+              - "To Fix this error please define a existing ACL in iosrtr_copp_critical_acl in defaults main."
+          when:
+            - "'none' in iosrtr_copp_critical_acl"
+
+        - name: Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_critical_acl ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_copp_critical_acl"
+
+        - name: No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+              - "To Fix this error please define a existing ACL in iosrtr_copp_important_acl in defaults main."
+          when:
+            - "'none' in iosrtr_copp_important_acl"
+
+        - name: Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_important_acl ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_copp_important_acl"
+
+        - name: No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+              - "To Fix this error please define a existing ACL in iosrtr_copp_normal_acl in defaults main."
+          when:
+            - "'none' in iosrtr_copp_normal_acl"
+
+        - name: Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_normal_acl ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_copp_normal_acl"
+
+        - name: No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+              - "To Fix this error please define a existing ACL in iosrtr_copp_undesirable_acl in defaults main."
+          when:
+            - "'none' in iosrtr_copp_undesirable_acl"
+
+        - name: Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_undesirable_acl ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_copp_undesirable_acl"
+
+        - name: No ACL Defined Warning Message."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+              - "To Fix this error please define a existing ACL in iosrtr_copp_default_acl in defaults main."
+          when:
+            - "'none' in iosrtr_copp_default_acl"
+
+        - name: Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_default_acl ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_copp_default_acl"
+      when:
+        - not cisc_rt_hardening_one_device
+
+    - name: User Defined CoPP ACLs Check In Defaults Main Or Template."
+      block:
+        - name: Show Run CoPP_CRITICAL ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_copp_critical_acl }}"
+          register: cisc_rt_000120_acl_showrun_copp_critical
+          when:
+            - "'none' not in iosrtr_copp_critical_acl"
+
+        - name: No ACL Defined By That Name Warning CoPP_CRITICAL."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
+              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_critical_acl."
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_critical.stdout | string
+            - "'none' not in iosrtr_copp_critical_acl"
+          with_items:
+            - "{{ iosrtr_copp_critical_acl }}"
+
+        - name: Create Control Warning For End Of Play CoPP_CRITICAL."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_critical.stdout | string
+            - "'none' not in iosrtr_copp_critical_acl"
+          with_items:
+            - "{{ iosrtr_copp_critical_acl }}"
+
+        - name: Show Run CoPP_IMPORTANT ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_copp_important_acl }}"
+          register: cisc_rt_000120_acl_showrun_copp_important
+          when:
+            - "'none' not in iosrtr_copp_important_acl"
+
+        - name: No ACL Defined By That Name Warning CoPP_IMPORTANT."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
+              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_important.stdout | string
+            - "'none' not in iosrtr_copp_important_acl"
+          with_items:
+            - "{{ iosrtr_copp_important_acl }}"
+
+        - name: Create Control Warning For End Of Play CoPP_IMPORTANT."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_important.stdout | string
+            - "'none' not in iosrtr_copp_important_acl"
+          with_items:
+            - "{{ iosrtr_copp_important_acl }}"
+
+        - name: Show Run CoPP_NORMAL ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_copp_normal_acl }}"
+          register: cisc_rt_000120_acl_showrun_copp_normal
+          when:
+            - "'none' not in iosrtr_copp_normal_acl"
+
+        - name: No ACL Defined By That Name Warning CoPP_NORMAL."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
+              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_normal.stdout | string
+            - "'none' not in iosrtr_copp_normal_acl"
+          with_items:
+            - "{{ iosrtr_copp_normal_acl }}"
+
+        - name: Create Control Warning For End Of Play CoPP_NORMAL."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_normal.stdout | string
+            - "'none' not in iosrtr_copp_normal_acl"
+          with_items:
+            - "{{ iosrtr_copp_normal_acl }}"
+
+        - name: Show Run CoPP_UNDESIRABLE ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_copp_undesirable_acl }}"
+          register: cisc_rt_000120_acl_showrun_copp_undesirable
+          when:
+            - "'none' not in iosrtr_copp_normal_acl"
+
+        - name: No ACL Defined By That Name Warning CoPP_UNDESIRABLE."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
+              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout | string
+            - "'none' not in iosrtr_copp_undesirable_acl"
+          with_items:
+            - "{{ iosrtr_copp_undesirable_acl }}"
+
+        - name: Create Control Warning For End Of Play CoPP_UNDESIRABLE."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout | string
+            - "'none' not in iosrtr_copp_undesirable_acl"
+          with_items:
+            - "{{ iosrtr_copp_undesirable_acl }}"
+
+        - name: Show Run CoPP_DEFAULT ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_copp_default_acl }}"
+          register: cisc_rt_000120_acl_showrun_copp_default
+          when:
+            - "'none' not in iosrtr_copp_default_acl"
+
+        - name: No ACL Defined By That Name Warning CoPP_DEFAULT."
+          debug:
+            msg: 
+              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
+              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_default.stdout | string
+            - "'none' not in iosrtr_copp_default_acl"
+          with_items:
+            - "{{ iosrtr_copp_default_acl }}"
+
+        - name: Create Control Warning For End Of Play CoPP_DEFAULT."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - item not in cisc_rt_000120_acl_showrun_copp_default.stdout | string
+            - "'none' not in iosrtr_copp_default_acl"
+          with_items:
+            - "{{ iosrtr_copp_default_acl }}"
+
+
+
+
+
+      when:
+        - not cisc_rt_hardening_one_device
+
+
+
+
+
+
+
+    - name:  Single Router Setup."
+      block:
+        - name: Remove CoPP_CRITICAL Access List."
+          ios_acls:
+              config:
+                  - afi: ipv4
+                    acls:
+                      - name: "{{ iosrtr_copp_critical_acl_old }}"
+              state: deleted
+          when: 
+            - "'none' not in iosrtr_copp_critical_acl_old"
+
+        - name: Parse User Given ACL From host_vars For CoPP_CRITICAL ACL."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000120-CoPP_CRITICAL-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000120_copp_critical_parsed
+
+        - name: Convert JSON to DICT For ACL Defined Name For CoPP_CRITICAL ACL."
+          set_fact:
+            cisc_rt_000120_copp_critical_name: "{{ cisc_rt_000120_copp_critical_parsed.parsed.0.acls.0.name }}"
+        
+        - name: Compare And Update ACL For CoPP_CRITICAL ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000120_copp_critical_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000120_copp_critical_ran
+
+        - name: Print Changed Lines With Debug When ACL Is Changed For CoPP_CRITICAL ACL."
+          debug:
+            var: cisc_rt_000120_copp_critical_ran.commands
+          when: 
+            - cisc_rt_000120_copp_critical_ran.changed
+
+        - name: Remove Old CoPP_IMPORTANT Access List."
+          ios_acls:
+              config:
+                  - afi: ipv4
+                    acls:
+                      - name: "{{ iosrtr_copp_important_acl_old }}"
+              state: deleted
+          when: 
+            - "'none' not in iosrtr_copp_important_acl_old"
+
+        - name: Parse User Given ACL From host_vars For CoPP_IMPORTANT ACL."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000120-CoPP_IMPORTANT-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000120_copp_important_parsed
+
+        - name: Convert JSON to DICT For ACL Defined Name For CoPP_IMPORTANT ACL."
+          set_fact:
+            cisc_rt_000120_copp_important_name: "{{ cisc_rt_000120_copp_important_parsed.parsed.0.acls.0.name }}"
+        
+        - name: Compare And Update ACL For CoPP_IMPORTANT ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000120_copp_important_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000120_copp_important_ran
+
+        - name: Print Changed Lines With Debug When ACL Is Changed For CoPP_IMPORTANT ACL."
+          debug:
+            var: cisc_rt_000120_copp_important_ran.commands
+          when: 
+            - cisc_rt_000120_copp_important_ran.changed
+
+        - name: Remove Old CoPP_NORMAL Access List."
+          ios_acls:
+              config:
+                  - afi: ipv4
+                    acls:
+                      - name: "{{ iosrtr_copp_normal_acl_old }}"
+              state: deleted
+          when: 
+            - "'none' not in iosrtr_copp_normal_acl_old"
+
+        - name: Parse User Given ACL From host_vars For CoPP_NORMAL ACL."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000120-CoPP_NORMAL-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000120_copp_normal_parsed
+
+        - name: Convert JSON to DICT For ACL Defined Name For CoPP_NORMAL ACL."
+          set_fact:
+            cisc_rt_000120_copp_normal_name: "{{ cisc_rt_000120_copp_normal_parsed.parsed.0.acls.0.name }}"
+        
+        - name: Compare And Update ACL For CoPP_NORMAL ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000120_copp_normal_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000120_copp_normal_ran
+
+        - name: Print Changed Lines With Debug When ACL Is Changed For CoPP_NORMAL ACL."
+          debug:
+            var: cisc_rt_000120_copp_normal_ran.commands
+          when: 
+            - cisc_rt_000120_copp_normal_ran.changed
+
+        - name: Remove Old CoPP_UNDESIRABLE Access List."
+          ios_acls:
+              config:
+                  - afi: ipv4
+                    acls:
+                      - name: "{{ iosrtr_copp_undesirable_acl_old }}"
+              state: deleted
+          when: 
+            - "'none' not in iosrtr_copp_undesirable_acl_old"
+
+        - name: Parse User Given ACL From host_vars For CoPP_UNDESIRABLE ACL."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000120-CoPP_UNDESIRABLE-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000120_copp_undesirable_parsed
+
+        - name: Convert JSON to DICT For ACL Defined Name For CoPP_UNDESIRABLE ACL."
+          set_fact:
+            cisc_rt_000120_copp_undesirable_name: "{{ cisc_rt_000120_copp_undesirable_parsed.parsed.0.acls.0.name }}"
+        
+        - name: Compare And Update ACL For CoPP_UNDESIRABLE ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000120_copp_undesirable_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000120_copp_undesirable_ran
+
+        - name: Print Changed Lines With Debug When ACL Is Changed For CoPP_UNDESIRABLE ACL."
+          debug:
+            var: cisc_rt_000120_copp_undesirable_ran.commands
+          when: 
+            - cisc_rt_000120_copp_undesirable_ran.changed
+
+        - name: Remove Old CoPP_DEFAULT Access List."
+          ios_acls:
+              config:
+                  - afi: ipv4
+                    acls:
+                      - name: "{{ iosrtr_copp_default_acl_old }}"
+              state: deleted
+          when: 
+            - "'none' not in iosrtr_copp_default_acl_old"
+
+        - name: Parse User Given ACL From host_vars For CoPP_DEFAULT ACL."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000120-CoPP_DEFAULT-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000120_copp_default_parsed
+
+        - name: Convert JSON to DICT For ACL Defined Name For CoPP_DEFAULT ACL."
+          set_fact:
+            cisc_rt_000120_copp_default_name: "{{ cisc_rt_000120_copp_default_parsed.parsed.0.acls.0.name }}"
+        
+        - name: Compare And Update ACL For CoPP_DEFAULT ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000120_copp_default_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000120_copp_default_ran
+
+        - name: Print Changed Lines With Debug When ACL Is Changed For CoPP_DEFAULT ACL."
+          debug:
+            var: cisc_rt_000120_copp_default_ran.commands
+          when: 
+            - cisc_rt_000120_copp_default_ran.changed
+
+        - name: Configure Class Maps For CoPP_CRITICAL
+          ios_config:
+            parents:
+              - "class-map match-all {{ cisc_rt_000120_copp_critical_name }}"
+            lines:
+              - "match access-group name {{ cisc_rt_000120_copp_critical_name }}"
+          
+        - name: Configure Class Maps For CoPP_IMPORTANT
+          ios_config:
+            parents:
+              - "class-map match-all {{ cisc_rt_000120_copp_important_name }}"
+            lines:
+              - "match access-group name {{ cisc_rt_000120_copp_important_name }}"
+              - "match protocol arp"
+
+        - name: Configure Class Maps For CoPP_NORMAL
+          ios_config:
+            parents:
+              - "class-map match-all {{ cisc_rt_000120_copp_normal_name }}"
+            lines:
+              - "match access-group name {{ cisc_rt_000120_copp_normal_name }}"
+
+        - name: Configure Class Maps For CoPP_UNDESIRABLE
+          ios_config:
+            parents:
+              - "class-map match-all {{ cisc_rt_000120_copp_undesirable_name }}"
+            lines:
+              - "match access-group name {{ cisc_rt_000120_copp_undesirable_name }}"
+
+        - name: Configure Class Maps For CoPP_DEFAULT
+          ios_config:
+            parents:
+              - "class-map match-all {{ cisc_rt_000120_copp_default_name }}"
+            lines:
+              - "match access-group name {{ cisc_rt_000120_copp_default_name }}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      when: 
+        - cisc_rt_hardening_one_device
+        - "'none' in iosrtr_copp_critical_acl or iosrtr_copp_important_acl or iosrtr_copp_normal_acl or iosrtr_copp_undesirable_acl or iosrtr_copp_default_acl"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   when:
       - cisc_rt_000120
   tags:
