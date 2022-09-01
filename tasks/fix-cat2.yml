@@ -376,17 +376,182 @@
           with_items:
             - "{{ iosrtr_copp_default_acl }}"
 
+    - name: Configure Policy-Map And Apply Appropriate Bandwidth Allowance And Policing Attribute."
+      block:  
+        - name: Configure Class Maps
+          block:
+            - name: Configure Class Maps For CoPP_CRITICAL
+              ios_config:
+                parents:
+                  - "class-map match-all {{ iosrtr_class_map_critical_name }}"
+                lines:
+                  - "match access-group name {{ iosrtr_copp_critical_acl }}"
+              
+            - name: Configure Class Maps For CoPP_IMPORTANT
+              ios_config:
+                parents:
+                  - "class-map match-all {{ iosrtr_class_map_important_name }}"
+                lines:
+                  - "match access-group name {{ iosrtr_copp_important_acl }}"
+                  - "match protocol arp"
 
+            - name: Configure Class Maps For CoPP_NORMAL
+              ios_config:
+                parents:
+                  - "class-map match-all {{ iosrtr_class_map_normal_name }}"
+                lines:
+                  - "match access-group name {{ iosrtr_copp_normal_acl }}"
 
+            - name: Configure Class Maps For CoPP_UNDESIRABLE
+              ios_config:
+                parents:
+                  - "class-map match-all {{ iosrtr_class_map_undesirable_name }}"
+                lines:
+                  - "match access-group name {{ iosrtr_copp_undesirable_acl }}"
 
+            - name: Configure Class Maps For CoPP_DEFAULT
+              ios_config:
+                parents:
+                  - "class-map match-all {{ iosrtr_class_map_default_name }}"
+                lines:
+                  - "match access-group name {{ iosrtr_copp_default_acl }}"
 
+        - name: Configure A Policy Map For Configured Class Maps And Apply Bandwidth."
+          block:
+            - name: Set Facts For CoPP_CRITICAL Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_critical_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action transmit"
+              with_items:
+                  - "{{ iosrtr_copp_critical_bandwidth }}"
+
+            - name: Set Facts For CoPP_IMPORTANT Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_important_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_important_bandwidth }}"
+
+            - name: Set Facts For CoPP_NORMAL Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_normal_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_normal_bandwidth }}"
+
+            - name: Set Facts For CoPP_UNDESIRABLE Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_undesirable_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_undesirable_bandwidth }}"
+
+            - name: Set Facts For CoPP_DEFAULT Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_default_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_default_bandwidth }}"
+
+            - name: Show Run For Idempotency CoPP_CRITICAL."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_critical_name }}"
+              register: cisc_rt_000120_class_copp_critical
+
+            - name: Show Run For Idempotency CoPP_IMPORTANT."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_important_name }}"
+              register: cisc_rt_000120_class_copp_important
+
+            - name: Show Run For Idempotency CoPP_NORMAL."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_normal_name }}"
+              register: cisc_rt_000120_class_copp_normal
+
+            - name: Show Run For Idempotency CoPP_UNDESIRABLE."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_undesirable_name }}"
+              register: cisc_rt_000120_class_copp_undesirable
+
+            - name: Show Run For Idempotency CoPP_DEFAULT."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_default_name }}"
+              register: cisc_rt_000120_class_copp_default
+
+            - name: Policy Map Bandwidth For CoPP_CRITICAL
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ iosrtr_class_map_critical_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action transmit"
+              with_items:
+                  - "{{ iosrtr_copp_critical_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_critical_police not in cisc_rt_000120_class_copp_critical.stdout | string"
+
+            - name: Policy Map Bandwidth For CoPP_IMPORTANT
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ iosrtr_class_map_important_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_important_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_important_police not in cisc_rt_000120_class_copp_important.stdout | string"
+
+            - name: Policy Map Bandwidth For CoPP_NORMAL
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ iosrtr_class_map_normal_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_normal_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_normal_police not in cisc_rt_000120_class_copp_normal.stdout | string"
+
+            - name: Policy Map Bandwidth For CoPP_UNDESIRABLE
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ iosrtr_class_map_undesirable_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_undesirable_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_undesirable_police not in cisc_rt_000120_class_copp_undesirable.stdout | string"
+
+            - name: Policy Map Bandwidth For CoPP_DEFAULT
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ iosrtr_class_map_default_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_default_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_default_police not in cisc_rt_000120_class_copp_default.stdout | string"
+             
+            - name: Show Run For Idempotency."
+              ios_command:
+                commands:
+                  - "show run | section control-plane"
+              register: cisc_rt_000120_control_plane_check
+            
+            - name: Set_fact Line Check."
+              set_fact:
+                service_policy_check: "service-policy input {{ iosrtr_copp_service_policy_name }}"
+                
+            - name: Apply Policy Map."
+              ios_config:
+                parents:
+                  - "control-plane"
+                lines: 
+                  - "service-policy input {{ iosrtr_copp_service_policy_name }}"
+              when: "service_policy_check not in cisc_rt_000120_control_plane_check.stdout | string"
       when:
         - not cisc_rt_hardening_one_device
-
-
-
-
-
 
 
     - name:  Single Router Setup."
@@ -554,14 +719,14 @@
         - name: Configure Class Maps For CoPP_CRITICAL
           ios_config:
             parents:
-              - "class-map match-all {{ cisc_rt_000120_copp_critical_name }}"
+              - "class-map match-all {{ iosrtr_class_map_critical_name }}"
             lines:
               - "match access-group name {{ cisc_rt_000120_copp_critical_name }}"
           
         - name: Configure Class Maps For CoPP_IMPORTANT
           ios_config:
             parents:
-              - "class-map match-all {{ cisc_rt_000120_copp_important_name }}"
+              - "class-map match-all {{ iosrtr_class_map_important_name }}"
             lines:
               - "match access-group name {{ cisc_rt_000120_copp_important_name }}"
               - "match protocol arp"
@@ -569,41 +734,158 @@
         - name: Configure Class Maps For CoPP_NORMAL
           ios_config:
             parents:
-              - "class-map match-all {{ cisc_rt_000120_copp_normal_name }}"
+              - "class-map match-all {{ iosrtr_class_map_normal_name }}"
             lines:
               - "match access-group name {{ cisc_rt_000120_copp_normal_name }}"
 
         - name: Configure Class Maps For CoPP_UNDESIRABLE
           ios_config:
             parents:
-              - "class-map match-all {{ cisc_rt_000120_copp_undesirable_name }}"
+              - "class-map match-all {{ iosrtr_class_map_undesirable_name }}"
             lines:
               - "match access-group name {{ cisc_rt_000120_copp_undesirable_name }}"
 
         - name: Configure Class Maps For CoPP_DEFAULT
           ios_config:
             parents:
-              - "class-map match-all {{ cisc_rt_000120_copp_default_name }}"
+              - "class-map match-all {{ iosrtr_class_map_default_name }}"
             lines:
               - "match access-group name {{ cisc_rt_000120_copp_default_name }}"
 
+        - name: Configure A Policy Map For Configured Class Maps And Apply Bandwidth."
+          block:
+            - name: Set Facts For CoPP_CRITICAL Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_critical_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action transmit"
+              with_items:
+                  - "{{ iosrtr_copp_critical_bandwidth }}"
 
+            - name: Set Facts For CoPP_IMPORTANT Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_important_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_important_bandwidth }}"
 
+            - name: Set Facts For CoPP_NORMAL Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_normal_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_normal_bandwidth }}"
 
+            - name: Set Facts For CoPP_UNDESIRABLE Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_undesirable_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_undesirable_bandwidth }}"
 
+            - name: Set Facts For CoPP_DEFAULT Police Line
+              set_fact: 
+                cisc_rt_000120_class_copp_default_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_default_bandwidth }}"
 
+            - name: Show Run For Idempotency CoPP_CRITICAL."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_critical_name }}"
+              register: cisc_rt_000120_class_copp_critical
 
+            - name: Show Run For Idempotency CoPP_IMPORTANT."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_important_name }}"
+              register: cisc_rt_000120_class_copp_important
 
+            - name: Show Run For Idempotency CoPP_NORMAL."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_normal_name }}"
+              register: cisc_rt_000120_class_copp_normal
 
+            - name: Show Run For Idempotency CoPP_UNDESIRABLE."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_undesirable_name }}"
+              register: cisc_rt_000120_class_copp_undesirable
 
+            - name: Show Run For Idempotency CoPP_DEFAULT."
+              ios_command:
+                commands:
+                  - "show run | section class {{ iosrtr_class_map_default_name }}"
+              register: cisc_rt_000120_class_copp_default
 
+            - name: Policy Map Bandwidth For CoPP_CRITICAL
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ cisc_rt_000120_copp_critical_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action transmit"
+              with_items:
+                  - "{{ iosrtr_copp_critical_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_critical_police not in cisc_rt_000120_class_copp_critical.stdout | string"
 
+            - name: Policy Map Bandwidth For CoPP_IMPORTANT
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ cisc_rt_000120_copp_important_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_important_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_important_police not in cisc_rt_000120_class_copp_important.stdout | string"
 
+            - name: Policy Map Bandwidth For CoPP_NORMAL
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ cisc_rt_000120_copp_normal_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_normal_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_normal_police not in cisc_rt_000120_class_copp_normal.stdout | string"
 
+            - name: Policy Map Bandwidth For CoPP_UNDESIRABLE
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ cisc_rt_000120_copp_undesirable_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_undesirable_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_undesirable_police not in cisc_rt_000120_class_copp_undesirable.stdout | string"
 
+            - name: Policy Map Bandwidth For CoPP_DEFAULT
+              ios_config:
+                parents:
+                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
+                  - "class {{ cisc_rt_000120_copp_default_name }}"
+                lines:
+                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+              with_items:
+                  - "{{ iosrtr_copp_default_bandwidth }}"
+              when: "cisc_rt_000120_class_copp_default_police not in cisc_rt_000120_class_copp_default.stdout | string"
 
-
-
+            - name: Show Run For Idempotency."
+              ios_command:
+                commands:
+                  - "show run | section control-plane"
+              register: cisc_rt_000120_control_plane_check
+            
+            - name: Set_fact Line Check."
+              set_fact:
+                service_policy_check: "service-policy input {{ iosrtr_copp_service_policy_name }}"
+                
+            - name: Apply Policy Map."
+              ios_config:
+                parents:
+                  - "control-plane"
+                lines: 
+                  - "service-policy input {{ iosrtr_copp_service_policy_name }}"
+              when: "service_policy_check not in cisc_rt_000120_control_plane_check.stdout | string"
       when: 
         - cisc_rt_hardening_one_device
         - "'none' in iosrtr_copp_critical_acl or iosrtr_copp_important_acl or iosrtr_copp_normal_acl or iosrtr_copp_undesirable_acl or iosrtr_copp_default_acl"

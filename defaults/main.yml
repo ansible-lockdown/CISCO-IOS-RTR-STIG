@@ -28,7 +28,7 @@ cisc_rt_dodin_backbone: false
 # Are you hardening one device.
 # If you are hardening a single device set this variable to true so that all controls will run and you can customize 
 # your router to your liking.  
-cisc_rt_hardening_one_device: true
+cisc_rt_hardening_one_device: false
 
 # These variables correspond with the STIG IDs defined in the STIG and allows you to enable/disable specific rules.
 # PLEASE NOTE: These work in coordination with the cat1, cat2, cat3 group variables. You must enable an entire group
@@ -444,14 +444,38 @@ iosrtr_egress_acl_filter_old: "none"
 # ----------------------------------------------------
 # CISC-RT-000120
 # -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+iosrtr_copp_service_policy_name: "CONTROL_PLANE_POLICY"
+
+iosrtr_class_map_critical_name: "CoPP_CRITICAL"
+iosrtr_class_map_important_name: "CoPP_IMPORTANT"
+iosrtr_class_map_normal_name: "CoPP_NORMAL"
+iosrtr_class_map_undesirable_name: "CoPP_UNDESIRABLE"
+iosrtr_class_map_default_name: "CoPP_DEFAULT"
+
+iosrtr_copp_critical_bandwidth:
+    - {bits_per_second: 512000, burst_bytes: 8000}
+iosrtr_copp_important_bandwidth:
+    - {bits_per_second: 256000, burst_bytes: 4000}
+iosrtr_copp_normal_bandwidth:
+    - {bits_per_second: 128000, burst_bytes: 2000}
+iosrtr_copp_undesirable_bandwidth:
+    - {bits_per_second: 8000, burst_bytes: 1000}
+iosrtr_copp_default_bandwidth:
+    - {bits_per_second: 64000, burst_bytes: 1000}
+
+# -------------------------------------------------------
 # User Defined (Existing ACL) In Defaults Main 
 # -------------------------------------------------------
+# If you are adding your own using the single router setup make sure you add 
+# your ACL names you have chosen to this section after the initial run.
+# This will allow the 
 iosrtr_copp_critical_acl: "CoPP_CRITICAL"
 iosrtr_copp_important_acl: "CoPP_IMPORTANT"
 iosrtr_copp_normal_acl: "CoPP_NORMAL"
 iosrtr_copp_undesirable_acl: "CoPP_UNDESIRABLE"
 iosrtr_copp_default_acl: "CoPP_DEFAULT"
-
 
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
