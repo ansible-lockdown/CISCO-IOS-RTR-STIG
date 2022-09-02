@@ -140,91 +140,7 @@
 
 - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection."
   block:
-    - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Check Block."
-      block:
-        - name: No ACL Defined Warning Message."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
-              - "To Fix this error please define a existing ACL in iosrtr_copp_critical_acl in defaults main."
-          when:
-            - "'none' in iosrtr_copp_critical_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_critical_acl ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - "'none' in iosrtr_copp_critical_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
-              - "To Fix this error please define a existing ACL in iosrtr_copp_important_acl in defaults main."
-          when:
-            - "'none' in iosrtr_copp_important_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_important_acl ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - "'none' in iosrtr_copp_important_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
-              - "To Fix this error please define a existing ACL in iosrtr_copp_normal_acl in defaults main."
-          when:
-            - "'none' in iosrtr_copp_normal_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_normal_acl ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - "'none' in iosrtr_copp_normal_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
-              - "To Fix this error please define a existing ACL in iosrtr_copp_undesirable_acl in defaults main."
-          when:
-            - "'none' in iosrtr_copp_undesirable_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_undesirable_acl ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - "'none' in iosrtr_copp_undesirable_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
-              - "To Fix this error please define a existing ACL in iosrtr_copp_default_acl in defaults main."
-          when:
-            - "'none' in iosrtr_copp_default_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - You Have Not Entered ACL Name In iosrtr_copp_default_acl ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - "'none' in iosrtr_copp_default_acl"
-      when:
-        - not cisc_rt_hardening_one_device
-
-    - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | User Defined CoPP ACLs Check In Defaults Main Or Template."
+    - name: Show Run For Acl Checks Below."
       block:
         - name: Show Run CoPP_CRITICAL ACL."
           ios_command:
@@ -234,28 +150,6 @@
           when:
             - "'none' not in iosrtr_copp_critical_acl"
 
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined By That Name Warning CoPP_CRITICAL."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
-              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_critical_acl."
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_critical.stdout | string
-            - "'none' not in iosrtr_copp_critical_acl"
-          with_items:
-            - "{{ iosrtr_copp_critical_acl }}"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play CoPP_CRITICAL."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_critical.stdout | string
-            - "'none' not in iosrtr_copp_critical_acl"
-          with_items:
-            - "{{ iosrtr_copp_critical_acl }}"
-
         - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run CoPP_IMPORTANT ACL."
           ios_command:
             commands:
@@ -263,28 +157,6 @@
           register: cisc_rt_000120_acl_showrun_copp_important
           when:
             - "'none' not in iosrtr_copp_important_acl"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined By That Name Warning CoPP_IMPORTANT."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
-              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_important.stdout | string
-            - "'none' not in iosrtr_copp_important_acl"
-          with_items:
-            - "{{ iosrtr_copp_important_acl }}"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play CoPP_IMPORTANT."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_important.stdout | string
-            - "'none' not in iosrtr_copp_important_acl"
-          with_items:
-            - "{{ iosrtr_copp_important_acl }}"
 
         - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run CoPP_NORMAL ACL."
           ios_command:
@@ -294,28 +166,6 @@
           when:
             - "'none' not in iosrtr_copp_normal_acl"
 
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined By That Name Warning CoPP_NORMAL."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
-              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_normal.stdout | string
-            - "'none' not in iosrtr_copp_normal_acl"
-          with_items:
-            - "{{ iosrtr_copp_normal_acl }}"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play CoPP_NORMAL."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_normal.stdout | string
-            - "'none' not in iosrtr_copp_normal_acl"
-          with_items:
-            - "{{ iosrtr_copp_normal_acl }}"
-
         - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run CoPP_UNDESIRABLE ACL."
           ios_command:
             commands:
@@ -324,28 +174,6 @@
           when:
             - "'none' not in iosrtr_copp_normal_acl"
 
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined By That Name Warning CoPP_UNDESIRABLE."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
-              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout | string
-            - "'none' not in iosrtr_copp_undesirable_acl"
-          with_items:
-            - "{{ iosrtr_copp_undesirable_acl }}"
-
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play CoPP_UNDESIRABLE."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout | string
-            - "'none' not in iosrtr_copp_undesirable_acl"
-          with_items:
-            - "{{ iosrtr_copp_undesirable_acl }}"
-
         - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run CoPP_DEFAULT ACL."
           ios_command:
             commands:
@@ -353,28 +181,176 @@
           register: cisc_rt_000120_acl_showrun_copp_default
           when:
             - "'none' not in iosrtr_copp_default_acl"
+      when:
+        - not cisc_rt_hardening_one_device
 
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined By That Name Warning CoPP_DEFAULT."
-          debug:
-            msg: 
-              - "Warning!!! Review the Access Control Lists(ACLs) referenced by the class maps to determine if the traffic is being classified appropriately." 
-              - "The defined ACL {{ item }} is not present on the Router and must be configured in iosrtr_copp_important_acl."
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_default.stdout | string
-            - "'none' not in iosrtr_copp_default_acl"
-          with_items:
-            - "{{ iosrtr_copp_default_acl }}"
 
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Create Control Warning For End Of Play CoPP_DEFAULT."
-          set_fact:
-            control_number:
-              - "{{ control_number }} + [ CISC-RT-000120 - User Defined (Existing ACL) {{ item }} Not Present ]"
-            warn_count: "{{ warn_count|int + 1 }}"
-          when:
-            - item not in cisc_rt_000120_acl_showrun_copp_default.stdout | string
-            - "'none' not in iosrtr_copp_default_acl"
-          with_items:
-            - "{{ iosrtr_copp_default_acl }}"
+
+
+    - name: ALL WARNING MESSAGES BLOCK
+      block:
+        - name: No ACL Defined Check Block."
+          block:
+            - name: No ACL Defined Warning Message."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_copp_critical_acl in defaults main."
+              when:
+                - "'none' in iosrtr_copp_critical_acl"
+
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_copp_important_acl in defaults main."
+              when:
+                - "'none' in iosrtr_copp_important_acl"
+
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_copp_normal_acl in defaults main."
+              when:
+                - "'none' in iosrtr_copp_normal_acl"
+
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_copp_undesirable_acl in defaults main."
+              when:
+                - "'none' in iosrtr_copp_undesirable_acl"
+
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined Warning Message."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_copp_default_acl in defaults main."
+              when:
+                - "'none' in iosrtr_copp_default_acl"
+
+        - name: ACLS Defined In Main Not On Router Error.  
+          block:
+            - name: No ACL Defined By That Name Warning CoPP_CRITICAL."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_copp_critical_acl }} is not present on the Router."
+              when:
+                - iosrtr_copp_critical_acl not in cisc_rt_000120_acl_showrun_copp_critical.stdout | string
+                - "'none' not in iosrtr_copp_critical_acl"
+
+            - name: No ACL Defined By That Name Warning CoPP_IMPORTANT."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_copp_important_acl }} is not present on the Router."
+              when:
+                - iosrtr_copp_important_acl not in cisc_rt_000120_acl_showrun_copp_important.stdout | string
+                - "'none' not in iosrtr_copp_important_acl"
+
+            - name: No ACL Defined By That Name Warning CoPP_NORMAL."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_copp_normal_acl }} is not present on the Router."
+              when:
+                - iosrtr_copp_normal_acl not in cisc_rt_000120_acl_showrun_copp_normal.stdout | string
+                - "'none' not in iosrtr_copp_normal_acl"
+
+            - name: No ACL Defined By That Name Warning CoPP_UNDESIRABLE."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_copp_undesirable_acl }} is not present on the Router."
+              when:
+                - iosrtr_copp_undesirable_acl not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout | string
+                - "'none' not in iosrtr_copp_undesirable_acl"
+
+            - name: No ACL Defined By That Name Warning CoPP_DEFAULT."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_copp_default_acl }} is not present on the Router."
+              when:
+                - iosrtr_copp_default_acl not in cisc_rt_000120_acl_showrun_copp_default.stdout | string
+                - "'none' not in iosrtr_copp_default_acl"
+
+        - name: ACLS On Router Make Sure They Conform To Site Policies.  
+          block:
+            - name: Warning MSG's To Chack ACL When On The Router."
+              block:         
+                - name: Warn Critical
+                  debug:
+                      msg:
+                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_critical_acl }}"
+                          - "Please confirm they align with your site policies"
+                          - "{{ cisc_rt_000120_acl_showrun_copp_critical.stdout_lines }}"
+                  when: cisc_rt_000120_acl_showrun_copp_critical.stdout != ""
+
+                - name: Warn Important
+                  debug:
+                      msg:
+                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_important_acl }}"
+                          - "Please confirm they align with your site policies"
+                          - "{{ cisc_rt_000120_acl_showrun_copp_important.stdout_lines }}"
+                  when: cisc_rt_000120_acl_showrun_copp_important.stdout != ""
+
+                - name: Warn Normal
+                  debug:
+                      msg:
+                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_normal_acl }}"
+                          - "Please confirm they align with your site policies"
+                          - "{{ cisc_rt_000120_acl_showrun_copp_normal.stdout_lines }}"
+                  when: cisc_rt_000120_acl_showrun_copp_normal.stdout != ""
+
+                - name: Warn Undesirable
+                  debug:
+                      msg:
+                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_undesirable_acl }}"
+                          - "Please confirm they align with your site policies"
+                          - "{{ cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines }}"
+                  when: cisc_rt_000120_acl_showrun_copp_undesirable.stdout != ""
+
+                - name: Warn Default
+                  debug:
+                      msg:
+                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_default_acl }}"
+                          - "Please confirm they align with your site policies"
+                          - "{{ cisc_rt_000120_acl_showrun_copp_default.stdout_lines }}"
+                  when: cisc_rt_000120_acl_showrun_copp_default.stdout != ""
+
+    - name: Warn Count."
+      set_fact:
+        control_number: "{{ control_number }} + ['CISC-RT-000120']"
+        warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_copp_critical_acl or
+          'none' in iosrtr_copp_important_acl or
+          'none' in iosrtr_copp_normal_acl or 
+          'none' in iosrtr_copp_undesirable_acl or
+          'none' in iosrtr_copp_default_acl or
+          iosrtr_copp_critical_acl not in cisc_rt_000120_acl_showrun_copp_critical.stdout | string and 'none' not in iosrtr_copp_critical_acl or
+          iosrtr_copp_important_acl not in cisc_rt_000120_acl_showrun_copp_important.stdout | string and 'none' not in iosrtr_copp_important_acl or
+          iosrtr_copp_normal_acl not in cisc_rt_000120_acl_showrun_copp_normal.stdout | string and 'none' not in iosrtr_copp_normal_acl or
+          iosrtr_copp_undesirable_acl not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout | string and  'none' not in iosrtr_copp_undesirable_acl or 
+          iosrtr_copp_default_acl not in cisc_rt_000120_acl_showrun_copp_default.stdout | string and 'none' not in iosrtr_copp_default_acl"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Configure Policy-Map And Apply Appropriate Bandwidth Allowance And Policing Attribute."
       block:  
@@ -416,140 +392,140 @@
                 lines:
                   - "match access-group name {{ iosrtr_copp_default_acl }}"
 
-        - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Configure A Policy Map For Configured Class Maps And Apply Bandwidth."
-          block:
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_CRITICAL Police Line."
-              set_fact: 
-                cisc_rt_000120_class_copp_critical_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action transmit"
-              with_items:
-                  - "{{ iosrtr_copp_critical_bandwidth }}"
+        # - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Configure A Policy Map For Configured Class Maps And Apply Bandwidth."
+        #   block:
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_CRITICAL Police Line."
+        #       set_fact: 
+        #         cisc_rt_000120_class_copp_critical_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action transmit"
+        #       with_items:
+        #           - "{{ iosrtr_copp_critical_bandwidth }}"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_IMPORTANT Police Line."
-              set_fact: 
-                cisc_rt_000120_class_copp_important_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_important_bandwidth }}"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_IMPORTANT Police Line."
+        #       set_fact: 
+        #         cisc_rt_000120_class_copp_important_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_important_bandwidth }}"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_NORMAL Police Line."
-              set_fact: 
-                cisc_rt_000120_class_copp_normal_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_normal_bandwidth }}"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_NORMAL Police Line."
+        #       set_fact: 
+        #         cisc_rt_000120_class_copp_normal_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_normal_bandwidth }}"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_UNDESIRABLE Police Line."
-              set_fact: 
-                cisc_rt_000120_class_copp_undesirable_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop  exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_undesirable_bandwidth }}"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_UNDESIRABLE Police Line."
+        #       set_fact: 
+        #         cisc_rt_000120_class_copp_undesirable_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop  exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_undesirable_bandwidth }}"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_DEFAULT Police Line."
-              set_fact: 
-                cisc_rt_000120_class_copp_default_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_default_bandwidth }}"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set Facts For CoPP_DEFAULT Police Line."
+        #       set_fact: 
+        #         cisc_rt_000120_class_copp_default_police: "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit  exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_default_bandwidth }}"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_CRITICAL."
-              ios_command:
-                commands:
-                  - "show run | section class {{ iosrtr_class_map_critical_name }}"
-              register: cisc_rt_000120_class_copp_critical
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_CRITICAL."
+        #       ios_command:
+        #         commands:
+        #           - "show run | section class {{ iosrtr_class_map_critical_name }}"
+        #       register: cisc_rt_000120_class_copp_critical
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_IMPORTANT."
-              ios_command:
-                commands:
-                  - "show run | section class {{ iosrtr_class_map_important_name }}"
-              register: cisc_rt_000120_class_copp_important
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_IMPORTANT."
+        #       ios_command:
+        #         commands:
+        #           - "show run | section class {{ iosrtr_class_map_important_name }}"
+        #       register: cisc_rt_000120_class_copp_important
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_NORMAL."
-              ios_command:
-                commands:
-                  - "show run | section class {{ iosrtr_class_map_normal_name }}"
-              register: cisc_rt_000120_class_copp_normal
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_NORMAL."
+        #       ios_command:
+        #         commands:
+        #           - "show run | section class {{ iosrtr_class_map_normal_name }}"
+        #       register: cisc_rt_000120_class_copp_normal
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_UNDESIRABLE."
-              ios_command:
-                commands:
-                  - "show run | section class {{ iosrtr_class_map_undesirable_name }}"
-              register: cisc_rt_000120_class_copp_undesirable
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_UNDESIRABLE."
+        #       ios_command:
+        #         commands:
+        #           - "show run | section class {{ iosrtr_class_map_undesirable_name }}"
+        #       register: cisc_rt_000120_class_copp_undesirable
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_DEFAULT."
-              ios_command:
-                commands:
-                  - "show run | section class {{ iosrtr_class_map_default_name }}"
-              register: cisc_rt_000120_class_copp_default
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency CoPP_DEFAULT."
+        #       ios_command:
+        #         commands:
+        #           - "show run | section class {{ iosrtr_class_map_default_name }}"
+        #       register: cisc_rt_000120_class_copp_default
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_CRITICAL."
-              ios_config:
-                parents:
-                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
-                  - "class {{ iosrtr_class_map_critical_name }}"
-                lines:
-                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action transmit"
-              with_items:
-                  - "{{ iosrtr_copp_critical_bandwidth }}"
-              when: "cisc_rt_000120_class_copp_critical_police not in cisc_rt_000120_class_copp_critical.stdout | string"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_CRITICAL."
+        #       ios_config:
+        #         parents:
+        #           - "policy-map {{ iosrtr_copp_service_policy_name }}"
+        #           - "class {{ iosrtr_class_map_critical_name }}"
+        #         lines:
+        #           - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action transmit"
+        #       with_items:
+        #           - "{{ iosrtr_copp_critical_bandwidth }}"
+        #       when: "cisc_rt_000120_class_copp_critical_police not in cisc_rt_000120_class_copp_critical.stdout | string"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_IMPORTANT."
-              ios_config:
-                parents:
-                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
-                  - "class {{ iosrtr_class_map_important_name }}"
-                lines:
-                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_important_bandwidth }}"
-              when: "cisc_rt_000120_class_copp_important_police not in cisc_rt_000120_class_copp_important.stdout | string"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_IMPORTANT."
+        #       ios_config:
+        #         parents:
+        #           - "policy-map {{ iosrtr_copp_service_policy_name }}"
+        #           - "class {{ iosrtr_class_map_important_name }}"
+        #         lines:
+        #           - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_important_bandwidth }}"
+        #       when: "cisc_rt_000120_class_copp_important_police not in cisc_rt_000120_class_copp_important.stdout | string"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_NORMAL."
-              ios_config:
-                parents:
-                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
-                  - "class {{ iosrtr_class_map_normal_name }}"
-                lines:
-                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_normal_bandwidth }}"
-              when: "cisc_rt_000120_class_copp_normal_police not in cisc_rt_000120_class_copp_normal.stdout | string"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_NORMAL."
+        #       ios_config:
+        #         parents:
+        #           - "policy-map {{ iosrtr_copp_service_policy_name }}"
+        #           - "class {{ iosrtr_class_map_normal_name }}"
+        #         lines:
+        #           - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_normal_bandwidth }}"
+        #       when: "cisc_rt_000120_class_copp_normal_police not in cisc_rt_000120_class_copp_normal.stdout | string"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_UNDESIRABLE."
-              ios_config:
-                parents:
-                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
-                  - "class {{ iosrtr_class_map_undesirable_name }}"
-                lines:
-                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_undesirable_bandwidth }}"
-              when: "cisc_rt_000120_class_copp_undesirable_police not in cisc_rt_000120_class_copp_undesirable.stdout | string"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_UNDESIRABLE."
+        #       ios_config:
+        #         parents:
+        #           - "policy-map {{ iosrtr_copp_service_policy_name }}"
+        #           - "class {{ iosrtr_class_map_undesirable_name }}"
+        #         lines:
+        #           - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action drop exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_undesirable_bandwidth }}"
+        #       when: "cisc_rt_000120_class_copp_undesirable_police not in cisc_rt_000120_class_copp_undesirable.stdout | string"
 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_DEFAULT."
-              ios_config:
-                parents:
-                  - "policy-map {{ iosrtr_copp_service_policy_name }}"
-                  - "class {{ iosrtr_class_map_default_name }}"
-                lines:
-                  - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
-              with_items:
-                  - "{{ iosrtr_copp_default_bandwidth }}"
-              when: "cisc_rt_000120_class_copp_default_police not in cisc_rt_000120_class_copp_default.stdout | string"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Policy Map Bandwidth For CoPP_DEFAULT."
+        #       ios_config:
+        #         parents:
+        #           - "policy-map {{ iosrtr_copp_service_policy_name }}"
+        #           - "class {{ iosrtr_class_map_default_name }}"
+        #         lines:
+        #           - "police {{ item.bits_per_second }} {{ item.burst_bytes }} conform-action transmit exceed-action drop"
+        #       with_items:
+        #           - "{{ iosrtr_copp_default_bandwidth }}"
+        #       when: "cisc_rt_000120_class_copp_default_police not in cisc_rt_000120_class_copp_default.stdout | string"
              
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency."
-              ios_command:
-                commands:
-                  - "show run | section control-plane"
-              register: cisc_rt_000120_control_plane_check
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Show Run For Idempotency."
+        #       ios_command:
+        #         commands:
+        #           - "show run | section control-plane"
+        #       register: cisc_rt_000120_control_plane_check
             
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set_fact Line Check."
-              set_fact:
-                service_policy_check: "service-policy input {{ iosrtr_copp_service_policy_name }}"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Set_fact Line Check."
+        #       set_fact:
+        #         service_policy_check: "service-policy input {{ iosrtr_copp_service_policy_name }}"
                 
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | pply Policy Map."
-              ios_config:
-                parents:
-                  - "control-plane"
-                lines: 
-                  - "service-policy input {{ iosrtr_copp_service_policy_name }}"
-              when: "service_policy_check not in cisc_rt_000120_control_plane_check.stdout | string"
+        #     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | pply Policy Map."
+        #       ios_config:
+        #         parents:
+        #           - "control-plane"
+        #         lines: 
+        #           - "service-policy input {{ iosrtr_copp_service_policy_name }}"
+        #       when: "service_policy_check not in cisc_rt_000120_control_plane_check.stdout | string"
       when:
         - not cisc_rt_hardening_one_device
 

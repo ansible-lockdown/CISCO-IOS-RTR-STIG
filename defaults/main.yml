@@ -470,7 +470,7 @@ iosrtr_copp_default_bandwidth:
 # -------------------------------------------------------
 # If you are adding your own using the single router setup make sure you add 
 # your ACL names you have chosen to this section after the initial run.
-# This will allow the 
+# This will allow the checks to run correctly. 
 iosrtr_copp_critical_acl: "CoPP_CRITICAL"
 iosrtr_copp_important_acl: "CoPP_IMPORTANT"
 iosrtr_copp_normal_acl: "CoPP_NORMAL"
