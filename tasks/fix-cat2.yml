@@ -266,7 +266,6 @@
                 - "iosrtr_copp_undesirable_acl not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout | string and 'none' not in iosrtr_copp_undesirable_acl or
                   ' deny' not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string and ' permit' not in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string"
 
-
             - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | No ACL Defined By That Name Warning CoPP_DEFAULT."
               debug:
                 msg: 
@@ -278,52 +277,50 @@
 
         - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | ACL's On Router Conform To Site Policies."
           block:
-            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warning MSG's To Chack ACL When On The Router."
-              block:  
-                - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Critical."
-                  debug:
-                      msg:
-                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_critical_acl }}"
-                          - "Please confirm they align with your site policies"
-                          - "{{ cisc_rt_000120_acl_showrun_copp_critical.stdout_lines }}"
-                  when: "' deny' in cisc_rt_000120_acl_showrun_copp_critical.stdout_lines | string or 
-                        ' permit' in cisc_rt_000120_acl_showrun_copp_critical.stdout_lines | string" 
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Critical."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_copp_critical_acl }}"
+                      - "Please confirm they align with your site policies"
+                      - "{{ cisc_rt_000120_acl_showrun_copp_critical.stdout_lines }}"
+              when: "' deny' in cisc_rt_000120_acl_showrun_copp_critical.stdout_lines | string or 
+                    ' permit' in cisc_rt_000120_acl_showrun_copp_critical.stdout_lines | string" 
 
-                - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Important."
-                  debug:
-                      msg:
-                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_important_acl }}"
-                          - "Please confirm they align with your site policies"
-                          - "{{ cisc_rt_000120_acl_showrun_copp_important.stdout_lines }}"
-                  when: "' deny' in cisc_rt_000120_acl_showrun_copp_important.stdout_lines | string or 
-                        ' permit' in cisc_rt_000120_acl_showrun_copp_important.stdout_lines | string" 
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Important."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_copp_important_acl }}"
+                      - "Please confirm they align with your site policies"
+                      - "{{ cisc_rt_000120_acl_showrun_copp_important.stdout_lines }}"
+              when: "' deny' in cisc_rt_000120_acl_showrun_copp_important.stdout_lines | string or 
+                    ' permit' in cisc_rt_000120_acl_showrun_copp_important.stdout_lines | string" 
 
-                - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Normal."
-                  debug:
-                      msg:
-                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_normal_acl }}"
-                          - "Please confirm they align with your site policies"
-                          - "{{ cisc_rt_000120_acl_showrun_copp_normal.stdout_lines }}"
-                  when: "' deny' in cisc_rt_000120_acl_showrun_copp_normal.stdout_lines | string or 
-                        ' permit' in cisc_rt_000120_acl_showrun_copp_normal.stdout_lines | string"
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Normal."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_copp_normal_acl }}"
+                      - "Please confirm they align with your site policies"
+                      - "{{ cisc_rt_000120_acl_showrun_copp_normal.stdout_lines }}"
+              when: "' deny' in cisc_rt_000120_acl_showrun_copp_normal.stdout_lines | string or 
+                    ' permit' in cisc_rt_000120_acl_showrun_copp_normal.stdout_lines | string"
 
-                - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Undesirable."
-                  debug:
-                      msg:
-                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_undesirable_acl }}"
-                          - "Please confirm they align with your site policies"
-                          - "{{ cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines }}"
-                  when: "' deny' in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string or 
-                        ' permit' in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string" 
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Undesirable."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_copp_undesirable_acl }}"
+                      - "Please confirm they align with your site policies"
+                      - "{{ cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines }}"
+              when: "' deny' in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string or 
+                    ' permit' in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string" 
 
-                - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Default."
-                  debug:
-                      msg:
-                          - "Warning! Below is the Configured ACL For {{ iosrtr_copp_default_acl }}"
-                          - "Please confirm they align with your site policies"
-                          - "{{ cisc_rt_000120_acl_showrun_copp_default.stdout_lines }}"
-                  when: "' deny' in cisc_rt_000120_acl_showrun_copp_default.stdout_lines | string or 
-                        ' permit' in cisc_rt_000120_acl_showrun_copp_default.stdout_lines | string" 
+            - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Default."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_copp_default_acl }}"
+                      - "Please confirm they align with your site policies"
+                      - "{{ cisc_rt_000120_acl_showrun_copp_default.stdout_lines }}"
+              when: "' deny' in cisc_rt_000120_acl_showrun_copp_default.stdout_lines | string or 
+                    ' permit' in cisc_rt_000120_acl_showrun_copp_default.stdout_lines | string" 
 
     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Warn Count."
       set_fact:
@@ -1253,8 +1250,96 @@
       - V-216567
 
 - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred."
-  debug:
-    msg: "test" 
+  block:
+
+
+
+
+    - name: Show Run For Acl Checks Below."
+      block:
+        - name: Show Run INGRESS_FILTER ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_ingress_filter_acl_000210 }}"
+          register: cisc_rt_000210_acl_showrun_ingress_filter
+          when:
+            - "'none' not in iosrtr_ingress_filter_acl_000210"
+      when:
+        - not cisc_rt_hardening_one_device
+
+
+
+
+    - name: ALL WARNING MESSAGES BLOCK."
+      block:
+        - name: No ACL Defined Check Block."
+          block:
+            - name: No ACL Defined Warning Message For Critical."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_ingress_filter_acl_000210 in defaults main."
+              when:
+                - "'none' in iosrtr_ingress_filter_acl_000210"
+
+        - name:  ACL's Defined In Main Not On Router Error."
+          block:
+            - name: No ACL Defined By That Name Warning CoPP_CRITICAL."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_ingress_filter_acl_000210 }} is not present on the Router."
+              when:
+                - "iosrtr_ingress_filter_acl_000210 not in cisc_rt_000210_acl_showrun_ingress_filter.stdout | string and 'none' not in iosrtr_copp_critical_acl or
+                  ' deny' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string and ' permit' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
+        
+            - name: ACL Missing deny ip any any log-input
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_ingress_filter_acl_000210 }} does not contain deny ip any any log-input."
+              when: "' deny   ip any any log-input' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string and 
+                ' deny' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string or 
+                ' permit' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
+
+        - name: Warn ."
+          debug:
+              msg:
+                  - "Warning! Below is the Configured ACL For {{ iosrtr_ingress_filter_acl_000210 }}"
+                  - "Please confirm they align with your site policies"
+                  - "{{ cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines }}"
+          when: "' deny   ip any any log-input' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
+
+    - name: Warn Count."
+      set_fact:
+        control_number: "{{ control_number }} + ['CISC-RT-000210']"
+        warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_ingress_filter_acl_000210 or 
+          ' deny   ip any any log-input' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string or 
+          iosrtr_ingress_filter_acl_000210 not in cisc_rt_000210_acl_showrun_ingress_filter.stdout | string and 'none' not in iosrtr_copp_critical_acl or
+          ' deny' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string and ' permit' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string or 
+          ' deny   ip any any log-input' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   when:
       - cisc_rt_000210
   tags:
