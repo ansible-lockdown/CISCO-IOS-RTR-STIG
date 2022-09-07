@@ -1251,13 +1251,9 @@
 
 - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred."
   block:
-
-
-
-
-    - name: Show Run For Acl Checks Below."
+    - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | Show Run For Acl Checks Below."
       block:
-        - name: Show Run INGRESS_FILTER ACL."
+        - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | Show Run INGRESS_FILTER ACL."
           ios_command:
             commands:
               - "show run | section ip access-list extended {{ iosrtr_ingress_filter_acl_000210 }}"
@@ -1267,14 +1263,11 @@
       when:
         - not cisc_rt_hardening_one_device
 
-
-
-
-    - name: ALL WARNING MESSAGES BLOCK."
+    - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | ALL WARNING MESSAGES BLOCK."
       block:
-        - name: No ACL Defined Check Block."
+        - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | No ACL Defined Check Block."
           block:
-            - name: No ACL Defined Warning Message For Critical."
+            - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | No ACL Defined Warning Message For Ingress Filter ACL."
               debug:
                 msg: 
                   - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
@@ -1282,7 +1275,7 @@
               when:
                 - "'none' in iosrtr_ingress_filter_acl_000210"
 
-        - name:  ACL's Defined In Main Not On Router Error."
+        - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | ACL's Defined In Main Not On Router Error."
           block:
             - name: No ACL Defined By That Name Warning CoPP_CRITICAL."
               debug:
@@ -1293,16 +1286,15 @@
                 - "iosrtr_ingress_filter_acl_000210 not in cisc_rt_000210_acl_showrun_ingress_filter.stdout | string and 'none' not in iosrtr_copp_critical_acl or
                   ' deny' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string and ' permit' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
         
-            - name: ACL Missing deny ip any any log-input
+            - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | ACL Missing deny ip any any log-input."
               debug:
                 msg: 
                   - "Warning!!! Review the Access Control Lists(ACLs)."
                   - "The defined ACL {{ iosrtr_ingress_filter_acl_000210 }} does not contain deny ip any any log-input."
               when: "' deny   ip any any log-input' not in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string and 
-                ' deny' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string or 
-                ' permit' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
+                    iosrtr_ingress_filter_acl_000210 in cisc_rt_000210_acl_showrun_ingress_filter.stdout | string"
 
-        - name: Warn ."
+        - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | Site Policies Warning."
           debug:
               msg:
                   - "Warning! Below is the Configured ACL For {{ iosrtr_ingress_filter_acl_000210 }}"
@@ -1310,7 +1302,7 @@
                   - "{{ cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines }}"
           when: "' deny   ip any any log-input' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
 
-    - name: Warn Count."
+    - name: "MEDIUM | CISC-RT-000210 | PATCH | The Cisco router must be configured to produce audit records containing information to establish where the events occurred. | Warn Count Added."
       set_fact:
         control_number: "{{ control_number }} + ['CISC-RT-000210']"
         warn_count: "{{ warn_count|int + 1 }}"
