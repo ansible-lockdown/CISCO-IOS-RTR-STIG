@@ -59,7 +59,7 @@ cisc_rt_000190: false
 cisc_rt_000210: false
 cisc_rt_000220: false
 cisc_rt_000250: true
-cisc_rt_000260: false
+cisc_rt_000260: true
 cisc_rt_000270: false
 cisc_rt_000320: false
 cisc_rt_000330: false
@@ -559,7 +559,9 @@ iosrtr_external_facing_interfaces_000190:
 # CISC-RT-000220
 iosrtr_ingress_filter_acl_000210: "INGRESS_FILTER"
 
+
 # CISC-RT-000250
+# CISC-RT-000260
 iosrtr_filter_perimeter_acl_000250: "FILTER_PERIMETER"
 
 iosrtr_external_facing_interfaces_000250:
@@ -567,6 +569,8 @@ iosrtr_external_facing_interfaces_000250:
     - "FastEthernet2/0"
 
 iosrtr_filter_perimeter_acl_name_old: "none"
+
+
 
 
 

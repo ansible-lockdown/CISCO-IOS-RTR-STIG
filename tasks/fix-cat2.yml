@@ -281,7 +281,7 @@
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_copp_critical_acl }}"
-                      - "Please confirm they align with your site policies"
+                      - "Please confirm they align with your site policies."
                       - "{{ cisc_rt_000120_acl_showrun_copp_critical.stdout_lines }}"
               when: "' deny' in cisc_rt_000120_acl_showrun_copp_critical.stdout_lines | string or 
                     ' permit' in cisc_rt_000120_acl_showrun_copp_critical.stdout_lines | string" 
@@ -290,7 +290,7 @@
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_copp_important_acl }}"
-                      - "Please confirm they align with your site policies"
+                      - "Please confirm they align with your site policies."
                       - "{{ cisc_rt_000120_acl_showrun_copp_important.stdout_lines }}"
               when: "' deny' in cisc_rt_000120_acl_showrun_copp_important.stdout_lines | string or 
                     ' permit' in cisc_rt_000120_acl_showrun_copp_important.stdout_lines | string" 
@@ -299,7 +299,7 @@
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_copp_normal_acl }}"
-                      - "Please confirm they align with your site policies"
+                      - "Please confirm they align with your site policies."
                       - "{{ cisc_rt_000120_acl_showrun_copp_normal.stdout_lines }}"
               when: "' deny' in cisc_rt_000120_acl_showrun_copp_normal.stdout_lines | string or 
                     ' permit' in cisc_rt_000120_acl_showrun_copp_normal.stdout_lines | string"
@@ -308,7 +308,7 @@
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_copp_undesirable_acl }}"
-                      - "Please confirm they align with your site policies"
+                      - "Please confirm they align with your site policies."
                       - "{{ cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines }}"
               when: "' deny' in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string or 
                     ' permit' in cisc_rt_000120_acl_showrun_copp_undesirable.stdout_lines | string" 
@@ -317,7 +317,7 @@
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_copp_default_acl }}"
-                      - "Please confirm they align with your site policies"
+                      - "Please confirm they align with your site policies."
                       - "{{ cisc_rt_000120_acl_showrun_copp_default.stdout_lines }}"
               when: "' deny' in cisc_rt_000120_acl_showrun_copp_default.stdout_lines | string or 
                     ' permit' in cisc_rt_000120_acl_showrun_copp_default.stdout_lines | string" 
@@ -1307,7 +1307,7 @@
           debug:
               msg:
                   - "Warning! Below is the Configured ACL For {{ iosrtr_ingress_filter_acl_000210 }}"
-                  - "Please confirm they align with your site policies"
+                  - "Please confirm they align with your site policies."
                   - "{{ cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines }}"
           when: "' deny   ip any any log-input' in cisc_rt_000210_acl_showrun_ingress_filter.stdout_lines | string"
 
@@ -1375,7 +1375,8 @@
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_filter_perimeter_acl_000250 }}"
-                      - "Please confirm they align with your site policies"
+                      - "Please confirm they align with your site policies for enforcing approved"
+                      - "authorizations for controlling the flow of information between interconnected networks."
                       - "{{ cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines }}"
               when: "' deny   ip any any log-input' in cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines | string"
 
@@ -1498,8 +1499,59 @@
       - V-216573
 
 - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations."
-  debug:
-    msg: "test"
+  block:
+    - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | Show Run For Acl Checks Below."
+      block:
+        - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | Show Run FILTER_PERIMETER ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_filter_perimeter_acl_000250 }}"
+          register: cisc_rt_000260_acl_showrun_filter_perimeter
+          when:
+            - "'none' not in iosrtr_filter_perimeter_acl_000250"
+      when:
+        - not cisc_rt_hardening_one_device
+
+    - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | ALL WARNING MESSAGES BLOCK."
+      block:
+        - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | No ACL Defined Check Block."
+          block:
+            - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | No ACL Defined Warning Message For FILTER_PERIMETER ACL."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_ingress_filter_acl_000250 in defaults main."
+              when:
+                - "'none' in iosrtr_filter_perimeter_acl_000250"
+
+            - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | No ACL Defined By That Name Warning FILTER_PERIMETER."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_filter_perimeter_acl_000250 }} is not present on the Router."
+              when:
+                - "iosrtr_filter_perimeter_acl_000250 not in cisc_rt_000260_acl_showrun_filter_perimeter.stdout | string and 'none' not in iosrtr_filter_perimeter_acl_000250 or
+                  ' deny' not in cisc_rt_000260_acl_showrun_filter_perimeter.stdout_lines | string and ' permit' not in cisc_rt_000260_acl_showrun_filter_perimeter.stdout_lines | string"
+
+            - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | Site Policies Warning."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_filter_perimeter_acl_000250 }}"
+                      - "Please confirm they align with your site policies for restricting incoming communications"
+                      - "to allow only authorized sources and destination."
+                      - "{{ cisc_rt_000260_acl_showrun_filter_perimeter.stdout_lines }}"
+              when: "' deny   ip any any log-input' in cisc_rt_000260_acl_showrun_filter_perimeter.stdout_lines | string"
+
+        - name: "MEDIUM | CISC-RT-000260 | PATCH | The Cisco perimeter router must be configured to only allow incoming communications from authorized sources to be routed to authorized destinations. | Warn Count Added."
+          set_fact:
+            control_number: "{{ control_number }} + ['CISC-RT-000260']"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_filter_perimeter_acl_000250 or 
+              ' deny' not in cisc_rt_000260_acl_showrun_filter_perimeter.stdout_lines | string and ' permit' not in cisc_rt_000260_acl_showrun_filter_perimeter.stdout_lines | string or 
+              ' deny   ip any any log-input' in cisc_rt_000260_acl_showrun_filter_perimeter.stdout_lines | string"
+      when:
+        - not cisc_rt_hardening_one_device
   when:
       - cisc_rt_000260
       - not cisc_rt_dodin_backbone
