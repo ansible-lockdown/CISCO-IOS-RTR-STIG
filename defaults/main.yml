@@ -557,20 +557,46 @@ iosrtr_external_facing_interfaces_000190:
 
 # CISC-RT-000210
 # CISC-RT-000220
+# iosrtr_ingress_filter_acl_000210 is the ASCL used to produce audit records to establish the 
+# source and records where a event is coming from.  
 iosrtr_ingress_filter_acl_000210: "INGRESS_FILTER"
 
 
 # CISC-RT-000250
 # CISC-RT-000260
-iosrtr_filter_perimeter_acl_000250: "FILTER_PERIMETER"
-
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+# iosrtr_external_facing_interfaces_000250 are the interfaces that External Facing interfaces for the ACL.
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
 iosrtr_external_facing_interfaces_000250:
     - "GigabitEthernet0/0"
     - "FastEthernet2/0"
-
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Existing ACL)
+# -------------------------------------------------------
+# iosrtr_filter_perimeter_acl_000250 is the user defined ACL that is configured to enforce approved 
+# uthorizations for controlling the flow of information between interconnected networks and does not restrict
+# incoming communications to allow only authorized sources and destinations. 
+# By default none is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run.  
+# Example: "FILTER_PERIMETER"
+iosrtr_filter_perimeter_acl_000250: "none"
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# The settings below are the name of the old access control list that is used 
+# for the FILTER_PERIMETER acl.  
+# If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_filter_perimeter_acl_name_old: "none"
 
 # CISC-RT-000270
+# iosrtr_current_bogon_prefixes is the list of current prefixes defined by STIG
+# rules that should be added to the FILTER_PERIMETER ACL. 
+# There is no reason to edit these unless adding additional prefixes.  
+# Please Keep Formatting The Same For Error Checking To Work. 
 iosrtr_current_bogon_prefixes:
     - deny   ip 0.0.0.0 0.255.255.255 any log-input
     - deny   ip 10.0.0.0 0.255.255.255 any log-input

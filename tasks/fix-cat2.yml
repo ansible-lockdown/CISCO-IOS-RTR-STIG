@@ -1487,7 +1487,7 @@
             - item.0 is defined
             - iosrtr_filter_perimeter_acl_name_old in item.1
       when:
-        - not cisc_rt_hardening_one_device or cisc_rt_hardening_one_device
+        - not cisc_rt_hardening_one_device or cisc_rt_hardening_one_device and 'none' not in iosrtr_filter_perimeter_acl_000250
   when:
       - cisc_rt_000250
   tags:
