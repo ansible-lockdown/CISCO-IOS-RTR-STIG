@@ -1,0 +1,59 @@
+# NOTES: 
+# New ACL Must Match Actual Example Given At The Bottom For The First Line
+# Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
+# https://github.com/ansible-collections/cisco.ios/pull/626 
+#
+# This ACL combines STIG ID's 250 amnd 270 in Cat II.  
+#
+# There is also a open issue Regarding the way the ios_acl runs the add and remove for the commands.
+# If you failed to add permit ip any any to the original acl file and are back here to fix it
+# regarding the warning posted at the end of the run. Make sure you add it as Sequence 300 to match 
+# how the fix is applied in the system so Shows the task as ok, if Not It will always show changed.  
+# https://github.com/ansible-collections/cisco.ios/issues/598
+#
+# Example Given In STIG:
+# ip access-list extended FILTER_PERIMETER
+# deny ip 0.0.0.0 0.255.255.255 any log-input
+# deny ip 10.0.0.0 0.255.255.255 any log-input
+# deny ip 100.64.0.0 0.63.255.255 any log-input
+# deny ip 127.0.0.0 0.255.255.255 any log-input
+# deny ip 169.254.0.0 0.0.255.255 any log-input
+# deny ip 172.16.0.0 0.15.255.255 any log-input
+# deny ip 192.0.0.0 0.0.0.255 any log-input
+# deny ip 192.0.2.0 0.0.0.255 any log-input
+# deny ip 192.168.0.0 0.0.255.255 any log-input
+# deny ip 198.18.0.0 0.1.255.255 any log-input
+# deny ip 198.51.100.0 0.0.0.255 any log-input
+# deny ip 203.0.113.0 0.0.0.255 any log-input
+# deny ip 224.0.0.0 31.255.255.255 any log-input
+# permit tcp any any established
+# permit tcp host x.12.1.9 host x.12.1.10 eq bgp
+# permit tcp host x.12.1.9 eq bgp host x.12.1.10
+# permit icmp host x.12.1.9 host x.12.1.10 echo
+# permit icmp host x.12.1.9 host x.12.1.10 echo-reply
+# permit tcp any host x.12.1.22 eq www
+# deny ip any any log-input
+#
+#
+Extended IP access list FILTER_PERIMETER
+    10 deny ip 0.0.0.0 0.255.255.255 any log-input
+    15 deny ip 10.0.0.0 0.255.255.255 any log-input
+    20 deny ip 100.64.0.0 0.63.255.255 any log-input
+    25 deny ip 127.0.0.0 0.255.255.255 any log-input
+    30 deny ip 169.254.0.0 0.0.255.255 any log-input
+    35 deny ip 172.16.0.0 0.15.255.255 any log-input
+    40 deny ip 192.0.0.0 0.0.0.255 any log-input
+    45 deny ip 192.0.2.0 0.0.0.255 any log-input
+    50 deny ip 192.168.0.0 0.0.255.255 any log-input
+    55 deny ip 198.18.0.0 0.1.255.255 any log-input
+    60 deny ip 198.51.100.0 0.0.0.255 any log-input
+    65 deny ip 203.0.113.0 0.0.0.255 any log-input
+    70 deny ip 224.0.0.0 31.255.255.255 any log-input
+    80 permit tcp any any established
+    90 permit tcp host 1.12.1.9 host 2.12.1.10 eq bgp
+    100 permit tcp host 1.12.1.9 eq bgp host 2.12.1.10
+    110 permit icmp host 1.12.1.9 host 2.12.1.10 echo
+    120 permit icmp host 1.12.1.9 host 2.12.1.10 echo-reply
+    130 permit tcp any host 1.12.1.22 eq www
+    140 deny ip any any log-input
+

@@ -1336,22 +1336,157 @@
       - V-216569
       - V-216570
 
-- name: "MEDIUM | CISC-RT-000220 | PATCH | The Cisco router must be configured to produce audit records containing information to establish the source of the events."
-  debug:
-    msg: "test"  
-  when:
-      - cisc_rt_000220
-  tags:
-      - CISC-RT-000220
-      - CAT2
-      - CCI-000133
-      - SRG-NET-000077-RTR-000001
-      - SV-216570r531085_rule
-      - V-216570
-
 - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy."
-  debug:
-    msg: "test"  
+  block:
+    - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Show Run For Acl Checks Below."
+      block:
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Show Run FILTER_PERIMETER ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_filter_perimeter_acl_000250 }}"
+          register: cisc_rt_000250_acl_showrun_filter_perimeter
+          when:
+            - "'none' not in iosrtr_filter_perimeter_acl_000250"
+      when:
+        - not cisc_rt_hardening_one_device
+
+    - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | ALL WARNING MESSAGES BLOCK."
+      block:
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | No ACL Defined Check Block."
+          block:
+            - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | No ACL Defined Warning Message For FILTER_PERIMETER ACL."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_ingress_filter_acl_000250 in defaults main."
+              when:
+                - "'none' in iosrtr_filter_perimeter_acl_000250"
+
+            - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | No ACL Defined By That Name Warning FILTER_PERIMETER."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_filter_perimeter_acl_000250 }} is not present on the Router."
+              when:
+                - "iosrtr_filter_perimeter_acl_000250 not in cisc_rt_000250_acl_showrun_filter_perimeter.stdout | string and 'none' not in iosrtr_filter_perimeter_acl_000250 or
+                  ' deny' not in cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines | string and ' permit' not in cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines | string"
+
+            - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Site Policies Warning."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_filter_perimeter_acl_000250 }}"
+                      - "Please confirm they align with your site policies"
+                      - "{{ cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines }}"
+              when: "' deny   ip any any log-input' in cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines | string"
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Warn Count Added."
+          set_fact:
+            control_number: "{{ control_number }} + ['CISC-RT-000250']"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_filter_perimeter_acl_000250 or 
+              ' deny' not in cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines | string and ' permit' not in cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines | string or 
+              ' deny   ip any any log-input' in cisc_rt_000250_acl_showrun_filter_perimeter.stdout_lines | string"
+      when:
+        - not cisc_rt_hardening_one_device
+
+    - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Single Router Setup."
+      block:
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Remove Filter Perimeter Access List."
+          ios_acls:
+              config:
+                  - afi: ipv4
+                    acls:
+                      - name: "{{ iosrtr_filter_perimeter_acl_name_old }}"
+              state: deleted
+          when: 
+            - "'none' not in iosrtr_filter_perimeter_acl_name_old"
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Parse User Given ACL From host_vars For Filter Perimeter Access List."
+          ios_acls:
+            running_config: "{{ lookup('file','files/cisc-rt-000250-000270-acl.txt') }}"
+            state: parsed
+          register: cisc_rt_000250_filter_perimeter_parsed
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Convert JSON to DICT For ACL Defined Name For Filter Perimeter Access List."
+          set_fact:
+            cisc_rt_000250_filter_perimeter_name: "{{ cisc_rt_000250_filter_perimeter_parsed.parsed.0.acls.0.name }}"
+        
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Compare And Update ACL For FILTER_PERIMETER ACL."
+          ios_acls:
+            config: "{{ cisc_rt_000250_filter_perimeter_parsed.parsed }}"
+            state: replaced
+          register: cisc_rt_000250_filter_perimeter_ran
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Print Changed Lines With Debug When ACL Is Changed For Filter Perimeter Access List."
+          debug:
+            var: cisc_rt_000250_filter_perimeter_ran.commands
+          when: 
+            - cisc_rt_000250_filter_perimeter_ran.changed
+      when: 
+        - cisc_rt_hardening_one_device
+        - "'none' in iosrtr_filter_perimeter_acl_000250"
+
+    - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Apply / Remove to Interfaces."
+      block:
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000250_interfaceinfo
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000250_interfaceinfo.gathered }}"
+          register: cisc_rt_000250_interfaceinfo_showrun
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Set Fact For Interface Name And Stdout." 
+          set_fact:
+            cisc_rt_000250_intname: "{{ cisc_rt_000250_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000250_intstdout: "{{ cisc_rt_000250_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. |  Add ACL To Interfaces Listed In iosrtr_external_facing_interfaces_000250."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip access-group {{ iosrtr_filter_perimeter_acl_000250 }} in"
+          with_together: 
+            - "{{ cisc_rt_000250_intname }}"
+            - "{{ cisc_rt_000250_intstdout }}"
+          when:
+            - item.0 in iosrtr_external_facing_interfaces_000250
+            - iosrtr_filter_perimeter_acl_000250 not in item.1
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Remove ACL From Interfaces Not Listed In iosrtr_external_facing_interfaces_000250."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ iosrtr_filter_perimeter_acl_000250 }} in"
+          with_together: 
+            - "{{ cisc_rt_000250_intname }}"
+            - "{{ cisc_rt_000250_intstdout }}"
+          when:
+            - item.0 not in iosrtr_external_facing_interfaces_000250
+            - iosrtr_filter_perimeter_acl_000250 in item.1
+
+        - name: "MEDIUM | CISC-RT-000250 | PATCH | The Cisco perimeter router must be configured to enforce approved authorizations for controlling the flow of information between interconnected networks in accordance with applicable policy. | Remove Old Filter Perimeter From All Interfaces On Router."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip access-group {{ iosrtr_filter_perimeter_acl_name_old }} in"
+          with_together: 
+            - "{{ cisc_rt_000250_intname }}"
+            - "{{ cisc_rt_000250_intstdout }}"
+          when:
+            - "'none' not in iosrtr_filter_perimeter_acl_name_old"
+            - item.0 is defined
+            - iosrtr_filter_perimeter_acl_name_old in item.1
+      when:
+        - not cisc_rt_hardening_one_device or cisc_rt_hardening_one_device
   when:
       - cisc_rt_000250
   tags:
