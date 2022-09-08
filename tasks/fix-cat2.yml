@@ -1564,8 +1564,61 @@
       - V-216574
 
 - name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes."
-  debug:
-    msg: "test" 
+  block:
+    - name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes. | Show Run For Acl Checks Below."
+      block:
+        - name: Show Run FILTER_PERIMETER ACL."
+          ios_command:
+            commands:
+              - "show run | section ip access-list extended {{ iosrtr_filter_perimeter_acl_000250 }}"
+          register: cisc_rt_000270_acl_showrun_filter_perimeter
+          when:
+            - "'none' not in iosrtr_filter_perimeter_acl_000250"
+      when:
+        - not cisc_rt_hardening_one_device
+
+    - name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes. | ALL WARNING MESSAGES BLOCK."
+      block:
+        - name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes. | No ACL Defined Check Block."
+          block:
+            - name: No ACL Defined Warning Message For FILTER_PERIMETER ACL."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_ingress_filter_acl_000250 in defaults main."
+              when:
+                - "'none' in iosrtr_filter_perimeter_acl_000250"
+
+            - name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes. | No ACL Defined By That Name Warning FILTER_PERIMETER."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_filter_perimeter_acl_000250 }} is not present on the Router."
+              when:
+                - "iosrtr_filter_perimeter_acl_000250 not in cisc_rt_000270_acl_showrun_filter_perimeter.stdout | string and 'none' not in iosrtr_filter_perimeter_acl_000250 or
+                  ' deny' not in cisc_rt_000270_acl_showrun_filter_perimeter.stdout_lines | string and ' permit' not in cisc_rt_000270_acl_showrun_filter_perimeter.stdout_lines | string"
+
+            - name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes. | FILTER_PERIMETER Missing Bogon Prefixes Site Policies Warning."
+              debug:
+                  msg:
+                      - "Warning! Configured ACL For {{ iosrtr_filter_perimeter_acl_000250 }}" 
+                      - "Does not conform to STIG requirements."
+                      - "Please confirm they align with your site policies."
+                      - "Bogon Prefix {{ item }} not in configred site ACL."
+              when: "item not in cisc_rt_000270_acl_showrun_filter_perimeter.stdout_lines | string and ' deny' in cisc_rt_000270_acl_showrun_filter_perimeter.stdout_lines | string"
+              with_items:
+                - "{{ iosrtr_current_bogon_prefixes }}"
+
+        - name: "MEDIUM | CISC-RT-000270 | PATCH | The Cisco perimeter router must be configured to block inbound packets with source Bogon IP address prefixes. | Warn Count Added."
+          set_fact:
+            control_number: "{{ control_number }} + ['CISC-RT-000270']"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_filter_perimeter_acl_000250 or 
+              ' deny' not in cisc_rt_000270_acl_showrun_filter_perimeter.stdout_lines | string and ' permit' not in cisc_rt_000270_acl_showrun_filter_perimeter.stdout_lines | string or 
+              ' deny   ip any any log-input' in cisc_rt_000270_acl_showrun_filter_perimeter.stdout_lines | string"
+      when:
+        - not cisc_rt_hardening_one_device
   when:
       - cisc_rt_000270
       - not cisc_rt_dodin_backbone

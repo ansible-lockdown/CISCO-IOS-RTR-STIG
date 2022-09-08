@@ -58,9 +58,9 @@ cisc_rt_000180: false
 cisc_rt_000190: false
 cisc_rt_000210: false
 cisc_rt_000220: false
-cisc_rt_000250: true
-cisc_rt_000260: true
-cisc_rt_000270: false
+cisc_rt_000250: false
+cisc_rt_000260: false
+cisc_rt_000270: true
 cisc_rt_000320: false
 cisc_rt_000330: false
 cisc_rt_000340: false
@@ -570,7 +570,21 @@ iosrtr_external_facing_interfaces_000250:
 
 iosrtr_filter_perimeter_acl_name_old: "none"
 
-
+# CISC-RT-000270
+iosrtr_current_bogon_prefixes:
+    - deny   ip 0.0.0.0 0.255.255.255 any log-input
+    - deny   ip 10.0.0.0 0.255.255.255 any log-input
+    - deny   ip 100.64.0.0 0.63.255.255 any log-input
+    - deny   ip 127.0.0.0 0.255.255.255 any log-input
+    - deny   ip 169.254.0.0 0.0.255.255 any log-input
+    - deny   ip 172.16.0.0 0.15.255.255 any log-input
+    - deny   ip 192.0.0.0 0.0.0.255 any log-input
+    - deny   ip 192.0.2.0 0.0.0.255 any log-input
+    - deny   ip 192.168.0.0 0.0.255.255 any log-input
+    - deny   ip 198.18.0.0 0.1.255.255 any log-input
+    - deny   ip 198.51.100.0 0.0.0.255 any log-input
+    - deny   ip 203.0.113.0 0.0.0.255 any log-input
+    - deny   ip 224.0.0.0 31.255.255.255 any log-input
 
 
 
