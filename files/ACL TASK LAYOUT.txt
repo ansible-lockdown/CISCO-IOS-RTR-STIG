@@ -1,4 +1,50 @@
 ---
+
+
+
+
+
+# ----------------------------------------------------
+# CISC-RT-000010
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+# iosrtr_external_facing_interfaces_000010 are the External Facing interfaces for the ACL.
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
+iosrtr_external_facing_interfaces_000010:
+    - "GigabitEthernet0/0"
+    - "FastEthernet2/0"
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Existing ACL)
+# -------------------------------------------------------
+# iosrtr_filter_server_traffic_acl_000010 is the user defined ACL that is configured to 
+# allow or deny traffic for specific source and destination addresses as well as ports and protocols between various subnets as required.
+# By default "none" is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. 
+# If using option cisc_rt_hardening_one_device: true make sure to leave none in value.
+# If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to srtop using it you 
+# must set iosrtr_filter_server_traffic_acl_000010 to the exact EXACT ACL name that was injested from the txt file. 
+# Example: "FILTER_SERVER_TRAFFIC"
+iosrtr_filter_server_traffic_acl_000010: "FILTER_SERVER_TRAFFIC"
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# The settings below are the name of the old access control list that is used 
+# for the FILTER_SERVER_TRAFFIC acl.  
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_filter_server_traffic_acl_name_old: "none"
+
+
+
+
+
+
+
+
+
+
 - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies."
   block:
       - name: Show Run For Acl Checks Below."

@@ -459,15 +459,17 @@ iosrtr_external_facing_interfaces_000010:
 # -------------------------------------------------------
 # iosrtr_filter_server_traffic_acl_000010 is the user defined ACL that is configured to 
 # allow or deny traffic for specific source and destination addresses as well as ports and protocols between various subnets as required.
-# By default none is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. If
-# using option cisc_rt_hardening_one_device: true make sure to leave none in value. 
+# By default "none" is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. 
+# If using option cisc_rt_hardening_one_device: true make sure to leave none in value.
+# If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to srtop using it you 
+# must set iosrtr_filter_server_traffic_acl_000010 to the exact EXACT ACL name that was injested from the txt file. 
 # Example: "FILTER_SERVER_TRAFFIC"
-iosrtr_filter_server_traffic_acl_000010: "FILTER_SERVER_TRAFFIC"
+iosrtr_filter_server_traffic_acl_000010: "none"
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
 # -------------------------------------------------------
 # The settings below are the name of the old access control list that is used 
-# for the FILTER_PERIMETER acl.  
+# for the FILTER_SERVER_TRAFFIC acl.  
 # If you did not have a existing access control list defined in the router leave as is.  
 iosrtr_filter_server_traffic_acl_name_old: "none"
 
