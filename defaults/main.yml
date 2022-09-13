@@ -446,7 +446,7 @@ iosrtr_egress_acl_filter_old: "none"
 # -------------------------------------------------------
 # User Defined Settings In Defaults Main (Used In Full Task)
 # -------------------------------------------------------
-# iosrtr_external_facing_interfaces_000010 are the interfaces that External Facing interfaces for the ACL.
+# iosrtr_external_facing_interfaces_000010 are the External Facing interfaces for the ACL.
 # Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
 # Example:
 #   - "FastEthernet0/0"
