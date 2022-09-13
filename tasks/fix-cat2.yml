@@ -1,7 +1,242 @@
 ---
 - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies."
-  debug:
-    msg: "test" 
+  block:
+      - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Show Run For Acl Checks Below."
+        block:
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Show Run FILTER_SERVER_TRAFFIC ACL."
+            ios_command:
+              commands:
+                - "show run | section ip access-list extended {{ iosrtr_filter_server_traffic_acl_000010 }}"
+            register: cisc_rt_000010_acl_showrun_filter_server_traffic
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | No ACL Defined Check Block."
+            block:
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | No ACL Defined Warning Message For FILTER_SERVER_TRAFFIC ACL."
+                debug:
+                  msg: 
+                    - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                    - "To Fix this error please define a existing ACL in iosrtr_ingress_filter_acl_000250 in defaults main."
+                when:
+                  - "'none' in iosrtr_filter_server_traffic_acl_000010"
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | No ACL Defined By That Name Warning FILTER_SERVER_TRAFFIC."
+                debug:
+                  msg: 
+                    - "Warning!!! Review the Access Control Lists(ACLs)."
+                    - "The defined ACL {{ iosrtr_filter_server_traffic_acl_000010 }} is not present on the Router."
+                when:
+                  - "'none' not in iosrtr_filter_server_traffic_acl_000010 and 
+                    iosrtr_filter_server_traffic_acl_000010 not in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout | string or
+                    ' deny' not in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string and 
+                    ' permit' not in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string"
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Site Policies Warning."
+                debug:
+                    msg:
+                        - "Warning! Below is the Configured ACL For {{ iosrtr_filter_server_traffic_acl_000010 }}"
+                        - "Please confirm they align with your site policies to allow or deny traffic for specific"
+                        - "source and destination addresses as well as ports and protocols between various subnets as required"
+                        - "{{ cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines }}"
+                when: 
+                  - "' deny' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string or
+                     ' permit' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string"
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Warn Count Added."
+            set_fact:
+              control_number: "{{ control_number }} + ['CISC-RT-000010']"
+              warn_count: "{{ warn_count|int + 1 }}"
+            when:
+              - "'none' in iosrtr_filter_server_traffic_acl_000010 or 
+                'none' not in iosrtr_filter_server_traffic_acl_000010 and 
+                iosrtr_filter_server_traffic_acl_000010 not in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout | string or
+                ' deny' not in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string and 
+                ' permit' not in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string or
+                ' deny' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string or
+                ' permit' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string"
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Attach To Interfaces."
+            block:
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Gather Interface Facts."
+                ios_interfaces:
+                  state: gathered
+                register: cisc_rt_000010_interfaceinfo
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Register Show Run With Interfaces."
+                ios_command:
+                  commands: 
+                    - "show run | section {{ item.name }}" 
+                with_items: "{{ cisc_rt_000010_interfaceinfo.gathered }}"
+                register: cisc_rt_000010_interfaceinfo_showrun
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Set Fact For Interface Name And Stdout." 
+                set_fact:
+                  cisc_rt_000010_intname: "{{ cisc_rt_000010_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+                  cisc_rt_000010_intstdout: "{{ cisc_rt_000010_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Add ACL To Interfaces Listed In iosrtr_external_facing_interfaces_000010."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "ip access-group {{ iosrtr_filter_server_traffic_acl_000010 }} in"
+                with_together: 
+                  - "{{ cisc_rt_000010_intname }}"
+                  - "{{ cisc_rt_000010_intstdout }}"
+                when:
+                  - item.0 in iosrtr_external_facing_interfaces_000010
+                  - iosrtr_filter_server_traffic_acl_000010 not in item.1
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Remove ACL From Interfaces Not Listed In iosrtr_external_facing_interfaces_000010."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ iosrtr_filter_perimeter_acl_000250 }} in"
+                with_together: 
+                  - "{{ cisc_rt_000010_intname }}"
+                  - "{{ cisc_rt_000010_intstdout }}"
+                when:
+                  - item.0 not in iosrtr_external_facing_interfaces_000010
+                  - iosrtr_filter_server_traffic_acl_000010 in item.1
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Remove Old Filter Server ACL From All Interfaces On Router."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ iosrtr_filter_server_traffic_acl_name_old }} in"
+                with_together: 
+                  - "{{ cisc_rt_000010_intname }}"
+                  - "{{ cisc_rt_000010_intstdout }}"
+                when:
+                  - "'none' not in iosrtr_filter_server_traffic_acl_name_old"
+                  - item.0 is defined
+                  - iosrtr_filter_server_traffic_acl_name_old in item.1
+        when:
+          - not cisc_rt_hardening_one_device
+
+      - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Single Router Setup."
+        block:
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Remove Old Filter Server Access List."
+            ios_acls:
+                config:
+                    - afi: ipv4
+                      acls:
+                        - name: "{{ iosrtr_filter_server_traffic_acl_name_old }}"
+                state: deleted
+            when: 
+              - "'none' not in iosrtr_filter_server_traffic_acl_name_old"
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Parse User Given ACL From host_vars For Filter Server Access List."
+            ios_acls:
+              running_config: "{{ lookup('file','files/cisc-rt-000010-acl.txt') }}"
+              state: parsed
+            register: cisc_rt_000010_filter_server_traffic_parsed
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Convert JSON to DICT For ACL Defined Name For Filter Server Access List."
+            set_fact:
+              cisc_rt_000010_filter_server_traffic_name: "{{ cisc_rt_000010_filter_server_traffic_parsed.parsed.0.acls.0.name }}"
+          
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Compare And Update ACL For FILTER_SERVER_TRAFFIC ACL."
+            ios_acls:
+              config: "{{ cisc_rt_000010_filter_server_traffic_parsed.parsed }}"
+              state: replaced
+            register: cisc_rt_000250_filter_server_traffic_ran
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Print Changed Lines With Debug When ACL Is Changed For Filter Server Traffic Access List."
+            debug:
+              var: cisc_rt_000250_filter_server_traffic_ran.commands
+            when: 
+              - cisc_rt_000250_filter_server_traffic_ran.changed
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Check Against Site Policies And Warn Count."
+            block:
+              - name: Show Run FILTER_SERVER_TRAFFIC ACL."
+                ios_command:
+                  commands:
+                    - "show run | section ip access-list extended {{ cisc_rt_000010_filter_server_traffic_name }}"
+                register: cisc_rt_000010_acl_showrun_filter_server_traffic
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. |  Site Policies Warning."
+                debug:
+                    msg:
+                        - "Warning! Below is the Configured ACL For {{ cisc_rt_000010_filter_server_traffic_name }}"
+                        - "Please confirm they align with your site policies to allow or deny traffic for specific"
+                        - "source and destination addresses as well as ports and protocols between various subnets as required"
+                        - "{{ cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines }}"
+                when: 
+                  - "' deny' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string or
+                     ' permit' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string"
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Warn Count Added."
+                set_fact:
+                  control_number: "{{ control_number }} + ['CISC-RT-000010']"
+                  warn_count: "{{ warn_count|int + 1 }}"
+                when: 
+                  - "' deny' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string or
+                     ' permit' in cisc_rt_000010_acl_showrun_filter_server_traffic.stdout_lines | string"
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Add To Interfaces Block."
+            block: 
+              - name: Gather Interface Facts."
+                ios_interfaces:
+                  state: gathered
+                register: cisc_rt_000010_interfaceinfo
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Register Show Run With Interfaces."
+                ios_command:
+                  commands: 
+                    - "show run | section {{ item.name }}" 
+                with_items: "{{ cisc_rt_000010_interfaceinfo.gathered }}"
+                register: cisc_rt_000010_interfaceinfo_showrun
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Set Fact For Interface Name And Stdout." 
+                set_fact:
+                  cisc_rt_000010_intname: "{{ cisc_rt_000010_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+                  cisc_rt_000010_intstdout: "{{ cisc_rt_000010_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Add ACL To Interfaces Listed In iosrtr_external_facing_interfaces_000010."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "ip access-group {{ cisc_rt_000010_filter_server_traffic_name }} in"
+                with_together: 
+                  - "{{ cisc_rt_000010_intname }}"
+                  - "{{ cisc_rt_000010_intstdout }}"
+                when:
+                  - item.0 in iosrtr_external_facing_interfaces_000010
+                  - cisc_rt_000010_filter_server_traffic_name not in item.1
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Remove ACL From Interfaces Not Listed In iosrtr_external_facing_interfaces_000010."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ cisc_rt_000010_filter_server_traffic_name }} in"
+                with_together: 
+                  - "{{ cisc_rt_000010_intname }}"
+                  - "{{ cisc_rt_000010_intstdout }}"
+                when:
+                  - item.0 not in iosrtr_external_facing_interfaces_000010
+                  - cisc_rt_000010_filter_server_traffic_name in item.1
+
+              - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Remove Old Filter Server Traffic From All Interfaces On Router."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ iosrtr_filter_server_traffic_acl_name_old }} in"
+                with_together: 
+                  - "{{ cisc_rt_000010_intname }}"
+                  - "{{ cisc_rt_000010_intstdout }}"
+                when:
+                  - "'none' not in iosrtr_filter_server_traffic_acl_name_old"
+                  - item.0 is defined
+                  - iosrtr_filter_server_traffic_acl_name_old in item.1
+        when: 
+          - cisc_rt_hardening_one_device
+          - "'none' in iosrtr_filter_server_traffic_acl_000010"
   when:
       - cisc_rt_000010
       - not cisc_rt_dodin_backbone

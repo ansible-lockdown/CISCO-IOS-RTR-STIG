@@ -1,0 +1,31 @@
+# NOTES: 
+# New ACL Must Match Actual Example Given At The Bottom For The First Line
+# Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
+# https://github.com/ansible-collections/cisco.ios/pull/626 
+#
+# There is also a open issue Regarding the way the ios_acl runs the add and remove for the commands.
+# If you failed to add permit ip any any to the original acl file and are back here to fix it
+# regarding the warning posted at the end of the run. Make sure you add it as Sequence 300 to match 
+# how the fix is applied in the system so Shows the task as ok, if Not It will always show changed.  
+# https://github.com/ansible-collections/cisco.ios/issues/598
+#
+# Example Given In STIG:
+# ip access-list extended FILTER_SERVER_TRAFFIC
+permit tcp any 10.1.23.0 0.0.0.255 eq 515 631 9100
+permit tcp any 10.1.24.0 0.0.0.255 eq 1433 1434 4022
+permit icmp any any
+permit ospf any any
+deny ip any any
+
+#
+#
+Extended IP access list FILTER_SERVER_TRAFFIC
+    01 permit ip any any
+    10 permit tcp any any established
+    20 permit icmp host 1.12.1.16 host 1.12.1.17 echo
+    30 permit icmp host 2.12.1.16 host 2.12.1.17 echo_reply
+    40 permit tcp any host 1.12.1.22 eq www
+    50 permit tcp any host 1.12.1.23 eq www
+    60 permit esp any host 1.12.1.24
+    70 permit ahp any host 1.12.1.24
+    80 deny ip any any

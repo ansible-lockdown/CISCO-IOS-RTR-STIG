@@ -46,7 +46,7 @@ cisc_rt_000730: false
 cisc_rt_000310: false
 
 # CAT 2 rules
-cisc_rt_000010: false
+cisc_rt_000010: true
 cisc_rt_000040: false
 cisc_rt_000050: false
 cisc_rt_000090: false
@@ -60,7 +60,7 @@ cisc_rt_000210: false
 cisc_rt_000220: false
 cisc_rt_000250: false
 cisc_rt_000260: false
-cisc_rt_000270: true
+cisc_rt_000270: false
 cisc_rt_000320: false
 cisc_rt_000330: false
 cisc_rt_000340: false
@@ -441,6 +441,44 @@ iosrtr_egress_acl_filter_old: "none"
 
 
 # Cat 2
+# ----------------------------------------------------
+# CISC-RT-000010
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+# iosrtr_external_facing_interfaces_000010 are the interfaces that External Facing interfaces for the ACL.
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
+iosrtr_external_facing_interfaces_000010:
+    - "GigabitEthernet0/0"
+    - "FastEthernet2/0"
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Existing ACL)
+# -------------------------------------------------------
+# iosrtr_filter_server_traffic_acl_000010 is the user defined ACL that is configured to 
+# allow or deny traffic for specific source and destination addresses as well as ports and protocols between various subnets as required.
+# By default none is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. If
+# using option cisc_rt_hardening_one_device: true make sure to leave none in value. 
+# Example: "FILTER_SERVER_TRAFFIC"
+iosrtr_filter_server_traffic_acl_000010: "FILTER_SERVER_TRAFFIC"
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# The settings below are the name of the old access control list that is used 
+# for the FILTER_PERIMETER acl.  
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_filter_server_traffic_acl_name_old: "none"
+
+
+
+
+
+
+
+
+
 # ----------------------------------------------------
 # CISC-RT-000120
 # -------------------------------------------------------
