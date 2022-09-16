@@ -10,13 +10,15 @@
 #192.168.68.147
 
 #[Local Machine Testing]
-
-#[Local Cisco Router C3725-ADVENTERPRISEK9-M Version 12.4(15)T14]
-#192.168.68.147
-172.16.16.51
 #[Local Cisco Router C7200-ADVIPSERVICESK9-M Version 15.2(4)S5]
-#192.168.68.125
-172.16.225.40
+192.168.68.162
+#[Local Cisco Router C3725-ADVENTERPRISEK9-M Version 12.4(15)T14]
+192.168.68.147
+#172.16.16.51
+#[Local Cisco Router C7200-ADVIPSERVICESK9-M Version 15.2(4)S5]
+192.168.68.125
+#172.16.225.40
+
 
 
 
@@ -54,7 +56,7 @@
 
 
 [cisco:vars] 
-ansible_network_os=ios 
+ansible_network_os=ios
 ansible_ssh_user=mpg
 ansible_ssh_password=password
 ansible_port=22

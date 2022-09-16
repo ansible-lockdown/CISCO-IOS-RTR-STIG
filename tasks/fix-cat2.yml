@@ -2305,8 +2305,195 @@
       - V-216630
 
 - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports."
-  debug:
-    msg: "test"
+  block:
+    - name: Error Messages
+      block:
+          - name: Show Run FILTER_SERVER_TRAFFIC ACL."
+            ios_command:
+              commands:
+                - "show run | section ip igmp limit"
+            register: cisc_rt_000880_igmp_global_limit
+
+          - name: No IP IGMP Check Block."
+            block:
+              - name: No IP IGMP Set Warning Message For Entire Router"
+                debug:
+                  msg: 
+                    - "Warning!!! Review Defaults Main Item Is Not Defined."
+                    - "To Fix this error please set iosrtr_igmp_limit_globally"
+                    - "and / or iosrtr_igmp_limit_by_interfaces to true in defaults main."
+                when:
+                  - not iosrtr_igmp_limit_globally and not iosrtr_igmp_limit_by_interfaces
+
+          - name: Warn Count Added."
+            set_fact:
+              control_number: "{{ control_number }} + ['CISC-RT-000010']"
+              warn_count: "{{ warn_count|int + 1 }}"
+            when:
+              - not iosrtr_igmp_limit_globally and not iosrtr_igmp_limit_by_interfaces
+
+    - name: Global IGMP Limit
+      block: 
+          - name: Set Global IGMP Limit."
+            ios_config:
+              lines:
+                - "ip igmp limit {{ iosrtr_igmp_limit_global }}"
+            when: 
+              - iosrtr_igmp_limit_globally
+              - "'none' not in iosrtr_igmp_limit_global"
+
+    - name: Interface IGMP Limit Set
+      block:
+          - name: Gather Interface Facts."
+            ios_interfaces:
+              state: gathered
+            register: cisc_rt_000880_interfaceinfo
+
+          - name: Register Show Run With Interfaces."
+            ios_command:
+              commands: 
+                - "show run | section {{ item.name }}" 
+            with_items: "{{ cisc_rt_000880_interfaceinfo.gathered }}"
+            register: cisc_rt_000880_interfaceinfo_showrun
+
+          - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Set Fact For Interface Name And Stdout." 
+            set_fact:
+              cisc_rt_000880_intname: "{{ cisc_rt_000880_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+              cisc_rt_000880_intstdout: "{{ cisc_rt_000880_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+
+
+
+          - name: Debug
+            debug:
+              msg: 
+                "{{ iosrtr_igmp_limit_interfaces['interface'] }}"
+
+          # - name: Set IMGP Per Interface."
+          #   ios_config:
+          #     parents:
+          #       - "interface {{ item.interface }}"
+          #     lines:
+          #       - "ip igmp limit {{ item.rate_limit }}"
+          #   with_together: 
+          #     - "{{ cisc_rt_000880_intname }}"
+          #     - "{{ cisc_rt_000880_intstdout }}"
+          #     - "{{ iosrtr_igmp_limit_interfaces }}"
+          #   when:
+          #     - item.0 in item.3.interface
+
+
+
+
+
+
+
+
+          # - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Add ACL To Interfaces Listed In iosrtr_external_facing_interfaces_000010."
+          #   ios_config:
+          #     parents:
+          #       - "interface {{ item.0 }}"
+          #     lines:
+          #       - "ip access-group {{ iosrtr_filter_server_traffic_acl_000010 }} in"
+          #   with_together: 
+          #     - "{{ cisc_rt_000010_intname }}"
+          #     - "{{ cisc_rt_000010_intstdout }}"
+          #   when:
+          #     - item.0 in iosrtr_igmp_limit_interfaces.interface
+          #     - iosrtr_filter_server_traffic_acl_000010 not in item.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+    #       - name: Gather Interface Facts."
+    #         ios_interfaces:
+    #           state: gathered
+    #         register: cisc_rt_000010_interfaceinfo
+
+    #       - name: Register Show Run With Interfaces."
+    #         ios_command:
+    #           commands: 
+    #             - "show run | section {{ item.name }}" 
+    #         with_items: "{{ cisc_rt_000010_interfaceinfo.gathered }}"
+    #         register: cisc_rt_000010_interfaceinfo_showrun
+
+    #       - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Set Fact For Interface Name And Stdout." 
+    #         set_fact:
+    #           cisc_rt_000010_intname: "{{ cisc_rt_000010_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+    #           cisc_rt_000010_intstdout: "{{ cisc_rt_000010_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+    #       - name: "MEDIUM | CISC-RT-000010 | PATCH | The Cisco router must be configured to enforce approved authorizations for controlling the flow of information within the network based on organization-defined information flow control policies. | Add ACL To Interfaces Listed In iosrtr_external_facing_interfaces_000010."
+    #         ios_config:
+    #           parents:
+    #             - "interface {{ item.0 }}"
+    #           lines:
+    #             - "ip access-group {{ iosrtr_filter_server_traffic_acl_000010 }} in"
+    #         with_together: 
+    #           - "{{ cisc_rt_000010_intname }}"
+    #           - "{{ cisc_rt_000010_intstdout }}"
+    #         when:
+    #           - item.0 in iosrtr_external_facing_interfaces_000010
+    #           - iosrtr_filter_server_traffic_acl_000010 not in item.1
+
+
+
+
+
+
+
+
+
+
+
+    #   when: 
+    #     - iosrtr_igmp_limit_globally
+
+
+
+
+
+
+
+
+
+
+
   when:
       - cisc_rt_000880
   tags:

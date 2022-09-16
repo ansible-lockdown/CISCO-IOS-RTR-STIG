@@ -46,7 +46,7 @@ cisc_rt_000730: false
 cisc_rt_000310: false
 
 # CAT 2 rules
-cisc_rt_000010: true
+cisc_rt_000010: false
 cisc_rt_000040: false
 cisc_rt_000050: false
 cisc_rt_000090: false
@@ -88,7 +88,7 @@ cisc_rt_000790: false
 cisc_rt_000800: false
 cisc_rt_000850: false
 cisc_rt_000870: false
-cisc_rt_000880: false
+cisc_rt_000880: true
 cisc_rt_000890: false
 cisc_rt_000900: false
 cisc_rt_000910: false
@@ -474,9 +474,12 @@ iosrtr_filter_server_traffic_acl_000010: "none"
 iosrtr_filter_server_traffic_acl_name_old: "none"
 
 
+# CISC-RT-000040
 
 
 
+
+# CISC-RT-000050
 
 
 
@@ -683,6 +686,21 @@ iosrtr_pim_register_rate_limit: '8000'
 
 
 
+
+# CISC-RT-000880
+iosrtr_igmp_limit_globally: true
+iosrtr_igmp_limit_global: "256"
+
+
+iosrtr_igmp_limit_by_interfaces: true
+iosrtr_igmp_limit_interfaces:
+    - {interface: "GigabitEthernet0/0", rate_limit: 5}
+    - {interface: "FastEthernet2/0", rate_limit: 15}
+
+
+
+
+
 # CISC-RT-000398
 # -------------------------------------------------------
 # User Defined Settings In Defaults Main (Used In Full Task)
@@ -694,6 +712,12 @@ iosrtr_pim_register_rate_limit: '8000'
 #   - "Serial1/3"
 iosrtr_: 
     - "Serial1/3"
+
+
+
+
+
+
 
 
 
