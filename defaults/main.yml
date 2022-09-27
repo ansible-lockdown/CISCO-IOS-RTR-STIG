@@ -688,14 +688,15 @@ iosrtr_pim_register_rate_limit: '8000'
 
 
 # CISC-RT-000880
-iosrtr_igmp_limit_globally: true
+iosrtr_igmp_limit_globally: false
 iosrtr_igmp_limit_global: "256"
 
 
-iosrtr_igmp_limit_by_interfaces: true
+iosrtr_igmp_limit_by_interfaces: false
 iosrtr_igmp_limit_interfaces:
-    - {interface: "GigabitEthernet0/0", rate_limit: 5}
-    - {interface: "FastEthernet2/0", rate_limit: 15}
+    - {interface: "GigabitEthernet0/0", rate_limit: 10000}
+    - {interface: "GigabitEthernet0/4", rate_limit: 5678}
+    - {interface: "GigabitEthernet1/0", rate_limit: 1500}
 
 
 
