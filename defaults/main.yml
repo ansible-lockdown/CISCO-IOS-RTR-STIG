@@ -688,15 +688,22 @@ iosrtr_pim_register_rate_limit: '8000'
 
 
 # CISC-RT-000880
+# This is to be set on the designated router.  
+# iosrtr_igmp_limit_globally is the setting to enable or disbale the global igmp limit on the DR.
+# if you only want the global setting then make sure true is set here and false is set in iosrtr_igmp_limit_by_interfaces.
 iosrtr_igmp_limit_globally: false
-iosrtr_igmp_limit_global: "256"
-
-
+# iosrtr_igmp_limit_global is the global igmp limit.  
+# <1-64000>  Max Allowed State on this interface
+iosrtr_igmp_limit_global: "0"
+# iosrtr_igmp_limit_by_interfaces is the setting that allows you to add igmp rate limit to the interfaces on the DR. You will define 
+# define variables in iosrtr_igmp_limit_interfaces.  If you decide to use the igmp per interface make you put false in 
+# iosrtr_igmp_limit_globally in defaults main. These must be host facing interfaces.  
 iosrtr_igmp_limit_by_interfaces: false
+# iosrtr_igmp_limit_interfaces are the host facing interfaces that will have the igmp setting on them as well as rate-limit. 
 iosrtr_igmp_limit_interfaces:
-    - {interface: "GigabitEthernet0/0", rate_limit: 10000}
-    - {interface: "GigabitEthernet0/4", rate_limit: 5678}
-    - {interface: "GigabitEthernet1/0", rate_limit: 1500}
+    - {interface: "GigabitEthernet0/0", rate_limit: "10000"}
+    - {interface: "GigabitEthernet0/4", rate_limit: "53253"}
+    - {interface: "GigabitEthernet1/0", rate_limit: "1500"}
 
 
 

@@ -2306,17 +2306,11 @@
 
 - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports."
   block:
-    - name: Error Messages
+    - name:  "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Error Messages."
       block:
-          - name: Show Run IGMP Limit."
-            ios_command:
-              commands:
-                - "show run | section ip igmp limit"
-            register: cisc_rt_000880_igmp_global_limit
-
-          - name: No IP IGMP Check Block."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | No IP IGMP Check Block."
             block:
-              - name: No IP IGMP Set Warning Message For Entire Router"
+              - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | No IP IGMP Set Warning Message For Entire Router."
                 debug:
                   msg: 
                     - "Warning!!! Review Defaults Main Item Is Not Defined."
@@ -2325,46 +2319,52 @@
                 when:
                   - not iosrtr_igmp_limit_globally and not iosrtr_igmp_limit_by_interfaces
             
-          - name: Warn Count Added."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Warn Count Added."
             set_fact:
-              control_number: "{{ control_number }} + ['CISC-RT-000010']"
+              control_number: "{{ control_number }} + ['CISC-RT-000880']"
               warn_count: "{{ warn_count|int + 1 }}"
             when:
               - not iosrtr_igmp_limit_globally and not iosrtr_igmp_limit_by_interfaces
 
-    - name: Set Facts."
+    - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Set Facts Block."
       block:
-          - name: Gather Interface Facts."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Gather Interface Facts."
             ios_interfaces:
               state: gathered
             register: cisc_rt_000880_interfaceinfo
 
-          - name: Register Show Run With Interfaces."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Register Show Run With Interfaces."
             ios_command:
               commands: 
                 - "show run | section {{ item.name }}" 
             with_items: "{{ cisc_rt_000880_interfaceinfo.gathered }}"
             register: cisc_rt_000880_interfaceinfo_showrun
 
-          - name: Set Fact For Interface Name And Stdout." 
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Set Fact For Interface Name And Stdout." 
             set_fact:
               cisc_rt_000880_intname: "{{ cisc_rt_000880_interfaceinfo_showrun.results | map(attribute='item.name') }}"
               cisc_rt_000880_intstdout: "{{ cisc_rt_000880_interfaceinfo_showrun.results | map(attribute='stdout') }}"
 
-          - name: Create List For Nested Variables."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Create List For Nested Variables."
             debug:
               msg: "{{ item.interface }}"
             with_items:
               - "{{ iosrtr_igmp_limit_interfaces }}"
             register: iosrtr_igmp_limit_interfaces_interface
           
-          - name: Set Fact For Nested Variables."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Set Fact For Nested Variables."
             set_fact:
               iosrtr_igmp_limit_interfaces_interface_list: "{{ iosrtr_igmp_limit_interfaces_interface.results | map(attribute='item.interface') }}"
 
-    - name: Global IGMP Limit Add / Remove."
+    - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Global IGMP Limit Add / Remove."
       block: 
-          - name: Set Global IGMP Limit."
+          - name: Show Run Full Config."
+            ios_command:
+              commands:
+                - "show run | section ^ip igmp"
+            register: cisc_rt_000880_full_run
+
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Set Global IGMP Limit."
             ios_config:
               lines:
                 - "ip igmp limit {{ iosrtr_igmp_limit_global }}"
@@ -2372,16 +2372,17 @@
               - iosrtr_igmp_limit_globally
               - "'none' not in iosrtr_igmp_limit_global"
 
-          - name: Remove Global IGMP Limit."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Remove Global IGMP Limit."
             ios_config:
               lines:
                 - "no ip igmp limit"
             when:
               - not iosrtr_igmp_limit_globally
+              - "'ip igmp limit' in cisc_rt_000880_full_run.stdout | string"
 
-    - name: Interface IGMP Limit Set Per Interface and Remove From Others Not In List."
+    - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Interface IGMP Limit Set Per Interface and Remove From Others Not In List."
       block:
-          - name: Set IGMP Per Interface."
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Set IGMP Per Interface."
             ios_config:
               parents:
                 - "interface {{ item.interface }}"
@@ -2392,7 +2393,7 @@
             when:
                 - item.interface in cisc_rt_000880_intname
 
-          - name: Remove IGMP Per Interface If Not in List
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Remove IGMP Per Interface If Not in List."
             ios_config:
               parents:
                 - "interface {{ item.0 }}"
@@ -2407,9 +2408,9 @@
       when: 
         - iosrtr_igmp_limit_by_interfaces
 
-    - name: Remove From All Interfaces."
+    - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Remove From All Interfaces."
       block:
-          - name: Remove IGMP Per Interface If Not in List
+          - name: "MEDIUM | CISC-RT-000880 | PATCH | The Cisco multicast Designated Router (DR) must be configured to limit the number of mroute states resulting from Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Host Membership Reports. | Remove IGMP Per Interface If Not in List."
             ios_config:
               parents:
                 - "interface {{ item.0 }}"
@@ -2422,11 +2423,6 @@
               - "'ip igmp limit' in item.1"
       when: 
         - not iosrtr_igmp_limit_by_interfaces
-
-
-
-
-
   when:
       - cisc_rt_000880
   tags:
