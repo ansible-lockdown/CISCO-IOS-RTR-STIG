@@ -2452,7 +2452,8 @@
                 debug:
                     msg:
                         - "Warning! Below is the Configured ACL For {{ cisc_rt_000870_igmp_join_filter_name }}"
-                        - "Please verify that the Access Control List (ACL) denies unauthorized sources or allows only authorized sources."                        - "{{ cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines }}"
+                        - "Please verify that the Access Control List (ACL) denies unauthorized sources or allows only authorized sources."                        
+                        - "{{ cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines }}"
                 when: 
                   - "' deny' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string or
                      ' permit' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string"
@@ -2465,15 +2466,67 @@
                   - "' deny' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string or
                      ' permit' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string"
 
+          - name: Add To Interfaces Block."
+            block: 
+              - name: Gather Interface Facts."
+                ios_interfaces:
+                  state: gathered
+                register: cisc_rt_000870_interfaceinfo
 
+              - name: Register Show Run With Interfaces."
+                ios_command:
+                  commands: 
+                    - "show run | section {{ item.name }}" 
+                with_items: "{{ cisc_rt_000870_interfaceinfo.gathered }}"
+                register: cisc_rt_000870_interfaceinfo_showrun
 
+              - name: Set Fact For Interface Name And Stdout." 
+                set_fact:
+                  cisc_rt_000870_intname: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+                  cisc_rt_000870_intstdout: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='stdout') }}"
 
+              - name: Add ACL To Interfaces Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "ip access-group {{ cisc_rt_000870_igmp_join_filter_name }} in"
+                with_together: 
+                  - "{{ cisc_rt_000870_intname }}"
+                  - "{{ cisc_rt_000870_intstdout }}"
+                when:
+                  - item.0 in iosrtr_igmp_join_filter_host_facing_interfaces_000870
+                  - cisc_rt_000870_igmp_join_filter_name not in item.1
 
+              - name: Remove ACL From Interfaces Not Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ cisc_rt_000870_igmp_join_filter_name }} in"
+                with_together: 
+                  - "{{ cisc_rt_000870_intname }}"
+                  - "{{ cisc_rt_000870_intstdout }}"
+                when:
+                  - item.0 not in iosrtr_igmp_join_filter_host_facing_interfaces_000870
+                  - cisc_rt_000870_igmp_join_filter_name in item.1
 
-
-
-
-    
+              - name: Remove Old Filter Server Traffic From All Interfaces On Router."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ iosrtr_igmp_join_filter_acl_000870_name_old }} in"
+                with_together: 
+                  - "{{ cisc_rt_000870_intname }}"
+                  - "{{ cisc_rt_000870_intstdout }}"
+                when:
+                  - "'none' not in iosrtr_igmp_join_filter_acl_000870_name_old"
+                  - item.0 is defined
+                  - iosrtr_igmp_join_filter_acl_000870_name_old in item.1
+        when: 
+          - cisc_rt_hardening_one_device
+          - "'none' in iosrtr_igmp_join_filter_acl_000870"
   when:
       - cisc_rt_000870
   tags:

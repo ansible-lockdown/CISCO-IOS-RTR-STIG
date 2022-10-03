@@ -28,7 +28,7 @@ cisc_rt_dodin_backbone: false
 # Are you hardening one device.
 # If you are hardening a single device set this variable to true so that all controls will run and you can customize 
 # your router to your liking.  
-cisc_rt_hardening_one_device: false
+cisc_rt_hardening_one_device: true
 
 # These variables correspond with the STIG IDs defined in the STIG and allows you to enable/disable specific rules.
 # PLEASE NOTE: These work in coordination with the cat1, cat2, cat3 group variables. You must enable an entire group
@@ -708,10 +708,10 @@ iosrtr_igmp_join_filter_host_facing_interfaces_000870:
 # or MLD report messages, allowing hosts to only join multicast groups from sources that have been approved.
 # By default "none" is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. 
 # If using option cisc_rt_hardening_one_device: true make sure to leave none in value.
-# If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to srtop using it you 
+# If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to stop using it you 
 # must set iosrtr_igmp_join_filter_acl_000870 to the exact EXACT ACL name that was injested from the txt file. 
 # Example: "IGMP_JOIN_FILTER"
-iosrtr_igmp_join_filter_acl_000870: "IGMP_JOIN_FILTER"
+iosrtr_igmp_join_filter_acl_000870: "none"
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
 # -------------------------------------------------------
