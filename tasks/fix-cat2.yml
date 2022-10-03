@@ -2232,8 +2232,59 @@
       - V-216621
 
 - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing."
-  debug:
-    msg: "test"
+
+          # - name: Attach To Interfaces."
+          #   block:
+          #     - name: Gather Interface Facts."
+          #       ios_interfaces:
+          #         state: gathered
+          #       register: cisc_rt_000870_interfaceinfo
+
+          #     - name: Register Show Run With Interfaces."
+          #       ios_command:
+          #         commands: 
+          #           - "show run | section {{ item.name }}" 
+          #       with_items: "{{ cisc_rt_000870_interfaceinfo.gathered }}"
+          #       register: cisc_rt_000870_interfaceinfo_showrun
+
+          #     - name: Set Fact For Interface Name And Stdout." 
+          #       set_fact:
+          #         cisc_rt_000870_intname: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+          #         cisc_rt_000870_intstdout: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+          #     - name: Add ACL To Interfaces Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
+          #       ios_config:
+          #         parents:
+          #           - "interface {{ item.0 }}"
+          #         lines:
+          #           - "ip access-group {{ iosrtr_igmp_join_filter_acl_000870 }} in"
+          #       with_together: 
+          #         - "{{ cisc_rt_000870_intname }}"
+          #         - "{{ cisc_rt_000870_intstdout }}"
+          #       when:
+          #         - item.0 in iosrtr_igmp_join_filter_host_facing_interfaces_000870
+          #         - iosrtr_igmp_join_filter_acl_000870 not in item.1
+
+          #     - name: Remove ACL From Interfaces Not Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
+          #       ios_config:
+          #         parents:
+          #           - "interface {{ item.0 }}"
+          #         lines:
+          #           - "no ip access-group {{ iosrtr_filter_perimeter_acl_000250 }} in"
+          #       with_together: 
+          #         - "{{ cisc_rt_000870_intname }}"
+          #         - "{{ cisc_rt_000870_intstdout }}"
+          #       when:
+          #         - item.0 not in iosrtr_igmp_join_filter_host_facing_interfaces_000870
+          #         - iosrtr_igmp_join_filter_acl_000870 in item.1
+
+
+
+
+
+
+
+
   when:
       - cisc_rt_000790
   tags:
@@ -2293,15 +2344,15 @@
 
 - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization."
   block:
-      - name: Show Run For Acl Checks Below."
+      - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Show Run For Acl Checks Below."
         block:
-          - name: Show Run FILTER_SERVER_TRAFFIC ACL."
+          - name: Show Run IGMP_JOIN_FILTER ACL."
             ios_command:
               commands:
                 - "show run | section ip access-list extended {{ iosrtr_igmp_join_filter_acl_000870 }}"
             register: cisc_rt_000870_acl_showrun_igmp_filter_acl
 
-          - name: No ACL Defined Check Block."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | No ACL Defined Check Block."
             block:
               - name: No ACL Defined Warning Message For IGMP_JOIN_FILTER ACL."
                 debug:
@@ -2311,7 +2362,7 @@
                 when:
                   - "'none' in iosrtr_igmp_join_filter_acl_000870"
 
-              - name: No ACL Defined By That Name Warning FILTER_SERVER_TRAFFIC."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | No ACL Defined By That Name Warning IGMP_JOIN_FILTER."
                 debug:
                   msg: 
                     - "Warning!!! Review the Access Control Lists(ACLs)."
@@ -2319,10 +2370,8 @@
                 when:
                   - "'none' not in iosrtr_igmp_join_filter_acl_000870 and 
                     iosrtr_igmp_join_filter_acl_000870 not in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout | string"
-                    # ' deny' not in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string and 
-                    # ' permit' not in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string"
 
-              - name: Site Policies Warning."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Site Policies Warning."
                 debug:
                     msg:
                         - "Warning! Below is the Configured ACL For {{ iosrtr_igmp_join_filter_acl_000870 }}"
@@ -2332,7 +2381,7 @@
                   - "' deny' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string or
                      ' permit' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string"
 
-              - name: Warn Count Added."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Warn Count Added."
                 set_fact:
                   control_number: "{{ control_number }} + ['CISC-RT-000870']"
                   warn_count: "{{ warn_count|int + 1 }}"
@@ -2345,21 +2394,21 @@
                     ' deny' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string or
                     ' permit' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string"
 
-          - name: Attach To Interfaces."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Attach To Interfaces."
             block:
-              - name: Gather Interface Facts."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Gather Interface Facts."
                 ios_interfaces:
                   state: gathered
                 register: cisc_rt_000870_interfaceinfo
 
-              - name: Register Show Run With Interfaces."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Register Show Run With Interfaces."
                 ios_command:
                   commands: 
                     - "show run | section {{ item.name }}" 
                 with_items: "{{ cisc_rt_000870_interfaceinfo.gathered }}"
                 register: cisc_rt_000870_interfaceinfo_showrun
 
-              - name: Set Fact For Interface Name And Stdout." 
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Set Fact For Interface Name And Stdout." 
                 set_fact:
                   cisc_rt_000870_intname: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='item.name') }}"
                   cisc_rt_000870_intstdout: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='stdout') }}"
@@ -2377,7 +2426,7 @@
                   - item.0 in iosrtr_igmp_join_filter_host_facing_interfaces_000870
                   - iosrtr_igmp_join_filter_acl_000870 not in item.1
 
-              - name: Remove ACL From Interfaces Not Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Remove ACL From Interfaces Not Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
                 ios_config:
                   parents:
                     - "interface {{ item.0 }}"
@@ -2390,7 +2439,7 @@
                   - item.0 not in iosrtr_igmp_join_filter_host_facing_interfaces_000870
                   - iosrtr_igmp_join_filter_acl_000870 in item.1
 
-              - name: Remove Old Filter Server ACL From All Interfaces On Router."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Remove Old IGMP Filter ACL From All Interfaces On Router."
                 ios_config:
                   parents:
                     - "interface {{ item.0 }}"
@@ -2406,7 +2455,7 @@
         when:
           - not cisc_rt_hardening_one_device
 
-      - name: Single Router Setup."
+      - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Single Router Setup."
         block:
           - name: Remove Old IGMP Join Filter Access List."
             ios_acls:
@@ -2418,29 +2467,29 @@
             when: 
               - "'none' not in iosrtr_igmp_join_filter_acl_000870_name_old"
 
-          - name: Parse User Given ACL From host_vars For Filter Server Access List."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Parse User Given ACL From host_vars For Filter Server Access List."
             ios_acls:
               running_config: "{{ lookup('file','files/cisc-rt-000870-acl.txt') }}"
               state: parsed
             register: cisc_rt_000870_igmp_join_filter_parsed
 
-          - name:  Convert JSON to DICT For ACL Defined Name For Filter Server Access List."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Convert JSON to DICT For ACL Defined Name For Filter Server Access List."
             set_fact:
               cisc_rt_000870_igmp_join_filter_name: "{{ cisc_rt_000870_igmp_join_filter_parsed.parsed.0.acls.0.name }}"
           
-          - name: Compare And Update ACL For IGMP_JOIN_FILTER ACL."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Compare And Update ACL For IGMP_JOIN_FILTER ACL."
             ios_acls:
               config: "{{ cisc_rt_000870_igmp_join_filter_parsed.parsed }}"
               state: replaced
             register: cisc_rt_000870_igmp_join_filter_ran
 
-          - name: Print Changed Lines With Debug When ACL Is Changed For Filter Server Traffic Access List."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Print Changed Lines With Debug When ACL Is Changed For IGMP_JOIN_FILTER Access List."
             debug:
               var: cisc_rt_000870_igmp_join_filter_ran.commands
             when: 
               - cisc_rt_000870_igmp_join_filter_ran.changed
 
-          - name: Check Against Site Policies And Warn Count."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Check Against Site Policies And Warn Count."
             block:
               - name: Show Run IGMP_JOIN_FILTER ACL."
                 ios_command:
@@ -2448,7 +2497,7 @@
                     - "show run | section ip access-list extended {{ cisc_rt_000870_igmp_join_filter_name }}"
                 register: cisc_rt_000870_acl_showrun_igmp_join_filter
 
-              - name: Site Policies Warning."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Site Policies Warning."
                 debug:
                     msg:
                         - "Warning! Below is the Configured ACL For {{ cisc_rt_000870_igmp_join_filter_name }}"
@@ -2458,7 +2507,7 @@
                   - "' deny' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string or
                      ' permit' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string"
 
-              - name: Warn Count Added."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Warn Count Added."
                 set_fact:
                   control_number: "{{ control_number }} + ['CISC-RT-000870']"
                   warn_count: "{{ warn_count|int + 1 }}"
@@ -2466,26 +2515,26 @@
                   - "' deny' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string or
                      ' permit' in cisc_rt_000870_acl_showrun_igmp_join_filter.stdout_lines | string"
 
-          - name: Add To Interfaces Block."
+          - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Add To Interfaces Block."
             block: 
               - name: Gather Interface Facts."
                 ios_interfaces:
                   state: gathered
                 register: cisc_rt_000870_interfaceinfo
 
-              - name: Register Show Run With Interfaces."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Register Show Run With Interfaces."
                 ios_command:
                   commands: 
                     - "show run | section {{ item.name }}" 
                 with_items: "{{ cisc_rt_000870_interfaceinfo.gathered }}"
                 register: cisc_rt_000870_interfaceinfo_showrun
 
-              - name: Set Fact For Interface Name And Stdout." 
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Set Fact For Interface Name And Stdout." 
                 set_fact:
                   cisc_rt_000870_intname: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='item.name') }}"
                   cisc_rt_000870_intstdout: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='stdout') }}"
 
-              - name: Add ACL To Interfaces Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Add ACL To Interfaces Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
                 ios_config:
                   parents:
                     - "interface {{ item.0 }}"
@@ -2498,7 +2547,7 @@
                   - item.0 in iosrtr_igmp_join_filter_host_facing_interfaces_000870
                   - cisc_rt_000870_igmp_join_filter_name not in item.1
 
-              - name: Remove ACL From Interfaces Not Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Remove ACL From Interfaces Not Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
                 ios_config:
                   parents:
                     - "interface {{ item.0 }}"
@@ -2511,7 +2560,7 @@
                   - item.0 not in iosrtr_igmp_join_filter_host_facing_interfaces_000870
                   - cisc_rt_000870_igmp_join_filter_name in item.1
 
-              - name: Remove Old Filter Server Traffic From All Interfaces On Router."
+              - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Remove Old Filter Server Traffic From All Interfaces On Router."
                 ios_config:
                   parents:
                     - "interface {{ item.0 }}"
