@@ -84,10 +84,10 @@ cisc_rt_000650: false
 cisc_rt_000660: false
 cisc_rt_000740: false
 cisc_rt_000780: false
-cisc_rt_000790: false
+cisc_rt_000790: true
 cisc_rt_000800: false
 cisc_rt_000850: false
-cisc_rt_000870: true
+cisc_rt_000870: false
 cisc_rt_000880: false
 cisc_rt_000890: false
 cisc_rt_000900: false
@@ -678,14 +678,19 @@ iosrtr_external_ipv6_interfaces:
     - "FastEthernet0/1"
 
 
+
+
+# CISC-RT-000790
+# iosrtr_pim_enabled_interfaces_000790
+iosrtr_pim_enabled_interfaces_000790:
+    - "GigabitEthernet0/0"
+    - "GigabitEthernet0/1"
+
 # CISC-RT-000850
 # iosrtr_pim_register_rate_limit is used to configure the RP to rate limit the number of multicast register messages.
 # Allowed Values <8000-2000000000>  Bits per second on C7200 Series V15.2
 # Allowed Values <1-65535>  Packets per second on C3700 Series V12.4
 iosrtr_pim_register_rate_limit: '8000'
-
-
-
 
 
 # ----------------------------------------------------

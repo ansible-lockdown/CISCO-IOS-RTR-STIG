@@ -2232,58 +2232,45 @@
       - V-216621
 
 - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing."
+  block:
+    - name: Apply To Interfaces In List."
+      ios_config:
+        parents:
+          - interface {{ item }}
+        lines:  
+          - ip pim sparse-mode
+      with_items:
+        - "{{ iosrtr_pim_enabled_interfaces_000790 }}"
 
-          # - name: Attach To Interfaces."
-          #   block:
-          #     - name: Gather Interface Facts."
-          #       ios_interfaces:
-          #         state: gathered
-          #       register: cisc_rt_000870_interfaceinfo
+    - name: Gather Interface Facts."
+      ios_interfaces:
+        state: gathered
+      register: cisc_rt_000790_interfaceinfo
 
-          #     - name: Register Show Run With Interfaces."
-          #       ios_command:
-          #         commands: 
-          #           - "show run | section {{ item.name }}" 
-          #       with_items: "{{ cisc_rt_000870_interfaceinfo.gathered }}"
-          #       register: cisc_rt_000870_interfaceinfo_showrun
+    - name: Register Show Run With Interfaces."
+      ios_command:
+        commands: 
+          - "show run | section {{ item.name }}" 
+      with_items: "{{ cisc_rt_000790_interfaceinfo.gathered }}"
+      register: cisc_rt_000790_interfaceinfo_showrun
 
-          #     - name: Set Fact For Interface Name And Stdout." 
-          #       set_fact:
-          #         cisc_rt_000870_intname: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='item.name') }}"
-          #         cisc_rt_000870_intstdout: "{{ cisc_rt_000870_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+    - name: Set Fact For Interface Name And Interface Stdout." 
+      set_fact:
+        cisc_rt_000790_intname: "{{ cisc_rt_000790_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+        cisc_rt_000790_intstdout: "{{ cisc_rt_000790_interfaceinfo_showrun.results | map(attribute='stdout') }}"
 
-          #     - name: Add ACL To Interfaces Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
-          #       ios_config:
-          #         parents:
-          #           - "interface {{ item.0 }}"
-          #         lines:
-          #           - "ip access-group {{ iosrtr_igmp_join_filter_acl_000870 }} in"
-          #       with_together: 
-          #         - "{{ cisc_rt_000870_intname }}"
-          #         - "{{ cisc_rt_000870_intstdout }}"
-          #       when:
-          #         - item.0 in iosrtr_igmp_join_filter_host_facing_interfaces_000870
-          #         - iosrtr_igmp_join_filter_acl_000870 not in item.1
-
-          #     - name: Remove ACL From Interfaces Not Listed In iosrtr_igmp_join_filter_host_facing_interfaces_000870."
-          #       ios_config:
-          #         parents:
-          #           - "interface {{ item.0 }}"
-          #         lines:
-          #           - "no ip access-group {{ iosrtr_filter_perimeter_acl_000250 }} in"
-          #       with_together: 
-          #         - "{{ cisc_rt_000870_intname }}"
-          #         - "{{ cisc_rt_000870_intstdout }}"
-          #       when:
-          #         - item.0 not in iosrtr_igmp_join_filter_host_facing_interfaces_000870
-          #         - iosrtr_igmp_join_filter_acl_000870 in item.1
-
-
-
-
-
-
-
+    - name: Remove IP PIM Sparse-mode From Interfaces Not In List."
+      ios_config:
+        parents:
+          - interface {{ item.0 }}
+        lines:  
+          - no ip pim sparse-mode
+      with_together: 
+        - "{{ cisc_rt_000790_intname }}"
+        - "{{ cisc_rt_000790_intstdout }}"
+      when:
+        - item.0 not in iosrtr_pim_enabled_interfaces_000790
+        - "'ip pim sparse-mode' in item.1"
 
   when:
       - cisc_rt_000790
