@@ -2232,46 +2232,67 @@
       - V-216621
 
 - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing."
-  block:
-    - name: Apply To Interfaces In List."
-      ios_config:
-        parents:
-          - interface {{ item }}
-        lines:  
-          - ip pim sparse-mode
-      with_items:
-        - "{{ iosrtr_pim_enabled_interfaces_000790 }}"
+  block: 
+    - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Interfaces Not Defined Error Check."
+      block:
+        - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Warning Message Check."
+          debug:
+            msg: 
+              - "Warning!!! Router is not configured to have no ip pim sparse-mode on interfaces."
+              - "To Fix this error please set interfaces in iosrtr_pim_enabled_interfaces_000790 in defaults main."
 
-    - name: Gather Interface Facts."
-      ios_interfaces:
-        state: gathered
-      register: cisc_rt_000790_interfaceinfo
-
-    - name: Register Show Run With Interfaces."
-      ios_command:
-        commands: 
-          - "show run | section {{ item.name }}" 
-      with_items: "{{ cisc_rt_000790_interfaceinfo.gathered }}"
-      register: cisc_rt_000790_interfaceinfo_showrun
-
-    - name: Set Fact For Interface Name And Interface Stdout." 
-      set_fact:
-        cisc_rt_000790_intname: "{{ cisc_rt_000790_interfaceinfo_showrun.results | map(attribute='item.name') }}"
-        cisc_rt_000790_intstdout: "{{ cisc_rt_000790_interfaceinfo_showrun.results | map(attribute='stdout') }}"
-
-    - name: Remove IP PIM Sparse-mode From Interfaces Not In List."
-      ios_config:
-        parents:
-          - interface {{ item.0 }}
-        lines:  
-          - no ip pim sparse-mode
-      with_together: 
-        - "{{ cisc_rt_000790_intname }}"
-        - "{{ cisc_rt_000790_intstdout }}"
+        - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000790 - You Have Not Entered Interfaces ]"
+            warn_count: "{{ warn_count|int + 1 }}"
       when:
-        - item.0 not in iosrtr_pim_enabled_interfaces_000790
-        - "'ip pim sparse-mode' in item.1"
+        - "'none' in iosrtr_pim_enabled_interfaces_000790"
 
+    - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Add PIM Sparse-mode To External Interface."
+      block:
+        - name: Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000790_interfaceinfo
+
+        - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000790_interfaceinfo.gathered }}"
+          register: cisc_rt_000790_interfaceinfo_showrun
+
+        - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Set Fact For Interface Name And Interface Stdout." 
+          set_fact:
+            cisc_rt_000790_intname: "{{ cisc_rt_000790_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000790_intstdout: "{{ cisc_rt_000790_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Add PIM Sparse-mode To Interfaces Listed In iosrtr_pim_enabled_interfaces_000790."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip pim sparse-mode"
+          with_together: 
+            - "{{ cisc_rt_000790_intname }}"
+            - "{{ cisc_rt_000790_intstdout }}"
+          when:
+            - item.0 in iosrtr_pim_enabled_interfaces_000790
+
+        - name: "MEDIUM | CISC-RT-000790 | PATCH | The Cisco multicast router must be configured to disable Protocol Independent Multicast (PIM) on all interfaces that are not required to support multicast routing. | Remove PIM Sparse-mode From Interfaces Not Listed In iosrtr_pim_enabled_interfaces_000790."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip pim sparse-mode"
+          with_together: 
+            - "{{ cisc_rt_000790_intname }}"
+            - "{{ cisc_rt_000790_intstdout }}"
+          when:
+            - item.0 not in iosrtr_pim_enabled_interfaces_000790
+            - "' ip pim sparse-mode' in item.1"
+      when: "'none' not in iosrtr_pim_enabled_interfaces_000790"
   when:
       - cisc_rt_000790
   tags:
