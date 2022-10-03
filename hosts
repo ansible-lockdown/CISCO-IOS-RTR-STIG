@@ -11,12 +11,12 @@
 
 #[Local Machine Testing]
 #[Local Cisco Router C7200-ADVIPSERVICESK9-M Version 15.9(3)M4]
-192.168.68.133
+192.168.68.145
 #[Local Cisco Router C3725-ADVENTERPRISEK9-M Version 12.4(15)T14]
 #192.168.68.147
 #172.16.16.51
 #[Local Cisco Router C7200-ADVIPSERVICESK9-M Version 15.2(4)S5]
-192.168.68.132
+192.168.68.143
 #172.16.225.40
 
 

@@ -10,14 +10,21 @@
 # https://github.com/ansible-collections/cisco.ios/issues/598
 #
 # Example Given In STIG:
-# ip access-list extended IGMP_JOIN_FILTER
-# deny ip any 232.8.0.0 0.0.255.255
-# permit ip x.0.0.0 0.255.255.255 any
+# ip access-list extended FILTER_SERVER_TRAFFIC
+# permit tcp any 10.1.23.0 0.0.0.255 eq 515 631 9100
+# permit tcp any 10.1.24.0 0.0.0.255 eq 1433 1434 4022
+# permit icmp any any
+# permit ospf any any
 # deny ip any any
 #
 #
 Extended IP access list FILTER_SERVER_TRAFFIC
     01 permit ip any any
-    10 deny ip any 232.8.0.0 0.0.255.255
-    20 permit ip 8.0.0.0 0.255.255.255 any
-    30 deny ip any any
+    10 permit tcp any any established
+    20 permit icmp host 1.12.1.16 host 1.12.1.17 echo
+    30 permit icmp host 2.12.1.16 host 2.12.1.17 echo_reply
+    40 permit tcp any host 1.12.1.22 eq www
+    50 permit tcp any host 1.12.1.23 eq www
+    60 permit esp any host 1.12.1.24
+    70 permit ahp any host 1.12.1.24
+    80 deny ip any any

@@ -87,8 +87,8 @@ cisc_rt_000780: false
 cisc_rt_000790: false
 cisc_rt_000800: false
 cisc_rt_000850: false
-cisc_rt_000870: false
-cisc_rt_000880: true
+cisc_rt_000870: true
+cisc_rt_000880: false
 cisc_rt_000890: false
 cisc_rt_000900: false
 cisc_rt_000910: false
@@ -683,6 +683,41 @@ iosrtr_external_ipv6_interfaces:
 # Allowed Values <8000-2000000000>  Bits per second on C7200 Series V15.2
 # Allowed Values <1-65535>  Packets per second on C3700 Series V12.4
 iosrtr_pim_register_rate_limit: '8000'
+
+
+
+
+
+# ----------------------------------------------------
+# CISC-RT-000870
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+# iosrtr_external_facing_interfaces_000010 are the External Facing interfaces for the ACL.
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
+iosrtr_igmp_join_filter_host_facing_interfaces_000870:
+    - "GigabitEthernet0/0"
+    - "GigabitEthernet0/1"
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Existing ACL)
+# -------------------------------------------------------
+# iosrtr_igmp_join_filter_acl_000870 is the user defined ACL that is configured to to verify that it is filtering IGMP 
+# or MLD report messages, allowing hosts to only join multicast groups from sources that have been approved.
+# By default "none" is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. 
+# If using option cisc_rt_hardening_one_device: true make sure to leave none in value.
+# If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to srtop using it you 
+# must set iosrtr_igmp_join_filter_acl_000870 to the exact EXACT ACL name that was injested from the txt file. 
+# Example: "IGMP_JOIN_FILTER"
+iosrtr_igmp_join_filter_acl_000870: "IGMP_JOIN_FILTER"
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# The settings below are the name of the old access control list that is used for the IGMP_JOIN_FILTER acl.  
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_igmp_join_filter_acl_000870_name_old: "none"
 
 
 
