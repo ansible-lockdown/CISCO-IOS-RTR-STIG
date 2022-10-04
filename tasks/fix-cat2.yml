@@ -2304,8 +2304,241 @@
       - V-216622
 
 - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled."
-  debug:
-    msg: "test"
+  block:
+      - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Show Run For Acl Checks Below."
+        block:
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Show Run PIM_NEIGHBORS ACL."
+            ios_command:
+              commands:
+                - "show run | section ip access-list standard {{ iosrtr_pim_neighbors_acl_000800 }}"
+            register: cisc_rt_000800_acl_showrun_pim_neighbors
+
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | No ACL Defined Check Block."
+            block:
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | No ACL Defined Warning Message For PIM_NEIGHBORS ACL."
+                debug:
+                  msg: 
+                    - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                    - "To Fix this error please define a existing ACL in iosrtr_pim_neighbors_acl_000800 in defaults main."
+                when:
+                  - "'none' in iosrtr_pim_neighbors_acl_000800"
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | No ACL Defined By That Name Warning PIM_NEIGHBORS."
+                debug:
+                  msg: 
+                    - "Warning!!! Review the Access Control Lists(ACLs)."
+                    - "The defined ACL {{ iosrtr_pim_neighbors_acl_000800 }} is not present on the Router."
+                when:
+                  - "'none' not in iosrtr_pim_neighbors_acl_000800 and 
+                    iosrtr_pim_neighbors_acl_000800 not in cisc_rt_000800_acl_showrun_pim_neighbors.stdout | string"
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Site Policies Warning."
+                debug:
+                    msg:
+                        - "Warning! Below is the Configured ACL For {{ iosrtr_pim_neighbors_acl_000800 }}"
+                        - "Please confirm they align with your site policies to only accept PIM control plane" 
+                        - "traffic from documented PIM neighbors"
+                        - "{{ cisc_rt_000800_acl_showrun_pim_neighbors.stdout_lines }}"
+                when: 
+                  - "' deny' in cisc_rt_000800_acl_showrun_pim_neighbors.stdout_lines | string or
+                     ' permit' in cisc_rt_000800_acl_showrun_pim_neighbors.stdout_lines | string"
+
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Warn Count Added."
+            set_fact:
+              control_number: "{{ control_number }} + ['CISC-RT-000800']"
+              warn_count: "{{ warn_count|int + 1 }}"
+            when:
+              - "'none' in iosrtr_pim_neighbors_acl_000800 or 
+                'none' not in iosrtr_pim_neighbors_acl_000800 and 
+                iosrtr_pim_neighbors_acl_000800 not in cisc_rt_000800_acl_showrun_pim_neighbors.stdout | string or
+                ' deny' not in cisc_rt_000800_acl_showrun_pim_neighbors.stdout_lines | string and 
+                ' permit' not in cisc_rt_000800_acl_showrun_pim_neighbors.stdout_lines | string or
+                ' deny' in cisc_rt_000800_acl_showrun_pim_neighbors.stdout_lines | string or
+                ' permit' in cisc_rt_000800_acl_showrun_pim_neighbors.stdout_lines | string"
+
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Attach To Interfaces."
+            block:
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Gather Interface Facts."
+                ios_interfaces:
+                  state: gathered
+                register: cisc_rt_000800_interfaceinfo
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Register Show Run With Interfaces."
+                ios_command:
+                  commands: 
+                    - "show run | section {{ item.name }}" 
+                with_items: "{{ cisc_rt_000800_interfaceinfo.gathered }}"
+                register: cisc_rt_000800_interfaceinfo_showrun
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Set Fact For Interface Name And Stdout." 
+                set_fact:
+                  cisc_rt_000800_intname: "{{ cisc_rt_000800_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+                  cisc_rt_000800_intstdout: "{{ cisc_rt_000800_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Add ACL To Interfaces Listed In iosrtr_pim_enabled_interfaces_000790."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "ip access-group {{ iosrtr_pim_neighbors_acl_000800 }} in"
+                with_together: 
+                  - "{{ cisc_rt_000800_intname }}"
+                  - "{{ cisc_rt_000800_intstdout }}"
+                when:
+                  - item.0 in iosrtr_pim_enabled_interfaces_000790
+                  - iosrtr_pim_neighbors_acl_000800 not in item.1
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Remove ACL From Interfaces Not Listed In iosrtr_pim_enabled_interfaces_000790."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ iosrtr_pim_neighbors_acl_000800 }} in"
+                with_together: 
+                  - "{{ cisc_rt_000800_intname }}"
+                  - "{{ cisc_rt_000800_intstdout }}"
+                when:
+                  - item.0 not in iosrtr_pim_enabled_interfaces_000790
+                  - iosrtr_pim_neighbors_acl_000800 in item.1
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Remove Old PIM_NEIGHBORS ACL From All Interfaces On Router."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ iosrtr_pim_neighbors_acl_000800_name_old }} in"
+                with_together: 
+                  - "{{ cisc_rt_000800_intname }}"
+                  - "{{ cisc_rt_000800_intstdout }}"
+                when:
+                  - "'none' not in iosrtr_pim_neighbors_acl_000800_name_old"
+                  - item.0 is defined
+                  - iosrtr_pim_neighbors_acl_000800_name_old in item.1
+        when:
+          - not cisc_rt_hardening_one_device
+
+      - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Single Router Setup."
+        block:
+          - name: Remove Old Filter Server Access List."
+            ios_acls:
+                config:
+                    - afi: ipv4
+                      acls:
+                        - name: "{{ iosrtr_pim_neighbors_acl_000800_name_old }}"
+                state: deleted
+            when: 
+              - "'none' not in iosrtr_pim_neighbors_acl_000800_name_old"
+
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Parse User Given ACL From host_vars For Pim Neighbors Access List."
+            ios_acls:
+              running_config: "{{ lookup('file','files/cisc-rt-000800-acl.txt') }}"
+              state: parsed
+            register: cisc_rt_000800_pim_neighbors_parsed
+
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Convert JSON to DICT For ACL Defined Name For PIM_NEIGHBORS Access List."
+            set_fact:
+              cisc_rt_000800_pim_neighbors_name: "{{ cisc_rt_000800_pim_neighbors_parsed.parsed.0.acls.0.name }}"
+          
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Compare And Update ACL For PIM_NEIGHBORS ACL."
+            ios_acls:
+              config: "{{ cisc_rt_000800_pim_neighbors_parsed.parsed }}"
+              state: replaced
+            register: cisc_rt_000800_pim_neighbors_ran
+
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Print Changed Lines With Debug When ACL Is Changed For Pim Neighbors Access List."
+            debug:
+              var: cisc_rt_000800_pim_neighbors_ran.commands
+            when: 
+              - cisc_rt_000800_pim_neighbors_ran.changed
+
+          - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Check Against Site Policies And Warn Count."
+            block:
+              - name: Show Run PIM_NEIGHBORS ACL."
+                ios_command:
+                  commands:
+                    - "show run | section ip access-list standard {{ cisc_rt_000800_pim_neighbors_name }}"
+                register: cisc_rt_000800_showrun_acl_pim_neighbors
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Site Policies Warning."
+                debug:
+                    msg:
+                        - "Warning! Below is the Configured ACL For {{ cisc_rt_000800_pim_neighbors_name }}"
+                        - "Please confirm they align with your site policies to only accept PIM control plane" 
+                        - "traffic from documented PIM neighbors"
+                        - "{{ cisc_rt_000800_showrun_acl_pim_neighbors.stdout_lines }}"
+                when: 
+                  - "' deny' in cisc_rt_000800_showrun_acl_pim_neighbors.stdout_lines | string or
+                    ' permit' in cisc_rt_000800_showrun_acl_pim_neighbors.stdout_lines | string"
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Warn Count Added."
+                set_fact:
+                  control_number: "{{ control_number }} + ['CISC-RT-000800']"
+                  warn_count: "{{ warn_count|int + 1 }}"
+                when: 
+                  - "' deny' in cisc_rt_000800_showrun_acl_pim_neighbors.stdout_lines | string or
+                    ' permit' in cisc_rt_000800_showrun_acl_pim_neighbors.stdout_lines | string"
+
+          - name: A"MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | dd To Interfaces Block."
+            block: 
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Gather Interface Facts."
+                ios_interfaces:
+                  state: gathered
+                register: cisc_rt_000800_interfaceinfo
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Register Show Run With Interfaces."
+                ios_command:
+                  commands: 
+                    - "show run | section {{ item.name }}" 
+                with_items: "{{ cisc_rt_000800_interfaceinfo.gathered }}"
+                register: cisc_rt_000800_interfaceinfo_showrun
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Set Fact For Interface Name And Stdout." 
+                set_fact:
+                  cisc_rt_000800_intname: "{{ cisc_rt_000800_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+                  cisc_rt_000800_intstdout: "{{ cisc_rt_000800_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Add ACL To Interfaces Listed In iosrtr_pim_enabled_interfaces_000790."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "ip access-group {{ cisc_rt_000800_pim_neighbors_name }} in"
+                with_together: 
+                  - "{{ cisc_rt_000800_intname }}"
+                  - "{{ cisc_rt_000800_intstdout }}"
+                when:
+                  - item.0 in iosrtr_pim_enabled_interfaces_000790
+                  - cisc_rt_000800_pim_neighbors_name not in item.1
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Remove ACL From Interfaces Not Listed In iosrtr_pim_enabled_interfaces_000790."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ cisc_rt_000800_pim_neighbors_name }} in"
+                with_together: 
+                  - "{{ cisc_rt_000800_intname }}"
+                  - "{{ cisc_rt_000800_intstdout }}"
+                when:
+                  - item.0 not in iosrtr_pim_enabled_interfaces_000790
+                  - cisc_rt_000800_pim_neighbors_name in item.1
+
+              - name: "MEDIUM | CISC-RT-000800 | PATCH | The Cisco multicast router must be configured to bind a Protocol Independent Multicast (PIM) neighbor filter to interfaces that have PIM enabled. | Remove Old Filter Server Traffic From All Interfaces On Router."
+                ios_config:
+                  parents:
+                    - "interface {{ item.0 }}"
+                  lines:
+                    - "no ip access-group {{ iosrtr_pim_neighbors_acl_000800_name_old }} in"
+                with_together: 
+                  - "{{ cisc_rt_000800_intname }}"
+                  - "{{ cisc_rt_000800_intstdout }}"
+                when:
+                  - "'none' not in iosrtr_pim_neighbors_acl_000800_name_old"
+                  - item.0 is defined
+                  - iosrtr_pim_neighbors_acl_000800_name_old in item.1
+        when: 
+          - cisc_rt_hardening_one_device
+          - "'none' in iosrtr_pim_neighbors_acl_000800"
   when:
       - cisc_rt_000800
       - not cisc_rt_dodin_backbone

@@ -85,7 +85,7 @@ cisc_rt_000660: false
 cisc_rt_000740: false
 cisc_rt_000780: false
 cisc_rt_000790: true
-cisc_rt_000800: false
+cisc_rt_000800: true
 cisc_rt_000850: false
 cisc_rt_000870: false
 cisc_rt_000880: false
@@ -680,11 +680,57 @@ iosrtr_external_ipv6_interfaces:
 
 
 
+
+# -------------------------------------------------------
 # CISC-RT-000790
-# iosrtr_pim_enabled_interfaces_000790
+# CISC-RT-000800
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Used In Full Task)
+# -------------------------------------------------------
+# iosrtr_pim_enabled_interfaces_000790 are the interfaces that will have PIM enabled and will have the ACL attached to them.
+# Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
+# Also this combines task 000790 and 000800 because they deal with the same ports.  
+# Example:
+#   - "FastEthernet0/0"
+#   - "FastEthernet0/1"
 iosrtr_pim_enabled_interfaces_000790:
     - "GigabitEthernet0/0"
     - "GigabitEthernet0/1"
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Existing ACL)
+# -------------------------------------------------------
+# iosrtr_pim_neighbors_acl_000800 is the user defined ACL that is configured to only accept PIM control plane traffic from documented PIM neighbors.
+# Then bind neighbor ACLs to all PIM enabled interfaces listed above.
+# By default "none" is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. 
+# If using option cisc_rt_hardening_one_device: true make sure to leave none in value.
+# If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to stop using it you 
+# must set iosrtr_pim_neighbors_acl_000800 to the exact EXACT ACL name that was injested from the txt file. 
+# Example: "PIM_NEIGHBORS"
+iosrtr_pim_neighbors_acl_000800: "PIM_NEIGHBORS"
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# The settings below are the name of the old access control list that is used for the PIM_NEIGHBORS acl.  
+# If you did not have a existing access control list defined in the router leave as is.  
+iosrtr_pim_neighbors_acl_000800_name_old: "none"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # CISC-RT-000850
 # iosrtr_pim_register_rate_limit is used to configure the RP to rate limit the number of multicast register messages.
