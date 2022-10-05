@@ -82,10 +82,10 @@ cisc_rt_000560: false
 cisc_rt_000620: false
 cisc_rt_000650: false
 cisc_rt_000660: false
-cisc_rt_000740: false
+cisc_rt_000740: true
 cisc_rt_000780: false
-cisc_rt_000790: true
-cisc_rt_000800: true
+cisc_rt_000790: false
+cisc_rt_000800: false
 cisc_rt_000850: false
 cisc_rt_000870: false
 cisc_rt_000880: false
@@ -678,6 +678,13 @@ iosrtr_external_ipv6_interfaces:
     - "FastEthernet0/1"
 
 
+# CISC-RT-000740
+# iosrtr_urpf_loose_mode_interfaces_000740 are the interfaces on the PE router that must be 
+# configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing 
+# interfaces.
+iosrtr_urpf_loose_mode_interfaces_000740:
+    - "GigabitEthernet0/0"
+    - "GigabitEthernet0/1"
 
 
 
@@ -706,7 +713,7 @@ iosrtr_pim_enabled_interfaces_000790:
 # If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to stop using it you 
 # must set iosrtr_pim_neighbors_acl_000800 to the exact EXACT ACL name that was injested from the txt file. 
 # Example: "PIM_NEIGHBORS"
-iosrtr_pim_neighbors_acl_000800: "PIM_NEIGHBORS"
+iosrtr_pim_neighbors_acl_000800: "none"
 # -------------------------------------------------------
 # Single Router Setup (New Setup ACL) 
 # -------------------------------------------------------

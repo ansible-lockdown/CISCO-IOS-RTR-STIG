@@ -1943,7 +1943,7 @@
             cisc_rt_000380_intname: "{{ cisc_rt_000380_interfaceinfo_showrun.results | map(attribute='item.name') }}"
             cisc_rt_000380_intstdout: "{{ cisc_rt_000380_interfaceinfo_showrun.results | map(attribute='stdout') }}"
 
-        - name: Disable Ip Proxy-Arp On External Interfaces."
+        - name: "MEDIUM | CISC-RT-000380 | PATCH | The Cisco perimeter router must be configured to have Proxy ARP disabled on all external interfaces. | Disable Ip Proxy-Arp On External Interfaces."
           ios_config:
             parents:
               - "interface {{ item }}"
@@ -2206,8 +2206,68 @@
       - V-216614
 
 - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces."
-  debug:
-    msg: "test"
+  block:
+    - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Interfaces Not Defined Error Check."
+      block:
+        - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Warning Message Check."
+          debug:
+            msg: 
+              - "Warning!!! Router is not configured to have urpf loose mode on CE-Facing interfaces."
+              - "To Fix this error please set interfaces in iosrtr_urpf_loose_mode_interfaces_000740 in defaults main."
+
+        - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Create Control Warning For End Of Play."
+          set_fact:
+            control_number:
+              - "{{ control_number }} + [ CISC-RT-000740 - You Have Not Entered Interfaces ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+      when:
+        - "'none' in iosrtr_urpf_loose_mode_interfaces_000740"
+
+    - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Add URPF Loose Mode To Ce-Facing Interfaces."
+      block:
+        - name: Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000740_interfaceinfo
+
+        - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000740_interfaceinfo.gathered }}"
+          register: cisc_rt_000740_interfaceinfo_showrun
+
+        - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Set Fact For Interface Name And Interface Stdout." 
+          set_fact:
+            cisc_rt_000740_intname: "{{ cisc_rt_000740_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000740_intstdout: "{{ cisc_rt_000740_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Add URPF Loose Mode To Interfaces Listed In iosrtr_urpf_loose_mode_interfaces_000740."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "ip verify unicast source reachable-via any"
+          with_together: 
+            - "{{ cisc_rt_000740_intname }}"
+            - "{{ cisc_rt_000740_intstdout }}"
+          when:
+            - item.0 in iosrtr_urpf_loose_mode_interfaces_000740
+            - "' ip verify unicast source reachable-via any' not in item.1"
+
+        - name: "MEDIUM | CISC-RT-000740 | PATCH | The Cisco PE router must be configured with Unicast Reverse Path Forwarding (uRPF) loose mode enabled on all CE-facing interfaces. | Remove URPF Loose Mode From Interfaces Not Listed In iosrtr_urpf_loose_mode_interfaces_000740."
+          ios_config:
+            parents:
+              - "interface {{ item.0 }}"
+            lines:
+              - "no ip verify unicast source reachable-via any"
+          with_together: 
+            - "{{ cisc_rt_000740_intname }}"
+            - "{{ cisc_rt_000740_intstdout }}"
+          when:
+            - item.0 not in iosrtr_urpf_loose_mode_interfaces_000740
+            - "' ip verify unicast source reachable-via any' in item.1"
+      when: "'none' not in iosrtr_urpf_loose_mode_interfaces_000740"
   when:
       - cisc_rt_000740
   tags:

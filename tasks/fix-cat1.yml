@@ -1111,7 +1111,7 @@
   when:
       - cisc_rt_000290
       - not cisc_rt_dodin_backbone
-  tags:
+      
       - CISC-RT-000290
       - CAT1
       - CCI-001414
