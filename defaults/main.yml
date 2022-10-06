@@ -82,7 +82,7 @@ cisc_rt_000560: false
 cisc_rt_000620: false
 cisc_rt_000650: false
 cisc_rt_000660: false
-cisc_rt_000740: true
+cisc_rt_000740: false
 cisc_rt_000780: false
 cisc_rt_000790: false
 cisc_rt_000800: false
@@ -100,8 +100,8 @@ cisc_rt_000480: false
 cisc_rt_000750: false
 cisc_rt_000235: false
 cisc_rt_000237: false
-cisc_rt_000391: false
-cisc_rt_000392: false
+cisc_rt_000391: true
+cisc_rt_000392: true
 cisc_rt_000393: false
 cisc_rt_000394: false
 cisc_rt_000395: false
@@ -823,11 +823,6 @@ iosrtr_:
 
 
 
-# iosrtr_external_ipv6_interfaces
-# These are external IPv6-enabled interfaces.  
-iosrtr_external_ipv6_interfaces_000391: 
-    - "FastEthernet0/0"
-    - "FastEthernet0/1"
 
 
 # ----------------------------------------------------
@@ -842,15 +837,32 @@ iosrtr_external_ipv6_interfaces_000391:
 # -------------------------------------------------------
 # User Defined Settings In Defaults Main (Used In Full Task)
 # -------------------------------------------------------
-# iosrtr_external_facing_interfaces_000010 are the External Facing interfaces for the ACL.
+# iosrtr_external_ipv6_enabled_interfaces_000391 are the external IPv6-enabled interfaces for the FILTER_IPV6 ACL.
 # Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
 # Example:
-#   - "FastEthernet0/0"
-#   - "FastEthernet0/1"
+    - "GigabitEthernet2/0"
+    - "GigabitEthernet0/2"
 iosrtr_external_ipv6_enabled_interfaces_000391: 
     - "GigabitEthernet2/0"
     - "GigabitEthernet0/2"
-
+# -------------------------------------------------------
+# User Defined Settings In Defaults Main (Existing ACL)
+# -------------------------------------------------------
+# iosrtr_filter_ipv6_acl_000392_to_000398 is the user defined ACL that is configured to 
+# allow or deny traffic for specific source and destination addresses as well as ports and protocols between various subnets as required.
+# By default "none" is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run. 
+# If using option cisc_rt_hardening_one_device: true make sure to leave none in value.
+# If have choosen to use cisc_rt_hardening_one_device: true on the initial run and decide later to srtop using it you 
+# must set iosrtr_filter_server_traffic_acl_000010 to the exact EXACT ACL name that was injested from the txt file. 
+# Example: "FILTER_IPV6"
+iosrtr_filter_ipv6_acl_000392_to_000398: "FILTER_IPV6"
+# -------------------------------------------------------
+# Single Router Setup (New Setup ACL) 
+# -------------------------------------------------------
+# The settings below are the name of the old access control list that is used 
+# for the FILTER_SERVER_TRAFFIC acl.  
+# If you did not have a existing access control list defined in the router leave as is.  
+#iosrtr_filter_server_traffic_acl_name_old: "none"
 
 
 

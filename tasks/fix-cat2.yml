@@ -1101,20 +1101,8 @@
       - V-216560
 
 - name: "MEDIUM | CISC-RT-000140 | PATCH | The Cisco router must be configured to drop all fragmented Internet Control Message Protocol (ICMP) packets destined to itself."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  debug:
+    msg: "test"
   when:
       - cisc_rt_000140
   tags:
@@ -1155,7 +1143,7 @@
               - "{{ control_number }} + [ CISC-RT-000170 - You Have Not Entered Interfaces ]"
             warn_count: "{{ warn_count|int + 1 }}"
       when:
-        - "'none' in iosrtr_external_facing_interfaces_000170"
+        - "'none' in iosrtr_external_facing_xinterfaces_000170"
     
     - name: "MEDIUM | CISC-RT-000170 | PATCH | The Cisco router must be configured to have Internet Control Message Protocol (ICMP) unreachable messages disabled on all external interfaces. | Add No Ip Unreachables To External Interface And Null0."
       block:
@@ -3212,44 +3200,69 @@
 
 - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces."
   block:
-    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Apply To Interfaces In List."
-      ios_config:
-        parents:
-          - interface {{ item }}
-        lines:  
-          - ipv6 nd ra suppress
-      with_items:
-        - "{{ iosrtr_external_ipv6_interfaces }}"
+    - name: Error Check Block."
+      block: 
+          - name: No Interfaces Defined."
+            debug:
+              msg: 
+                - "Warning!!! Router is not configured to have suppress Router Advertisements on all external IPv6-enabled interfaces."
+                - "To Fix this error please set interfaces in iosrtr_external_ipv6_enabled_interfaces_000391 in defaults main."
+            when:
+              - "'none' in iosrtr_external_ipv6_enabled_interfaces_000391"
 
-    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Gather Interface Facts."
-      ios_interfaces:
-        state: gathered
-      register: cisc_rt_000391_interfaceinfo
+          - name: Warn Count Added."
+            set_fact:
+              control_number: "{{ control_number }} + ['CISC-RT-000391']"
+              warn_count: "{{ warn_count|int + 1 }}"
+            when:
+              - "'none' in iosrtr_external_ipv6_enabled_interfaces_000391"
 
-    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Register Show Run With Interfaces."
-      ios_command:
-        commands: 
-          - "show run | section {{ item.name }}" 
-      with_items: "{{ cisc_rt_000391_interfaceinfo.gathered }}"
-      register: cisc_rt_000391_interfaceinfo_showrun
+    - name: Add ipv6 nd ra suppress To Interfaces.
+      block: 
+        - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Gather Interface Facts."
+          ios_interfaces:
+            state: gathered
+          register: cisc_rt_000391_interfaceinfo
 
-    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Set Fact For Interface Name And Interface Stdout." 
-      set_fact:
-        cisc_rt_000391_intname: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='item.name') }}"
-        cisc_rt_000391_intstdout: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+        - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Register Show Run With Interfaces."
+          ios_command:
+            commands: 
+              - "show run | section {{ item.name }}" 
+          with_items: "{{ cisc_rt_000391_interfaceinfo.gathered }}"
+          register: cisc_rt_000391_interfaceinfo_showrun
 
-    - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Remove ipv6 nd ra suppress From Interfaces Not In List."
-      ios_config:
-        parents:
-          - interface {{ item.0 }}
-        lines:  
-          - no ipv6 nd ra suppress
-      with_together: 
-        - "{{ cisc_rt_000391_intname }}"
-        - "{{ cisc_rt_000391_intstdout }}"
+        - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Set Fact For Interface Name And Interface Stdout." 
+          set_fact:
+            cisc_rt_000391_intname: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='item.name') }}"
+            cisc_rt_000391_intstdout: "{{ cisc_rt_000391_interfaceinfo_showrun.results | map(attribute='stdout') }}"
+
+        - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Apply To Interfaces In List."
+          ios_config:
+            parents:
+              - interface {{ item.0 }}
+            lines:  
+              - ipv6 nd ra suppress
+          with_together: 
+            - "{{ cisc_rt_000391_intname }}"
+            - "{{ cisc_rt_000391_intstdout }}"
+          when:
+            - item.0 in iosrtr_external_ipv6_enabled_interfaces_000391
+            - "'ipv6 nd ra suppress' not in item.1"
+
+        - name: "MEDIUM | CISC-RT-000391 | PATCH | The Cisco perimeter router must be configured to suppress Router Advertisements on all external IPv6-enabled interfaces. | Remove ipv6 nd ra suppress From Interfaces Not In List."
+          ios_config:
+            parents:
+              - interface {{ item.0 }}
+            lines:  
+              - no ipv6 nd ra suppress
+          with_together: 
+            - "{{ cisc_rt_000391_intname }}"
+            - "{{ cisc_rt_000391_intstdout }}"
+          when:
+            - item.0 not in iosrtr_external_ipv6_enabled_interfaces_000391
+            - "'ipv6 nd ra suppress' in item.1"
       when:
-        - item.0 not in iosrtr_external_ipv6_interfaces
-        - "'ipv6 nd ra suppress' in item.1"
+        - "'none' not in iosrtr_external_ipv6_enabled_interfaces_000391"
   when:
       - cisc_rt_000391
       - not cisc_rt_dodin_backbone
@@ -3262,9 +3275,67 @@
       - V-230044
 
 - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets."
-  ios_command:
-      commands:
-        - interface range
+  block:
+    - name: Error Check Block."
+      block: 
+          - name: No Interfaces Defined."
+            debug:
+              msg: 
+                - "Warning!!! Router is not configured to have suppress Router Advertisements on all external IPv6-enabled interfaces."
+                - "To Fix this error please set interfaces in iosrtr_external_ipv6_enabled_interfaces_000391 in defaults main."
+            when:
+              - "'none' in iosrtr_external_ipv6_enabled_interfaces_000391"
+
+    - name: Show Run For Acl Checks Below."
+      block:
+        - name: Show Run FILTER_IPV6 ACL."
+          ios_command:
+            commands:
+              - "show run | section ipv6 access-list {{ iosrtr_filter_ipv6_acl_000392_to_000398 }}"
+          register: cisc_rt_000392_acl_showrun_filter_ipv6_acl
+
+        - name: No ACL Defined Check Block."
+          block:
+            - name: No ACL Defined Warning Message For FILTER_IPV6 ACL."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+                  - "To Fix this error please define a existing ACL in iosrtr_filter_ipv6_acl_000392_to_000398 in defaults main."
+              when:
+                - "'none' in iosrtr_filter_ipv6_acl_000392_to_000398"
+
+            - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | No ACL Defined By That Name Warning IGMP_JOIN_FILTER."
+              debug:
+                msg: 
+                  - "Warning!!! Review the Access Control Lists(ACLs)."
+                  - "The defined ACL {{ iosrtr_filter_ipv6_acl_000392_to_000398 }} is not present on the Router."
+              when:
+                - "'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and 
+                  iosrtr_filter_ipv6_acl_000392_to_000398 not in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
+
+            - name: Site Policies Warning."
+              debug:
+                  msg:
+                      - "Warning! Below is the Configured ACL For {{ iosrtr_filter_ipv6_acl_000392_to_000398 }}"
+                      - "Please verify that the Access Control List (ACL) drops IPv6 undetermined transport packets."
+                      - "{{ cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines }}"
+              when: 
+                - "' deny' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string or
+                  ' permit' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string"
+
+        - name: Warn Count Added."
+          set_fact:
+            control_number: "{{ control_number }} + ['CISC-RT-000392']"
+            warn_count: "{{ warn_count|int + 1 }}"
+          when:
+            - "'none' in iosrtr_external_ipv6_enabled_interfaces_000391 or
+              'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and iosrtr_filter_ipv6_acl_000392_to_000398 not in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string or
+              ' deny' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string or ' permit' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string"
+
+    - name: Show Run For Acl Checks Below."
+      block:
+
+
   when:
       - cisc_rt_000392
       - not cisc_rt_dodin_backbone
@@ -3348,11 +3419,6 @@
 
 - name: "MEDIUM | CISC-RT-000398 | PATCH | The Cisco perimeter router must be configured to drop IPv6 packets containing a Hop-by-Hop or Destination Option extension header with an undefined option type."
   debug:
-
-
-
-
-    
     msg: "test"
   when:
       - cisc_rt_000398
@@ -3425,3 +3491,58 @@
 #       when:
 #         - item.0 in iosrtr_external_ipv6_interfaces
 #         - "'ipv6 nd ra suppress' not in cisc_rt_000391_intstdout"
+
+
+
+
+# - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization."
+#   block:
+#       - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Show Run For Acl Checks Below."
+#         block:
+#           - name: Show Run IGMP_JOIN_FILTER ACL."
+#             ios_command:
+#               commands:
+#                 - "show run | section ip access-list extended {{ iosrtr_igmp_join_filter_acl_000870 }}"
+#             register: cisc_rt_000870_acl_showrun_igmp_filter_acl
+
+#           - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | No ACL Defined Check Block."
+#             block:
+#               - name: No ACL Defined Warning Message For IGMP_JOIN_FILTER ACL."
+#                 debug:
+#                   msg: 
+#                     - "Warning!!! Review the Access Control Lists (ACLs) Item Is Not Defined."
+#                     - "To Fix this error please define a existing ACL in iosrtr_igmp_join_filter_acl_000870 in defaults main."
+#                 when:
+#                   - "'none' in iosrtr_igmp_join_filter_acl_000870"
+
+#               - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | No ACL Defined By That Name Warning IGMP_JOIN_FILTER."
+#                 debug:
+#                   msg: 
+#                     - "Warning!!! Review the Access Control Lists(ACLs)."
+#                     - "The defined ACL {{ iosrtr_igmp_join_filter_acl_000870 }} is not present on the Router."
+#                 when:
+#                   - "'none' not in iosrtr_igmp_join_filter_acl_000870 and 
+#                     iosrtr_igmp_join_filter_acl_000870 not in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout | string"
+
+#               - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Site Policies Warning."
+#                 debug:
+#                     msg:
+#                         - "Warning! Below is the Configured ACL For {{ iosrtr_igmp_join_filter_acl_000870 }}"
+#                         - "Please verify that the Access Control List (ACL) denies unauthorized sources or allows only authorized sources."
+#                         - "{{ cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines }}"
+#                 when: 
+#                   - "' deny' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string or
+#                      ' permit' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string"
+
+#               - name: "MEDIUM | CISC-RT-000870 | PATCH | The Cisco multicast Designated Router (DR) must be configured to filter the Internet Group Management Protocol (IGMP) and Multicast Listener Discovery (MLD) Report messages to allow hosts to join a multicast group only from sources that have been approved by the organization. | Warn Count Added."
+#                 set_fact:
+#                   control_number: "{{ control_number }} + ['CISC-RT-000870']"
+#                   warn_count: "{{ warn_count|int + 1 }}"
+#                 when:
+#                   - "'none' in iosrtr_igmp_join_filter_acl_000870 or 
+#                     'none' not in iosrtr_igmp_join_filter_acl_000870 and 
+#                     iosrtr_igmp_join_filter_acl_000870 not in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout | string or
+#                     ' deny' not in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string and 
+#                     ' permit' not in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string or
+#                     ' deny' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string or
+#                     ' permit' in cisc_rt_000870_acl_showrun_igmp_filter_acl.stdout_lines | string"
