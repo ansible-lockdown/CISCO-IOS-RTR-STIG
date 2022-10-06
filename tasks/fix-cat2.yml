@@ -755,7 +755,6 @@
       when:
         - not cisc_rt_hardening_one_device
 
-
     - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Single Router Setup."
       block:
         - name: "MEDIUM | CISC-RT-000120 | PATCH | The Cisco router must be configured to protect against or limit the effects of denial-of-service (DoS) attacks by employing control plane protection. | Remove CoPP_CRITICAL Access List Old."
@@ -1102,8 +1101,20 @@
       - V-216560
 
 - name: "MEDIUM | CISC-RT-000140 | PATCH | The Cisco router must be configured to drop all fragmented Internet Control Message Protocol (ICMP) packets destined to itself."
-  debug:
-    msg: "test"  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   when:
       - cisc_rt_000140
   tags:

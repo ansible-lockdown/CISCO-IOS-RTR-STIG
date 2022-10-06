@@ -3,7 +3,7 @@
 # Currently a bug in echo_reply that is being fixed and has not been pushed to repo.  
 # https://github.com/ansible-collections/cisco.ios/pull/626 
 #
-# This ACL combines STIG ID's 250 amnd 270 in Cat II.  
+# This ACL combines STIG ID's 250 and 270 in Cat II.  
 #
 # There is also a open issue Regarding the way the ios_acl runs the add and remove for the commands.
 # If you failed to add permit ip any any to the original acl file and are back here to fix it

@@ -670,13 +670,6 @@ iosrtr_filter_ipv6:
   - {seq: , grant: , source_any: , destination_any: , }
 
 
-# CISC-RT-000391
-# iosrtr_external_ipv6_interfaces
-# These are external IPv6-enabled interfaces.  
-iosrtr_external_ipv6_interfaces: 
-    - "FastEthernet0/0"
-    - "FastEthernet0/1"
-
 
 # CISC-RT-000740
 # iosrtr_urpf_loose_mode_interfaces_000740 are the interfaces on the PE router that must be 
@@ -826,63 +819,37 @@ iosrtr_:
 
 
 
-###########################################################
-###########################################################
-#####               EXAMPLE BLOCK BEGIN               #####
-###########################################################
-###########################################################
-# CISC-RT-000730
+
+
+
+
+# iosrtr_external_ipv6_interfaces
+# These are external IPv6-enabled interfaces.  
+iosrtr_external_ipv6_interfaces_000391: 
+    - "FastEthernet0/0"
+    - "FastEthernet0/1"
+
+
+# ----------------------------------------------------
+# CISC-RT-000391
+# CISC-RT-000392
+# CISC-RT-000393
+# CISC-RT-000394
+# CISC-RT-000395
+# CISC-RT-000396
+# CISC-RT-000397
+# CISC-RT-000398
 # -------------------------------------------------------
 # User Defined Settings In Defaults Main (Used In Full Task)
 # -------------------------------------------------------
-# iosrtr_external_facing_interfaces are the interfaces that External Or CE Facing interfaces for the ACL.
+# iosrtr_external_facing_interfaces_000010 are the External Facing interfaces for the ACL.
 # Note: Interfaces that have the ACL attached to it will have it removed if they are not listed below. 
 # Example:
 #   - "FastEthernet0/0"
 #   - "FastEthernet0/1"
-iiosrtr_external_facing_interfaces: 
-    - "FastEthernet0/0"
-    - "FastEthernet0/1"
-#
-# -------------------------------------------------------
-# User Defined (Existing ACL) In Defaults Main 
-# -------------------------------------------------------
-# iosrtr_block_to_core_existing_acl is the current ACL defined in the router is used to discard and logs packets destined to the 
-# IP core address space. 
-# By default none is placed in here, you must change it to your EXACT ACL name, if not there will be a warning displayed at end of run.  
-# Example: "BLOCK_TO_CORE"
-iiosrtr_block_to_core_existing_acl: "BLOCK_TO_CORE"
-# iosrtr_block_to_core_existing_acl_ip_core_address_space is the list of IP ranges that are in your core space that must be in the ACL.
-# Note: Please follow proper syntax in entering your own ip blocks and wildcards, based on example below. Also when adding the lines to 
-#       the ACL make sure log-input is attached to them to properly satisfy the STIG requirements.  
-# Example:
-#   - '10.1.0.0 0.0.255.255'
-#   - '1.1.0.0 0.0.255.255'
-#   - '3.3.0.0 0.0.255.255'
-iiosrtr_block_to_core_existing_acl_ip_core_address_space: 
-    - '10.1.0.0 0.0.255.255'
-    - '1.1.0.0 0.0.255.255'
-#
-# -------------------------------------------------------
-# Single Router Setup (New Setup ACL) 
-# -------------------------------------------------------
-# Note: To setup a single router set cisc_rt_hardening_one_device: true 
-# iosrtr_block_to_core_acl_name_old is the name of the old access control list that is configured in the Cisco PE router, 
-# that must be configured to block any traffic that is destined to IP core infrastructure. This section when run, will 
-# replace the existing ACL with a user defined one that is located in /files and apply to all interfaces in list below.  
-# If you did not have a existing access control list defined in the router leave setting set as "none".
-# Example: "BLOCK_TO_CORE_OLD"
-iiosrtr_block_to_core_acl_name_old: "none"
-###########################################################
-###########################################################
-#####               EXAMPLE BLOCK END                 #####
-###########################################################
-###########################################################
-
-
-
-
-
+iosrtr_external_ipv6_enabled_interfaces_000391: 
+    - "GigabitEthernet2/0"
+    - "GigabitEthernet0/2"
 
 
 
