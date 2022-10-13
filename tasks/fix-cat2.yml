@@ -3276,9 +3276,9 @@
 
 - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets."
   block:
-    - name: Error Check Block."
+    - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Error Check Block."
       block: 
-          - name: No Interfaces Defined."
+          - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | No Interfaces Defined."
             debug:
               msg: 
                 - "Warning!!! External IPv6-enabled interfaces are not listed."
@@ -3286,7 +3286,7 @@
             when:
               - "'none' in iosrtr_external_ipv6_enabled_interfaces_000391"
 
-    - name: Show Run For Acl Checks Below."
+    - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Show Run For Acl Checks Below."
       block:
         - name: Show Run FILTER_IPV6 ACL."
           ios_command:
@@ -3294,7 +3294,7 @@
               - "show run | section ipv6 access-list {{ iosrtr_filter_ipv6_acl_000392_to_000398 }}"
           register: cisc_rt_000392_acl_showrun_filter_ipv6_acl
 
-        - name: ACL Check Block."
+        - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | ACL Check Block."
           block:
             - name: No ACL Defined Warning Message For FILTER_IPV6 ACL."
               debug:
@@ -3304,7 +3304,7 @@
               when:
                 - "'none' in iosrtr_filter_ipv6_acl_000392_to_000398"
 
-            - name: No ACL Defined By That Name Warning FILTER_IPV6 ACL."
+            - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | No ACL Defined By That Name Warning FILTER_IPV6 ACL."
               debug:
                 msg: 
                   - "Warning!!! Review the Access Control Lists(ACLs)."
@@ -3313,7 +3313,7 @@
                 - "'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and 
                   iosrtr_filter_ipv6_acl_000392_to_000398 not in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
 
-            - name: FILTER_IPV6 ACL Missing undetermined-transport log."
+            - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | FILTER_IPV6 ACL Missing undetermined-transport log."
               debug:
                 msg: 
                   - "Warning!!! Review the Access Control Lists(ACLs). The defined ACL {{ iosrtr_filter_ipv6_acl_000392_to_000398 }} does not contain the line"
@@ -3326,7 +3326,7 @@
                   iosrtr_filter_ipv6_acl_000392_to_000398 in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string and
                   ' deny ipv6 any any log undetermined-transport' not in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
 
-            - name: Site Policies Warning."
+            - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Site Policies Warning."
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_filter_ipv6_acl_000392_to_000398 }}"
@@ -3337,7 +3337,7 @@
                   ' permit' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string and 
                   'deny ipv6 any any undetermined-transport log' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
 
-        - name: Warn Count Added."
+        - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Warn Count Added."
           set_fact:
             control_number: "{{ control_number }} + ['CISC-RT-000392']"
             warn_count: "{{ warn_count|int + 1 }}"
@@ -3347,26 +3347,26 @@
               ' deny' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string or ' permit' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string or
               ' deny ipv6 any any undetermined-transport log' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
 
-    - name: Attach To Interfaces."
+    - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Attach To Interfaces."
       block:
-        - name: Gather Interface Facts."
+        - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Gather Interface Facts."
           ios_interfaces:
             state: gathered
           register: cisc_rt_000392_interfaceinfo
 
-        - name: Register Show Run With Interfaces."
+        - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Register Show Run With Interfaces."
           ios_command:
             commands: 
               - "show run | section {{ item.name }}" 
           with_items: "{{ cisc_rt_000392_interfaceinfo.gathered }}"
           register: cisc_rt_000392_interfaceinfo_showrun
 
-        - name: Set Fact For Interface Name And Stdout." 
+        - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Set Fact For Interface Name And Stdout." 
           set_fact:
             cisc_rt_000392_intname: "{{ cisc_rt_000392_interfaceinfo_showrun.results | map(attribute='item.name') }}"
             cisc_rt_000392_intstdout: "{{ cisc_rt_000392_interfaceinfo_showrun.results | map(attribute='stdout') }}"
 
-        - name: Add ACL To Interfaces Listed In iosrtr_external_ipv6_enabled_interfaces_000391."
+        - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Add ACL To Interfaces Listed In iosrtr_external_ipv6_enabled_interfaces_000391."
           ios_config:
             parents:
               - "interface {{ item.0 }}"
@@ -3379,7 +3379,7 @@
             - item.0 in iosrtr_external_ipv6_enabled_interfaces_000391
             - iosrtr_filter_ipv6_acl_000392_to_000398 not in item.1
 
-        - name: Remove ACL From Interfaces Not Listed In iosrtr_external_ipv6_enabled_interfaces_000391."
+        - name: "MEDIUM | CISC-RT-000392 | PATCH | The Cisco perimeter router must be configured to drop IPv6 undetermined transport packets. | Remove ACL From Interfaces Not Listed In iosrtr_external_ipv6_enabled_interfaces_000391."
           ios_config:
             parents:
               - "interface {{ item.0 }}"
@@ -3443,7 +3443,7 @@
                   - "The defined ACL {{ iosrtr_filter_ipv6_acl_000392_to_000398 }} is not present on the Router."
               when:
                 - "'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and 
-                  iosrtr_filter_ipv6_acl_000392_to_000398 not in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
+                  iosrtr_filter_ipv6_acl_000392_to_000398 not in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string"
 
             - name: No Address Defined In iosrtr_route_type2_host_000393."
               debug:
@@ -3463,47 +3463,59 @@
                   with_items:
                     - "{{ iosrtr_route_type2_host_000393 }}"
 
-                - name: Set Fact For Variable hosts
+                - name: Set Fact for FILTER_IPV6 CL show run route2 check.                  
+                  set_fact: 
+                    cisc_rt_000393_route2_stdout: "{{ cisc_rt_000393_acl_showrun_route2_check.results | map(attribute='stdout') }}"
+
+                - name: Create List Of Valid Lines That SHould Be In ACL.
                   set_fact:
-                    setfacttest: "permit ipv6 any host {{ item }} routing-type 2"
+                    cisc_rt_000393_valid_route_header_2_lines: "{{ cisc_rt_000393_valid_route_header_2_lines | default ([]) + 'permit ipv6 any host' item 'routing-type 2' }}"
                   with_items:
                     - "{{ iosrtr_route_type2_host_000393 }}"
 
-                - name: FILTER_IPV6 ACL Missing Both Lines."
+                - name: FILTER_IPV6 ACL Missing iosrtr_route_type2_host_000393 host line."
                   debug:
                     msg: 
                       - "Warning!!! Review the Access Control Lists(ACLs). The defined ACL {{ iosrtr_filter_ipv6_acl_000392_to_000398 }} does not contain the lines"
                       - "*****************************************************************"
-                      - "permit ipv6 any host {{ item }} routing-type 2"
-                      - "deny ipv6 any any log routing"
+                      - "permit ipv6 any host {{ item.0 }} routing-type 2"
                       - "*****************************************************************"
                       - "Please add to {{ iosrtr_filter_ipv6_acl_000392_to_000398 }} under the appropriate sequence number and order for it to be properly applied to the router."
-                  with_items: 
+                  with_together: 
                     - "{{ iosrtr_route_type2_host_000393 }}"
+                    - "{{ cisc_rt_000393_route2_stdout }}"
                   when:
                     - "'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and 
-                      iosrtr_filter_ipv6_acl_000392_to_000398 in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string and
-                      cisc_rt_000393_acl_showrun_route2_check.stdout | length < 1"
+                      iosrtr_filter_ipv6_acl_000392_to_000398 in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string and 
+                      item.0 not in item.1"
 
 
-
+                - name: FILTER_IPV6 ACL Missing deny ipv6 any any log routing after host lines."
+                  debug:
+                    msg: 
+                      - "Warning!!! Review the Access Control Lists(ACLs). The defined ACL {{ iosrtr_filter_ipv6_acl_000392_to_000398 }} does not contain the lines"
+                      - "*****************************************************************"
+                      - "deny ipv6 any any log routing"
+                      - "*****************************************************************"
+                      - "Please add to {{ iosrtr_filter_ipv6_acl_000392_to_000398 }} under the appropriate sequence number and after the host routing-type 2 options for it to be properly applied to the router."
+                  when:
+                    - "'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and 
+                      iosrtr_filter_ipv6_acl_000392_to_000398 in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string and 
+                      ' deny ipv6 any any log routing' not in cisc_rt_000393_route2_stdout | string"
               when:
                 - "'none' not in iosrtr_route_type2_host_000393"
-
-
-
-
 
             - name: Site Policies Warning."
               debug:
                   msg:
                       - "Warning! Below is the Configured ACL For {{ iosrtr_filter_ipv6_acl_000392_to_000398 }}"
-                      - "Please verify that the Access Control List (ACL) drops IPv6 undetermined transport packets and is configred in the correct order."
-                      - "{{ cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines }}"
+                      - "Please Review the router configuration to determine if it is configured to drop IPv6 packets containing a"
+                      - "Routing Header of type 0, 1, or 3-255. and is configred in the correct order."
+                      - "{{ cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout_lines }}"
               when: 
-                - "' deny' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string or
-                  ' permit' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string and 
-                  'deny ipv6 any any undetermined-transport log' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
+                - "' deny' in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout_lines | string or
+                  ' permit' in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout_lines | string and 'deny ipv6 any any undetermined-transport log' in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string or 
+                  'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and iosrtr_filter_ipv6_acl_000392_to_000398 in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string and iosrtr_route_type2_host_000393 in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string and ' deny ipv6 any any log routing' in cisc_rt_000393_route2_stdout.stdout[0] | string"
 
         - name: Warn Count Added."
           set_fact:
@@ -3511,9 +3523,9 @@
             warn_count: "{{ warn_count|int + 1 }}"
           when:
             - "'none' in iosrtr_filter_ipv6_acl_000392_to_000398 or
-              'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and iosrtr_filter_ipv6_acl_000392_to_000398 not in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string or
-              ' deny' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string or ' permit' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout_lines | string or
-              'deny ipv6 any any undetermined-transport log' in cisc_rt_000392_acl_showrun_filter_ipv6_acl.stdout | string"
+              'none' not in iosrtr_filter_ipv6_acl_000392_to_000398 and iosrtr_filter_ipv6_acl_000392_to_000398 in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string or
+              ' deny' in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout_lines | string or ' permit' in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout_lines | string or
+              'deny ipv6 any any undetermined-transport log' in cisc_rt_000393_acl_showrun_filter_ipv6_acl.stdout | string"
 
 
 
